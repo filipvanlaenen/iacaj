@@ -45,4 +45,15 @@ public class BooleanFunctionTest {
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         assertEquals(THREE, booleanFunction.getNumberOfInputParameters());
     }
+
+    /**
+     * Verifies that parsing two simple AND expressions joins the input parameters
+     * correctly.
+     */
+    @Test
+    public void shouldParseTwoSimpleAndExpressionWithThreeInputParameters() {
+        String[] content = new String[] {"o1 = i1 ∧ i2", "o1 = i2 ∧ i3"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        assertEquals(THREE, booleanFunction.getNumberOfInputParameters());
+    }
 }
