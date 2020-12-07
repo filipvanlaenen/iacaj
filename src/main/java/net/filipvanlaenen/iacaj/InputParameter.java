@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Class representing an input parameter.
  */
-public class InputParameter {
+public class InputParameter extends Variable {
     /**
      * A map with all the instances.
      */
@@ -23,8 +23,22 @@ public class InputParameter {
         if (instances.containsKey(name)) {
             return instances.get(name);
         }
-        InputParameter newInstance = new InputParameter();
+        InputParameter newInstance = new InputParameter(name);
         instances.put(name, newInstance);
         return newInstance;
+    }
+
+    public InputParameter(final String name) {
+        super(name);
+    }
+
+    /**
+     * Returns whether a variable name matches the pattern for an input parameter.
+     *
+     * @param variableName The variable name to check.
+     * @return True if the variable name starts with an i, false otherwise.
+     */
+    public static boolean isInputParameter(String variableName) {
+        return variableName.startsWith("i");
     }
 }
