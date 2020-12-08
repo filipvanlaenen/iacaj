@@ -9,6 +9,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests on the <code>BooleanOperation</code> class.
+ */
 public class BooleanOperationTest {
     /**
      * Creates a set with input parameters with the names provided.
@@ -72,9 +75,20 @@ public class BooleanOperationTest {
         BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ v1");
         assertEquals("v2 = i1 ∧ v1", operation.toString());
     }
+
     /**
-     * Verifies that a simple AND expression with an input parameter and a negated variable
-     * is exported correctly.
+     * Verifies that a simple AND expression with two internal variables is exported
+     * correctly.
+     */
+    @Test
+    public void shouldExportSimpleAndExpressionWithTwoVariables() {
+        BooleanOperation operation = new BooleanOperation("v3", "v1 ∧ v2");
+        assertEquals("v3 = v1 ∧ v2", operation.toString());
+    }
+
+    /**
+     * Verifies that a simple AND expression with an input parameter and a negated
+     * variable is exported correctly.
      */
     @Test
     public void shouldExportSimpleAndExpressionWithInputParameterAndNegatedVariable() {
