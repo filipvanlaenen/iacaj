@@ -1,6 +1,8 @@
 package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -69,5 +71,25 @@ public class BooleanOperationTest {
     public void shouldExportSimpleAndExpressionWithInputParameterAndVariable() {
         BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ v1");
         assertEquals("v2 = i1 ∧ v1", operation.toString());
+    }
+
+    /**
+     * Verifies that a Boolean operation can detect that it doesn't represent an
+     * output parameter.
+     */
+    @Test
+    public void shouldDetectInternalVariable() {
+        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ v2");
+        assertFalse(operation.isOutputParameter());
+    }
+
+    /**
+     * Verifies that a Boolean operation can detect that it represents an output
+     * parameter.
+     */
+    @Test
+    public void shouldDetectOutputParameter() {
+        BooleanOperation operation = new BooleanOperation("o1", "i1 ∧ v1");
+        assertTrue(operation.isOutputParameter());
     }
 }

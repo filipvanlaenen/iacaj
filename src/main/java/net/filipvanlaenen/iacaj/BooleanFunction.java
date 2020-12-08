@@ -84,7 +84,17 @@ public class BooleanFunction {
             }
 
             public int compare(BooleanOperation operation0, BooleanOperation operation1) {
-                return operation0.getName().compareTo(operation1.getName());
+                if (operation0.isOutputParameter()) {
+                    if (operation1.isOutputParameter()) {
+                        return operation0.getName().compareTo(operation1.getName());
+                    } else {
+                        return 1;
+                    }
+                } else if (operation1.isOutputParameter()) {
+                    return -1;
+                } else {
+                    return operation0.getName().compareTo(operation1.getName());
+                }
             }
         });
         List<String> expressionStrings = sortedExpressions.stream().map(BooleanExpression::toString)

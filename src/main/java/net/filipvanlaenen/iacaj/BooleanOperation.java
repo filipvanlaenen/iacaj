@@ -2,7 +2,7 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -122,7 +122,27 @@ public class BooleanOperation extends BooleanExpression {
     public String toString() {
         List<Variable> variables = new ArrayList<Variable>(getInputParameters());
         variables.addAll(getInternalVariables());
+        variables.sort(new Comparator<Variable>() {
+            @Override
+            public int compare(Variable arg0, Variable arg1) {
+                if (arg0 instanceof InputParameter) {
+                    if (arg1 instanceof InputParameter) {
+                        return arg0.getName().compareTo(arg1.getName());
+                    } else {
+                        return -1;
+                    }
+                } else if (arg1 instanceof InputParameter) {
+                    return 1;
+                } else {
+                    return arg0.getName().compareTo(arg1.getName());
+                }
+            }
+        });
         List<String> variableNames = variables.stream().map(Variable::getName).collect(Collectors.toList());
         return name + " = " + String.join(" " + operator.getSymbol() + " ", variableNames);
+    }
+
+    public boolean isOutputParameter() {
+        return OutputParameter.isOutputParameter(name);
     }
 }
