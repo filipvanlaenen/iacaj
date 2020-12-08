@@ -6,7 +6,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class BooleanOperation extends BooleanExpression {
     /**
@@ -59,6 +58,10 @@ public class BooleanOperation extends BooleanExpression {
      */
     private Set<InternalVariable> internalVariables = new HashSet<InternalVariable>();
     /**
+     * The variables negated in the Boolean expression.
+     */
+    private Set<Variable> negatedVariables = new HashSet<Variable>();
+    /**
      * The operator in the Boolean expression.
      */
     private Operator operator;
@@ -85,13 +88,20 @@ public class BooleanOperation extends BooleanExpression {
                 .toArray(String[]::new);
         for (String operand : operands) {
             String operandName = operand;
-            if (operand.startsWith("¬")) {
+            boolean negated = operand.startsWith("¬");
+            if (negated) {
                 operandName = operand.substring(1);
             }
+            Variable variable = null;
             if (InputParameter.isInputParameter(operandName)) {
-                inputParameters.add(InputParameter.get(operandName));
+                variable = InputParameter.get(operandName);
+                inputParameters.add((InputParameter) variable);
             } else {
-                internalVariables.add(InternalVariable.get(operandName));
+                variable = InternalVariable.get(operandName);
+                internalVariables.add((InternalVariable) variable);
+            }
+            if (negated) {
+                negatedVariables.add(variable);
             }
         }
     }
@@ -138,8 +148,17 @@ public class BooleanOperation extends BooleanExpression {
                 }
             }
         });
-        List<String> variableNames = variables.stream().map(Variable::getName).collect(Collectors.toList());
-        return name + " = " + String.join(" " + operator.getSymbol() + " ", variableNames);
+        StringBuffer sb = new StringBuffer();
+        for (Variable variable : variables) {
+            if (sb.length() > 0) {
+                sb.append(" " + operator.getSymbol() + " ");
+            }
+            if (negatedVariables.contains(variable)) {
+                sb.append("¬");
+            }
+            sb.append(variable.getName());
+        }
+        return name + " = " + sb.toString();
     }
 
     public boolean isOutputParameter() {

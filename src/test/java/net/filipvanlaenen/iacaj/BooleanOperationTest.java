@@ -72,6 +72,15 @@ public class BooleanOperationTest {
         BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ v1");
         assertEquals("v2 = i1 ∧ v1", operation.toString());
     }
+    /**
+     * Verifies that a simple AND expression with an input parameter and a negated variable
+     * is exported correctly.
+     */
+    @Test
+    public void shouldExportSimpleAndExpressionWithInputParameterAndNegatedVariable() {
+        BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ ¬v1");
+        assertEquals("v2 = i1 ∧ ¬v1", operation.toString());
+    }
 
     /**
      * Verifies that a Boolean operation can detect that it doesn't represent an
