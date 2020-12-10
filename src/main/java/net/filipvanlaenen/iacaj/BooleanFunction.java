@@ -43,7 +43,7 @@ public class BooleanFunction {
      *
      * @param booleanExpression A Boolean expression.
      */
-    void addExpression(final BooleanExpression booleanExpression) {
+    public void addExpression(final BooleanExpression booleanExpression) {
         expressions.add(booleanExpression);
         inputParameters.addAll(booleanExpression.getInputParameters());
     }

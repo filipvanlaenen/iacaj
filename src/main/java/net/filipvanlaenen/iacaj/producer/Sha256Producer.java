@@ -1,6 +1,9 @@
-package net.filipvanlaenen.iacaj;
+package net.filipvanlaenen.iacaj.producer;
 
 import java.math.BigInteger;
+
+import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.iacaj.BooleanOperation;
 
 /**
  * Class producing a Boolean function for the SHA-256 hash function.

@@ -1,4 +1,7 @@
-package net.filipvanlaenen.iacaj;
+package net.filipvanlaenen.iacaj.cli;
+
+import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 
 /**
  * Class implementing a command line interface.
