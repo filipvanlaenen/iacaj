@@ -43,7 +43,7 @@ public class BooleanFunction {
      *
      * @param booleanExpression A Boolean expression.
      */
-    private void addExpression(final BooleanExpression booleanExpression) {
+    void addExpression(final BooleanExpression booleanExpression) {
         expressions.add(booleanExpression);
         inputParameters.addAll(booleanExpression.getInputParameters());
     }
@@ -80,20 +80,20 @@ public class BooleanFunction {
             }
 
             private int compare(BooleanConstraint constraint0, BooleanConstraint constraint1) {
-                return constraint0.getName().compareTo(constraint1.getName());
+                return constraint0.getNumber() - constraint1.getNumber();
             }
 
             public int compare(BooleanOperation operation0, BooleanOperation operation1) {
                 if (operation0.isOutputParameter()) {
                     if (operation1.isOutputParameter()) {
-                        return operation0.getName().compareTo(operation1.getName());
+                        return operation0.getNumber() - operation1.getNumber();
                     } else {
                         return 1;
                     }
                 } else if (operation1.isOutputParameter()) {
                     return -1;
                 } else {
-                    return operation0.getName().compareTo(operation1.getName());
+                    return operation0.getNumber() - operation1.getNumber();
                 }
             }
         });

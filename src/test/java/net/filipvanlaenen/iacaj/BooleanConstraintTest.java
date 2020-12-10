@@ -3,8 +3,8 @@ package net.filipvanlaenen.iacaj;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ public class BooleanConstraintTest {
      * @param names The names of the input parameters to be added to the set.
      * @return A set with input parameters having the provided names.
      */
-    private Set<InputParameter> createInputParameterSet(final String... names) {
-        Set<InputParameter> result = new HashSet<InputParameter>();
+    private List<InputParameter> createInputParameterSet(final String... names) {
+        List<InputParameter> result = new ArrayList<InputParameter>();
         for (String name : names) {
             result.add(InputParameter.get(name));
         }

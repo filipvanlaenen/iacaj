@@ -47,7 +47,8 @@ public final class CommandLineInterface {
             void execute(final String[] args) {
                 String hashFunction = args[1];
                 if (hashFunction.equals("SHA-256")) {
-                    new Sha256Producer().produce();
+                    BooleanFunction bf = new Sha256Producer().produce();
+                    System.out.println(bf);
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");
                 }

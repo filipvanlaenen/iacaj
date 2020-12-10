@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -19,8 +19,8 @@ public class BooleanOperationTest {
      * @param names The names of the input parameters to be added to the set.
      * @return A set with input parameters having the provided names.
      */
-    private Set<InputParameter> createInputParameterSet(final String... names) {
-        Set<InputParameter> result = new HashSet<InputParameter>();
+    private List<InputParameter> createInputParameterSet(final String... names) {
+        List<InputParameter> result = new ArrayList<InputParameter>();
         for (String name : names) {
             result.add(InputParameter.get(name));
         }
@@ -57,6 +57,24 @@ public class BooleanOperationTest {
     }
 
     /**
+     * Verifies that a True expression is exported correctly.
+     */
+    @Test
+    public void shouldExportTrueExpression() {
+        BooleanOperation operation = new BooleanOperation("v1", "True");
+        assertEquals("v1 = True", operation.toString());
+    }
+
+    /**
+     * Verifies that a False expression is exported correctly.
+     */
+    @Test
+    public void shouldExportFalseExpression() {
+        BooleanOperation operation = new BooleanOperation("v1", "False");
+        assertEquals("v1 = False", operation.toString());
+    }
+
+    /**
      * Verifies that a simple AND expression with two input parameters is exported
      * correctly.
      */
@@ -64,6 +82,16 @@ public class BooleanOperationTest {
     public void shouldExportSimpleAndExpressionWithTwoInputParameters() {
         BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ i2");
         assertEquals("v1 = i1 ∧ i2", operation.toString());
+    }
+
+    /**
+     * Verifies that a simple AND expression with two input parameters is exported
+     * correctly, with correct sorting.
+     */
+    @Test
+    public void shouldExportSortedSimpleAndExpressionWithTwoInputParameters() {
+        BooleanOperation operation = new BooleanOperation("v1", "i10 ∧ i2");
+        assertEquals("v1 = i2 ∧ i10", operation.toString());
     }
 
     /**
@@ -94,6 +122,16 @@ public class BooleanOperationTest {
     public void shouldExportSimpleAndExpressionWithInputParameterAndNegatedVariable() {
         BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ ¬v1");
         assertEquals("v2 = i1 ∧ ¬v1", operation.toString());
+    }
+
+    /**
+     * Verifies that an XOR expression with the same variable twice directly and
+     * twice negated is exported correctly.
+     */
+    @Test
+    public void shouldExportMultipleOccurrencesOfVariableAndNegations() {
+        BooleanOperation operation = new BooleanOperation("v2", "v1 ⊻ v1 ⊻ ¬v1 ⊻ ¬v1");
+        assertEquals("v2 = v1 ⊻ v1 ⊻ ¬v1 ⊻ ¬v1", operation.toString());
     }
 
     /**

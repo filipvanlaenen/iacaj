@@ -1,6 +1,8 @@
 package net.filipvanlaenen.iacaj;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -68,11 +70,12 @@ public class BooleanConstraint extends BooleanExpression {
     /**
      * The input parameters used in the Boolean constraint.
      */
-    Set<InputParameter> inputParameters = new HashSet<InputParameter>();
+    List<InputParameter> inputParameters = new ArrayList<InputParameter>();
     /**
      * The name of the constraint.
      */
     final String name;
+    private final int number;
 
     /**
      * Creates a Boolean constraint based on the left hand side and the right hand
@@ -95,10 +98,11 @@ public class BooleanConstraint extends BooleanExpression {
 
     public BooleanConstraint(String name) {
         this.name = name;
+        this.number = Integer.parseInt(name.substring(1));
     }
 
     @Override
-    public Set<InputParameter> getInputParameters() {
+    public List<InputParameter> getInputParameters() {
         return inputParameters;
     }
 
@@ -106,4 +110,7 @@ public class BooleanConstraint extends BooleanExpression {
         return name;
     }
 
+    public int getNumber() {
+        return number;
+    }
 }

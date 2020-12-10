@@ -1,5 +1,7 @@
 package net.filipvanlaenen.iacaj;
 
+import java.math.BigInteger;
+
 /**
  * Class producing a Boolean function for the SHA-256 hash function.
  * 
@@ -7,47 +9,152 @@ package net.filipvanlaenen.iacaj;
  * https://en.wikipedia.org/wiki/SHA-2#Pseudocode
  */
 public class Sha256Producer {
+    public class Word {
+        private final String[] variables;
+
+        public Word(int wordLength) {
+            variables = new String[wordLength];
+        }
+
+        public void put(int i, String name) {
+            variables[i] = name;
+        }
+
+        public String get(int i) {
+            return variables[i];
+        }
+    }
+
+    private static final int WORD_LENGTH = 32;
+
+    private int numberOfRounds = 64;
+    private long vCounter = 0;
+    private Word a, b, c, d, e, f, g, h;
+    private Word h0, h1, h2, h3, h4, h5, h6, h7;
+    private Word[] k = new Word[64];
+
+    private void addCompressionResultToHash(BooleanFunction bf) {
+        h0 = addWords(bf, h0, a);
+        h1 = addWords(bf, h1, b);
+        h2 = addWords(bf, h2, c);
+        h3 = addWords(bf, h3, d);
+        h4 = addWords(bf, h4, e);
+        h5 = addWords(bf, h5, f);
+        h6 = addWords(bf, h6, g);
+        h7 = addWords(bf, h7, h);
+    }
+
+    private Word addWords(BooleanFunction bf, Word w0, Word w1) {
+        Word result = new Word(WORD_LENGTH);
+        BooleanOperation b0 = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ⊻ " + w1.get(0));
+        bf.addExpression(b0);
+        result.put(0, b0.getName());
+        BooleanOperation c = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ∧ " + w1.get(0));
+        bf.addExpression(c);
+        for (int i = 1; i < WORD_LENGTH - 1; i++) {
+            BooleanOperation bi = new BooleanOperation("v" + (++vCounter),
+                    w0.get(i) + " ⊻ " + w1.get(i) + " ⊻ " + c.getName());
+            bf.addExpression(bi);
+            result.put(i, bi.getName());
+            BooleanOperation p1 = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ∧ " + w1.get(0));
+            bf.addExpression(p1);
+            BooleanOperation p2 = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ⊻ " + w1.get(0));
+            bf.addExpression(p2);
+            BooleanOperation p3 = new BooleanOperation("v" + (++vCounter), c.getName() + " ∧ " + p2.getName());
+            bf.addExpression(p3);
+            c = new BooleanOperation("v" + (++vCounter), p1.getName() + " ⊻ " + p3.getName());
+            bf.addExpression(c);
+        }
+        BooleanOperation bl = new BooleanOperation("v" + (++vCounter),
+                w0.get(WORD_LENGTH - 1) + " ⊻ " + w1.get(WORD_LENGTH - 1) + " ⊻ " + c.getName());
+        bf.addExpression(bl);
+        result.put(WORD_LENGTH - 1, bl.getName());
+        return result;
+    }
+
+    private Word addConstant(BooleanFunction bf, String hexValue) {
+        BigInteger value = new BigInteger(hexValue, 16);
+        Word result = new Word(WORD_LENGTH);
+        for (int i = 0; i < WORD_LENGTH; i++) {
+            String rightHandSide;
+            if (value.mod(new BigInteger("2")).equals(BigInteger.ZERO)) {
+                rightHandSide = "False";
+            } else {
+                rightHandSide = "True";
+            }
+            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), rightHandSide);
+            bf.addExpression(bo);
+            result.put(i, bo.getName());
+            value = value.divide(new BigInteger("2"));
+        }
+        return result;
+    }
+
+    private void appendWordToResult(BooleanFunction bf, Word w, int offset) {
+        for (int i = 1; i <= WORD_LENGTH; i++) {
+            bf.addExpression(new BooleanOperation("o" + (WORD_LENGTH * offset + i), w.get(WORD_LENGTH - i)));
+        }
+    }
+
+    private void composeResult(BooleanFunction bf) {
+        Word[] words = new Word[] {h0, h1, h2, h3, h4, h5, h6, h7};
+        for (int i = 0; i < words.length; i++) {
+            appendWordToResult(bf, words[i], i);
+        }
+    }
+
+    private void initializeAtoH() {
+        a = h0;
+        b = h1;
+        c = h2;
+        d = h3;
+        e = h4;
+        f = h5;
+        g = h6;
+        h = h7;
+    }
+
+    private void initializeH(BooleanFunction bf) {
+        h0 = addConstant(bf, "6a09e667");
+        h1 = addConstant(bf, "bb67ae85");
+        h2 = addConstant(bf, "3c6ef372");
+        h3 = addConstant(bf, "a54ff53a");
+        h4 = addConstant(bf, "510e527f");
+        h5 = addConstant(bf, "9b05688c");
+        h6 = addConstant(bf, "1f83d9ab");
+        h7 = addConstant(bf, "5be0cd19");
+    }
+
+    private void initializeK(BooleanFunction bf) {
+        String[] values = new String[] {"428a2f98", "71374491", "b5c0fbcf", "e9b5dba5", "3956c25b", "59f111f1",
+                "923f82a4", "ab1c5ed5", "d807aa98", "12835b01", "243185be", "550c7dc3", "72be5d74", "80deb1fe",
+                "9bdc06a7", "c19bf174", "e49b69c1", "efbe4786", "0fc19dc6", "240ca1cc", "2de92c6f", "4a7484aa",
+                "5cb0a9dc", "76f988da", "983e5152", "a831c66d", "b00327c8", "bf597fc7", "c6e00bf3", "d5a79147",
+                "06ca6351", "14292967", "27b70a85", "2e1b2138", "4d2c6dfc", "53380d13", "650a7354", "766a0abb",
+                "81c2c92e", "92722c85", "a2bfe8a1", "a81a664b", "c24b8b70", "c76c51a3", "d192e819", "d6990624",
+                "f40e3585", "106aa070", "19a4c116", "1e376c08", "2748774c", "34b0bcb5", "391c0cb3", "4ed8aa4a",
+                "5b9cca4f", "682e6ff3", "748f82ee", "78a5636f", "84c87814", "8cc70208", "90befffa", "a4506ceb",
+                "bef9a3f7", "c67178f2"};
+        for (int i = 0; i < numberOfRounds; i++) {
+            k[i] = addConstant(bf, values[i]);
+        }
+    }
 
     /**
      * Produces a Boolean function for the SHA-256 hash function.
      */
-    public void produce() {
-        initializeH();
-        initializeK();
+    public BooleanFunction produce() {
+        BooleanFunction result = new BooleanFunction();
+        initializeH(result);
+        initializeK(result);
         createW();
         initializeAtoH();
-        for (int i = 0; i <= 63; i++) {
+        for (int i = 0; i < numberOfRounds; i++) {
             compress();
         }
-        addCompressionResultToHash();
-        returnResult();
-    }
-
-    private void returnResult() {
-        /**
-         * digest := hash := h0 append h1 append h2 append h3 append h4 append h5 append
-         * h6 append h7
-         */
-    }
-
-    private void addCompressionResultToHash() {
-        /**
-         * h0 := h0 + a
-         * 
-         * h1 := h1 + b
-         *
-         * h2 := h2 + c
-         *
-         * h3 := h3 + d
-         *
-         * h4 := h4 + e
-         *
-         * h5 := h5 + f
-         *
-         * h6 := h6 + g
-         *
-         * h7 := h7 + h
-         */
+        addCompressionResultToHash(result);
+        composeResult(result);
+        return result;
     }
 
     private void compress() {
@@ -82,28 +189,6 @@ public class Sha256Producer {
          */
     }
 
-    private void initializeAtoH() {
-        /**
-         * Initialize working variables to current hash value:
-         * 
-         * a := h0
-         * 
-         * b := h1
-         * 
-         * c := h2
-         * 
-         * d := h3
-         * 
-         * e := h4
-         * 
-         * f := h5
-         * 
-         * g := h6
-         * 
-         * h := h7
-         */
-    }
-
     private void createW() {
         /**
          * create a 64-entry message schedule array w[0..63] of 32-bit words (The
@@ -127,39 +212,4 @@ public class Sha256Producer {
          */
     }
 
-    private void initializeK() {
-        /**
-         * k[0..63] := 0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b,
-         * 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01, 0x243185be,
-         * 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1,
-         * 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc,
-         * 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3,
-         * 0xd5a79147, 0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc,
-         * 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85, 0xa2bfe8a1,
-         * 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585,
-         * 0x106aa070, 0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3,
-         * 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814,
-         * 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
-         */
-    }
-
-    private void initializeH() {
-        /**
-         * h0 := 0x6a09e667
-         * 
-         * h1 := 0xbb67ae85
-         * 
-         * h2 := 0x3c6ef372
-         * 
-         * h3 := 0xa54ff53a
-         * 
-         * h4 := 0x510e527f
-         * 
-         * h5 := 0x9b05688c
-         * 
-         * h6 := 0x1f83d9ab
-         * 
-         * h7 := 0x5be0cd19
-         */
-    }
 }

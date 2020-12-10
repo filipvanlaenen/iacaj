@@ -1,5 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,6 +34,6 @@ public abstract class BooleanExpression {
      *
      * @return The input parameters of the Boolean expression.
      */
-    public abstract Set<InputParameter> getInputParameters();
+    public abstract List<InputParameter> getInputParameters();
 
 }
