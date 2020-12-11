@@ -89,9 +89,57 @@ public class Sha256Producer {
      */
     private static final int DEFAULT_NUMBER_OF_ROUNDS = 64;
     /**
+     * The magic number 3.
+     */
+    private static final int THREE = 3;
+    /**
+     * The magic number 6.
+     */
+    private static final int SIX = 6;
+    /**
+     * The magic number 7.
+     */
+    private static final int SEVEN = 7;
+    /**
+     * The magic number 10.
+     */
+    private static final int TEN = 10;
+    /**
+     * The magic number 11.
+     */
+    private static final int ELEVEN = 11;
+    /**
+     * The magic number 13.
+     */
+    private static final int THIRTEEN = 13;
+    /**
+     * The magic number 15.
+     */
+    private static final int FIFTEEN = 15;
+    /**
      * The magic number 16.
      */
     private static final int SIXTEEN = 16;
+    /**
+     * The magic number 17.
+     */
+    private static final int SEVENTEEN = 17;
+    /**
+     * The magic number 18.
+     */
+    private static final int EIGHTEEN = 18;
+    /**
+     * The magic number 19.
+     */
+    private static final int NINETEEN = 19;
+    /**
+     * The magic number 22.
+     */
+    private static final int TWENTY_TWO = 22;
+    /**
+     * The magic number 25.
+     */
+    private static final int TWENTY_FIVE = 25;
     /**
      * The number of rounds for the SHA-256 algorithm.
      */
@@ -218,7 +266,15 @@ public class Sha256Producer {
         }
     }
 
-    private Word atomicOperationOnWords(final BooleanFunction bf, final Operator o, final Word... words) {
+    /**
+     * Performs an atomic Boolean operations on a set of words.
+     *
+     * @param bf       The Boolean function.
+     * @param operator The operator to apply.
+     * @param words    The words on which to perform the operation.
+     * @return A word holding the result.
+     */
+    private Word atomicOperationOnWords(final BooleanFunction bf, final Operator operator, final Word... words) {
         Word result = new Word(WORD_LENGTH);
         for (int i = 0; i < WORD_LENGTH; i++) {
             String[] operands = new String[words.length];
@@ -226,25 +282,36 @@ public class Sha256Producer {
                 operands[j] = words[j].get(i);
             }
             BooleanOperation bo = new BooleanOperation("v" + (++vCounter),
-                    String.join(" " + o.getSymbol() + " ", operands));
+                    String.join(" " + operator.getSymbol() + " ", operands));
             bf.addExpression(bo);
             result.put(i, bo.getName());
         }
         return result;
     }
 
-    private void composeResult(BooleanFunction bf) {
+    /**
+     * Composes the result of the SHA-256 algorithm.
+     *
+     * @param bf The Boolean function.
+     */
+    private void composeResult(final BooleanFunction bf) {
         Word[] words = new Word[] {h0, h1, h2, h3, h4, h5, h6, h7};
         for (int i = 0; i < words.length; i++) {
             appendWordToResult(bf, words[i], i);
         }
     }
 
-    private void compress(BooleanFunction bf, int i) {
-        Word s1 = xorWords(bf, e.rightRotate(6), e.rightRotate(11), e.rightRotate(25));
+    /**
+     * Performs a round of the compress function of the SHA-256 algorithm.
+     *
+     * @param bf The Boolean function.
+     * @param i  The round.
+     */
+    private void compress(final BooleanFunction bf, final int i) {
+        Word s1 = xorWords(bf, e.rightRotate(SIX), e.rightRotate(ELEVEN), e.rightRotate(TWENTY_FIVE));
         Word ch = xorWords(bf, andWords(bf, e, f), andWords(bf, negateWord(bf, e), g));
         Word t1 = addWords(bf, addWords(bf, addWords(bf, addWords(bf, h, s1), ch), k[i]), w[i]);
-        Word s0 = xorWords(bf, a.rightRotate(2), a.rightRotate(13), a.rightRotate(22));
+        Word s0 = xorWords(bf, a.rightRotate(2), a.rightRotate(THIRTEEN), a.rightRotate(TWENTY_TWO));
         Word maj = xorWords(bf, andWords(bf, a, b), andWords(bf, a, c), andWords(bf, b, c));
         Word t2 = addWords(bf, s0, maj);
         h = g;
@@ -257,21 +324,31 @@ public class Sha256Producer {
         a = addWords(bf, t1, t2);
     }
 
-    private void createW(BooleanFunction bf) {
+    /**
+     * Initializes the message schedule array w.
+     *
+     * @param bf The Boolean function.
+     */
+    private void createW(final BooleanFunction bf) {
         w = new Word[numberOfRounds];
-        for (int i = 0; i < 16 && i < numberOfRounds; i++) {
+        for (int i = 0; i < SIXTEEN && i < numberOfRounds; i++) {
             w[i] = new Word(WORD_LENGTH);
             for (int j = 0; j < WORD_LENGTH; j++) {
                 w[i].put(j, "i" + ((i + 1) * WORD_LENGTH - j));
             }
         }
-        for (int i = 16; i < numberOfRounds; i++) {
-            Word s0 = xorWords(bf, w[i - 15].rightRotate(7), w[i - 15].rightRotate(18), rightShift(bf, w[i - 15], 3));
-            Word s1 = xorWords(bf, w[i - 2].rightRotate(17), w[i - 2].rightRotate(19), rightShift(bf, w[i - 2], 10));
-            w[i] = addWords(bf, addWords(bf, addWords(bf, w[i - 16], s0), w[i - 7]), s1);
+        for (int i = SIXTEEN; i < numberOfRounds; i++) {
+            Word s0 = xorWords(bf, w[i - FIFTEEN].rightRotate(SEVEN), w[i - FIFTEEN].rightRotate(EIGHTEEN),
+                    rightShift(bf, w[i - FIFTEEN], THREE));
+            Word s1 = xorWords(bf, w[i - 2].rightRotate(SEVENTEEN), w[i - 2].rightRotate(NINETEEN),
+                    rightShift(bf, w[i - 2], TEN));
+            w[i] = addWords(bf, addWords(bf, addWords(bf, w[i - SIXTEEN], s0), w[i - SEVEN]), s1);
         }
     }
 
+    /**
+     * Initializes the working variables.
+     */
     private void initializeAtoH() {
         a = h0;
         b = h1;
@@ -283,7 +360,12 @@ public class Sha256Producer {
         h = h7;
     }
 
-    private void initializeH(BooleanFunction bf) {
+    /**
+     * Initializes the hash values.
+     *
+     * @param bf The Boolean function.
+     */
+    private void initializeH(final BooleanFunction bf) {
         h0 = addConstant(bf, "6a09e667");
         h1 = addConstant(bf, "bb67ae85");
         h2 = addConstant(bf, "3c6ef372");
@@ -294,7 +376,12 @@ public class Sha256Producer {
         h7 = addConstant(bf, "5be0cd19");
     }
 
-    private void initializeK(BooleanFunction bf) {
+    /**
+     * Initializes the round constants.
+     *
+     * @param bf The Boolean function.
+     */
+    private void initializeK(final BooleanFunction bf) {
         String[] values = new String[] {"428a2f98", "71374491", "b5c0fbcf", "e9b5dba5", "3956c25b", "59f111f1",
                 "923f82a4", "ab1c5ed5", "d807aa98", "12835b01", "243185be", "550c7dc3", "72be5d74", "80deb1fe",
                 "9bdc06a7", "c19bf174", "e49b69c1", "efbe4786", "0fc19dc6", "240ca1cc", "2de92c6f", "4a7484aa",
@@ -310,10 +397,17 @@ public class Sha256Producer {
         }
     }
 
-    private Word negateWord(BooleanFunction bf, Word w) {
+    /**
+     * Returns the negation of a word.
+     *
+     * @param bf   The Boolean function.
+     * @param word The word to be negated.
+     * @return A word holding the negation of the word.
+     */
+    private Word negateWord(final BooleanFunction bf, final Word word) {
         Word result = new Word(WORD_LENGTH);
         for (int i = 0; i < WORD_LENGTH; i++) {
-            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "¬" + w.get(i));
+            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "¬" + word.get(i));
             bf.addExpression(bo);
             result.put(i, bo.getName());
         }
@@ -322,6 +416,8 @@ public class Sha256Producer {
 
     /**
      * Produces a Boolean function for the SHA-256 hash function.
+     *
+     * @return A Boolean function representing the SHA-256 hash function.
      */
     public BooleanFunction produce() {
         BooleanFunction result = new BooleanFunction();
@@ -337,11 +433,20 @@ public class Sha256Producer {
         return result;
     }
 
-    private Word rightShift(BooleanFunction bf, Word w, int r) {
-        int length = w.getLength();
+    /**
+     * Returns a word with all variables names shifted to the right with r
+     * positions.
+     *
+     * @param bf   The Boolean function.
+     * @param word The word to be shifted to the right.
+     * @param r    The number of positions to shift.
+     * @return A word with all variable names shifted to the right with r positions.
+     */
+    private Word rightShift(final BooleanFunction bf, final Word word, final int r) {
+        int length = word.getLength();
         Word result = new Word(length);
         for (int i = 0; i < length - r; i++) {
-            result.put(i, w.get(i + r));
+            result.put(i, word.get(i + r));
         }
         for (int i = length - r; i < length; i++) {
             BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "False");
@@ -351,7 +456,14 @@ public class Sha256Producer {
         return result;
     }
 
-    private Word xorWords(BooleanFunction bf, Word... words) {
+    /**
+     * Combines to words using XOR.
+     *
+     * @param bf    The Boolean function.
+     * @param words The words to be XORed together.
+     * @return A word holding the result.
+     */
+    private Word xorWords(final BooleanFunction bf, final Word... words) {
         return atomicOperationOnWords(bf, Operator.Xor, words);
     }
 }
