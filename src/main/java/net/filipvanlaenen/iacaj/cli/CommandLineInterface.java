@@ -1,5 +1,7 @@
 package net.filipvanlaenen.iacaj.cli;
 
+import java.util.regex.Pattern;
+
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 
@@ -50,8 +52,19 @@ public final class CommandLineInterface {
             @Override
             void execute(final String[] args) {
                 String hashFunction = args[1];
+                Sha256Producer producer;
+                if (args.length > 2) {
+                    boolean hasNumberOfRounds = Pattern.matches("\\d+", args[2]);
+                    if (hasNumberOfRounds) {
+                        producer = new Sha256Producer(Integer.parseInt(args[2]));
+                    } else {
+                        producer = new Sha256Producer();
+                    }
+                } else {
+                    producer = new Sha256Producer();
+                }
                 if (hashFunction.equals("SHA-256")) {
-                    BooleanFunction bf = new Sha256Producer().produce();
+                    BooleanFunction bf = producer.produce();
                     System.out.println(bf);
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");

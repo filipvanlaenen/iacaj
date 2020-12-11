@@ -143,7 +143,7 @@ public class Sha256Producer {
     /**
      * The number of rounds for the SHA-256 algorithm.
      */
-    private int numberOfRounds = DEFAULT_NUMBER_OF_ROUNDS;
+    private int numberOfRounds;
     /**
      * Counter for the internal variables added to the Boolean function.
      */
@@ -164,6 +164,22 @@ public class Sha256Producer {
      * Message schedule array for SHA-256.
      */
     private Word[] w;
+
+    /**
+     * The default constructor.
+     */
+    public Sha256Producer() {
+        this(DEFAULT_NUMBER_OF_ROUNDS);
+    }
+
+    /**
+     * Creates a producer for SHA-256 with a specified number of rounds.
+     *
+     * @param numberOfRounds The number of rounds.
+     */
+    public Sha256Producer(final int numberOfRounds) {
+        this.numberOfRounds = numberOfRounds;
+    }
 
     /**
      * Adds the compression result to the hash.

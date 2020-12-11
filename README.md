@@ -23,3 +23,10 @@ have it printed out on the command line, use the following command:
 ```
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256
 ```
+
+For a reduced version of the hash function, add the number of rounds as the
+second argument, e.g. 32:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32
+```
