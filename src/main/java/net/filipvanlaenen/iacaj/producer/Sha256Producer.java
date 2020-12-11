@@ -4,6 +4,7 @@ import java.math.BigInteger;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
+import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
 
 /**
  * Class producing a Boolean function for the SHA-256 hash function.
@@ -14,9 +15,11 @@ import net.filipvanlaenen.iacaj.BooleanOperation;
 public class Sha256Producer {
     public class Word {
         private final String[] variables;
+        private final int length;
 
-        public Word(int wordLength) {
-            variables = new String[wordLength];
+        public Word(int length) {
+            this.length = length;
+            variables = new String[length];
         }
 
         public void put(int i, String name) {
@@ -26,6 +29,18 @@ public class Sha256Producer {
         public String get(int i) {
             return variables[i];
         }
+
+        int getLength() {
+            return length;
+        }
+
+        public Word rightRotate(int r) {
+            Word result = new Word(length);
+            for (int i = 0; i < length; i++) {
+                result.put(i, get((i + r) % length));
+            }
+            return result;
+        }
     }
 
     private static final int WORD_LENGTH = 32;
@@ -34,7 +49,8 @@ public class Sha256Producer {
     private long vCounter = 0;
     private Word a, b, c, d, e, f, g, h;
     private Word h0, h1, h2, h3, h4, h5, h6, h7;
-    private Word[] k = new Word[64];
+    private Word[] k;
+    private Word[] w;
 
     private void addCompressionResultToHash(BooleanFunction bf) {
         h0 = addWords(bf, h0, a);
@@ -93,16 +109,67 @@ public class Sha256Producer {
         return result;
     }
 
+    private Word andWords(BooleanFunction bf, Word... words) {
+        return atomicOperationOnWords(bf, Operator.And, words);
+    }
+
     private void appendWordToResult(BooleanFunction bf, Word w, int offset) {
         for (int i = 1; i <= WORD_LENGTH; i++) {
             bf.addExpression(new BooleanOperation("o" + (WORD_LENGTH * offset + i), w.get(WORD_LENGTH - i)));
         }
     }
 
+    private Word atomicOperationOnWords(BooleanFunction bf, Operator o, Word... words) {
+        Word result = new Word(WORD_LENGTH);
+        for (int i = 1; i < WORD_LENGTH - 1; i++) {
+            String[] operands = new String[words.length];
+            for (int j = 0; j < words.length; j++) {
+                operands[j] = words[j].get(i);
+            }
+            BooleanOperation bo = new BooleanOperation("v" + (++vCounter),
+                    String.join(" " + o.getSymbol() + " ", operands));
+            bf.addExpression(bo);
+            result.put(i, bo.getName());
+        }
+        return result;
+    }
+
     private void composeResult(BooleanFunction bf) {
         Word[] words = new Word[] {h0, h1, h2, h3, h4, h5, h6, h7};
         for (int i = 0; i < words.length; i++) {
             appendWordToResult(bf, words[i], i);
+        }
+    }
+
+    private void compress(BooleanFunction bf, int i) {
+        Word s1 = xorWords(bf, e.rightRotate(6), e.rightRotate(11), e.rightRotate(25));
+        Word ch = xorWords(bf, andWords(bf, e, f), andWords(bf, negateWord(bf, e), g));
+        Word t1 = addWords(bf, addWords(bf, addWords(bf, addWords(bf, h, s1), ch), k[i]), w[i]);
+        Word s0 = xorWords(bf, a.rightRotate(2), a.rightRotate(13), a.rightRotate(22));
+        Word maj = xorWords(bf, andWords(bf, a, b), andWords(bf, a, c), andWords(bf, b, c));
+        Word t2 = addWords(bf, s0, maj);
+        h = g;
+        g = f;
+        f = e;
+        e = addWords(bf, d, t1);
+        d = c;
+        c = b;
+        b = a;
+        a = addWords(bf, t1, t2);
+    }
+
+    private void createW(BooleanFunction bf) {
+        w = new Word[numberOfRounds];
+        for (int i = 0; i < 16 && i < numberOfRounds; i++) {
+            w[i] = new Word(WORD_LENGTH);
+            for (int j = 0; j < WORD_LENGTH; j++) {
+                w[i].put(j, "i" + (((i + 1) * WORD_LENGTH) - j));
+            }
+        }
+        for (int i = 16; i < numberOfRounds; i++) {
+            Word s0 = xorWords(bf, w[i - 15].rightRotate(7), w[i - 15].rightRotate(18), rightShift(bf, w[i - 15], 3));
+            Word s1 = xorWords(bf, w[i - 2].rightRotate(17), w[i - 2].rightRotate(19), rightShift(bf, w[i - 2], 10));
+            w[i] = addWords(bf, addWords(bf, addWords(bf, w[i - 16], s0), w[i - 7]), s1);
         }
     }
 
@@ -138,9 +205,20 @@ public class Sha256Producer {
                 "f40e3585", "106aa070", "19a4c116", "1e376c08", "2748774c", "34b0bcb5", "391c0cb3", "4ed8aa4a",
                 "5b9cca4f", "682e6ff3", "748f82ee", "78a5636f", "84c87814", "8cc70208", "90befffa", "a4506ceb",
                 "bef9a3f7", "c67178f2"};
+        k = new Word[numberOfRounds];
         for (int i = 0; i < numberOfRounds; i++) {
             k[i] = addConstant(bf, values[i]);
         }
+    }
+
+    private Word negateWord(BooleanFunction bf, Word w) {
+        Word result = new Word(WORD_LENGTH);
+        for (int i = 1; i < WORD_LENGTH - 1; i++) {
+            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "¬" + w.get(i));
+            bf.addExpression(bo);
+            result.put(i, bo.getName());
+        }
+        return result;
     }
 
     /**
@@ -150,69 +228,31 @@ public class Sha256Producer {
         BooleanFunction result = new BooleanFunction();
         initializeH(result);
         initializeK(result);
-        createW();
+        createW(result);
         initializeAtoH();
         for (int i = 0; i < numberOfRounds; i++) {
-            compress();
+            compress(result, i);
         }
         addCompressionResultToHash(result);
         composeResult(result);
         return result;
     }
 
-    private void compress() {
-        /**
-         * S1 := (e rightrotate 6) xor (e rightrotate 11) xor (e rightrotate 25)
-         * 
-         * ch := (e and f) xor ((not e) and g)
-         * 
-         * temp1 := h + S1 + ch + k[i] + w[i]
-         *
-         * S0 := (a rightrotate 2) xor (a rightrotate 13) xor (a rightrotate 22)
-         *
-         * maj := (a and b) xor (a and c) xor (b and c)
-         *
-         * temp2 := S0 + maj
-         *
-         * h := g
-         *
-         * g := f
-         *
-         * f := e
-         *
-         * e := d + temp1
-         *
-         * d := c
-         *
-         * c := b
-         *
-         * b := a
-         *
-         * a := temp1 + temp2
-         */
+    private Word rightShift(BooleanFunction bf, Word w, int r) {
+        int length = w.getLength();
+        Word result = new Word(length);
+        for (int i = 0; i < length - r; i++) {
+            result.put(i, w.get(i + r));
+        }
+        for (int i = length - r; i < length; i++) {
+            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "False");
+            bf.addExpression(bo);
+            result.put(i, bo.getName());
+        }
+        return result;
     }
 
-    private void createW() {
-        /**
-         * create a 64-entry message schedule array w[0..63] of 32-bit words (The
-         * initial values in w[0..63] don't matter, so many implementations zero them
-         * here)
-         *
-         * copy chunk into first 16 words w[0..15] of the message schedule array
-         *
-         * Extend the first 16 words into the remaining 48 words w[16..63] of the
-         * message schedule array:
-         * 
-         * for i from 16 to 63
-         * 
-         * s0 := (w[i-15] rightrotate 7) xor (w[i-15] rightrotate 18) xor (w[i-15]
-         * rightshift 3)
-         * 
-         * s1 := (w[i- 2] rightrotate 17) xor (w[i- 2] rightrotate 19) xor (w[i- 2]
-         * rightshift 10)
-         * 
-         * w[i] := w[i-16] + s0 + w[i-7] + s1
-         */
+    private Word xorWords(BooleanFunction bf, Word... words) {
+        return atomicOperationOnWords(bf, Operator.Xor, words);
     }
-
 }

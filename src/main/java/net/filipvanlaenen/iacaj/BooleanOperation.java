@@ -238,7 +238,7 @@ public class BooleanOperation extends BooleanExpression {
          *
          * @return The symbol of the operator.
          */
-        String getSymbol() {
+        public String getSymbol() {
             return symbol;
         }
     }
