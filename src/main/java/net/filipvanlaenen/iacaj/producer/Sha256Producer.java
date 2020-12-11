@@ -41,6 +41,15 @@ public class Sha256Producer {
             }
             return result;
         }
+
+        @Override
+        public String toString() {
+            String result = "";
+            for (int i = 0; i < length; i++) {
+                result = get(i) + " " + result;
+            }
+            return result;
+        }
     }
 
     private static final int WORD_LENGTH = 32;
@@ -121,7 +130,7 @@ public class Sha256Producer {
 
     private Word atomicOperationOnWords(BooleanFunction bf, Operator o, Word... words) {
         Word result = new Word(WORD_LENGTH);
-        for (int i = 1; i < WORD_LENGTH - 1; i++) {
+        for (int i = 0; i < WORD_LENGTH; i++) {
             String[] operands = new String[words.length];
             for (int j = 0; j < words.length; j++) {
                 operands[j] = words[j].get(i);
@@ -213,7 +222,7 @@ public class Sha256Producer {
 
     private Word negateWord(BooleanFunction bf, Word w) {
         Word result = new Word(WORD_LENGTH);
-        for (int i = 1; i < WORD_LENGTH - 1; i++) {
+        for (int i = 0; i < WORD_LENGTH; i++) {
             BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "¬" + w.get(i));
             bf.addExpression(bo);
             result.put(i, bo.getName());
