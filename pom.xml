@@ -36,7 +36,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.computas.orangeparrot.CommandLineInterface</mainClass>
+              <mainClass>net.filipvanlaenen.iacaj.cli.CommandLineInterface</mainClass>
             </manifest>
           </archive>
           <descriptorRefs>

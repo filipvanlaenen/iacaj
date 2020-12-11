@@ -16,7 +16,8 @@ public final class CommandLineInterface {
         if (args.length < 1) {
             printUsage();
         }
-        Command command = Command.valueOf(args[0]);
+        String capitalizedArgument = args[0].substring(0, 1).toUpperCase() + args[0].substring(1);
+        Command command = Command.valueOf(capitalizedArgument);
         if (command == null) {
             printUsage();
         }
@@ -28,7 +29,7 @@ public final class CommandLineInterface {
      */
     private static void printUsage() {
         System.out.println("Usage:");
-        System.out.println("  produce <hash-function> [<no-of-rounds>] <file-name>");
+        System.out.println("  produce <hash-function> [<no-of-rounds>] [<file-name>]");
     }
 
     /**
