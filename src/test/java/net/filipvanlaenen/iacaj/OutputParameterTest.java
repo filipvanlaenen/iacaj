@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests on the <code>OutputParameter</code> class.
+ */
 public class OutputParameterTest {
     /**
      * Verifies that a parameter starting with an i is not recognized as an output

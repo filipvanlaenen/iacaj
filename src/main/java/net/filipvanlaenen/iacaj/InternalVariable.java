@@ -3,6 +3,9 @@ package net.filipvanlaenen.iacaj;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class representing an internal variable.
+ */
 public class InternalVariable extends Variable {
     /**
      * A map with all the instances.
@@ -25,8 +28,12 @@ public class InternalVariable extends Variable {
         return newInstance;
     }
 
-    protected InternalVariable(String name) {
+    /**
+     * Constructor using the internal variable's name as parameter.
+     *
+     * @param name The name of the internal variable.
+     */
+    protected InternalVariable(final String name) {
         super(name);
     }
-
 }

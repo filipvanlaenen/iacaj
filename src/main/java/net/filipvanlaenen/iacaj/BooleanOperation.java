@@ -8,13 +8,34 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+/**
+ * Class representing a Boolean operation.
+ */
 public class BooleanOperation extends BooleanExpression {
+    /**
+     * Class representing the right hand side of a Boolean operation.
+     */
     public abstract static class BooleanRightHandSide {
-        public static class BooleanEquation extends BooleanRightHandSide {
+        /**
+         * Class representing a right hand side of a Boolean operation with an equation
+         * (or negation).
+         */
+        public final static class BooleanEquation extends BooleanRightHandSide {
+            /**
+             * Whether or not the equation is negated.
+             */
             private final boolean negated;
+            /**
+             * The name of the operand.
+             */
             private final String operand;
 
-            public BooleanEquation(String rightHandSide) {
+            /**
+             * Constructor taking the right hand side as the parameter.
+             *
+             * @param rightHandSide The right hand side to be parsed.
+             */
+            public BooleanEquation(final String rightHandSide) {
                 negated = rightHandSide.startsWith("¬");
                 if (negated) {
                     operand = rightHandSide.substring(1);

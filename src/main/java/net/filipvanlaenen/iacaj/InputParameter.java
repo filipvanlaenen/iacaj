@@ -28,6 +28,11 @@ public class InputParameter extends Variable {
         return newInstance;
     }
 
+    /**
+     * Constructor using the input parameter's name as parameter.
+     *
+     * @param name The name of the input parameter.
+     */
     public InputParameter(final String name) {
         super(name);
     }
@@ -38,7 +43,7 @@ public class InputParameter extends Variable {
      * @param variableName The variable name to check.
      * @return True if the variable name starts with an i, false otherwise.
      */
-    public static boolean isInputParameter(String variableName) {
+    public static boolean isInputParameter(final String variableName) {
         return variableName.startsWith("i");
     }
 }
