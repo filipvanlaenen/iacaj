@@ -1,5 +1,9 @@
 package net.filipvanlaenen.iacaj.cli;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
@@ -10,11 +14,17 @@ import net.filipvanlaenen.iacaj.producer.Sha256Producer;
  */
 public final class CommandLineInterface {
     /**
+     * The magic number 3.
+     */
+    private static final int THREE = 3;
+
+    /**
      * The main entry point for the command line interface.
      *
      * @param args The arguments.
+     * @throws IOException Thrown if something related to IO goes wrong.
      */
-    public static void main(final String... args) {
+    public static void main(final String... args) throws IOException {
         if (args.length < 1) {
             printUsage();
         }
@@ -50,22 +60,31 @@ public final class CommandLineInterface {
          */
         Produce {
             @Override
-            void execute(final String[] args) {
+            void execute(final String[] args) throws IOException {
                 String hashFunction = args[1];
                 Sha256Producer producer;
+                String fileName = null;
                 if (args.length > 2) {
                     boolean hasNumberOfRounds = Pattern.matches("\\d+", args[2]);
                     if (hasNumberOfRounds) {
                         producer = new Sha256Producer(Integer.parseInt(args[2]));
+                        if (args.length > THREE) {
+                            fileName = args[THREE];
+                        }
                     } else {
                         producer = new Sha256Producer();
+                        fileName = args[2];
                     }
                 } else {
                     producer = new Sha256Producer();
                 }
                 if (hashFunction.equals("SHA-256")) {
                     BooleanFunction bf = producer.produce();
-                    System.out.println(bf);
+                    if (fileName == null) {
+                        System.out.println(bf);
+                    } else {
+                        Files.writeString(Paths.get(fileName), bf.toString(), StandardCharsets.UTF_8);
+                    }
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");
                 }
@@ -76,7 +95,8 @@ public final class CommandLineInterface {
          * Executes the command, passing the arguments from the command line.
          *
          * @param args The arguments from the command line.
+         * @throws IOException Thrown if something related to IO goes wrong.
          */
-        abstract void execute(String[] args);
+        abstract void execute(String[] args) throws IOException;
     }
 }

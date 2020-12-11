@@ -30,3 +30,11 @@ second argument, e.g. 32:
 ```
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32
 ```
+
+If you specify a file name at the end, the Boolean function will be written to
+that file:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 SHA-256.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32 SHA-256-R32.bf
+```
