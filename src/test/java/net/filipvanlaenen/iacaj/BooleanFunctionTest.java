@@ -109,4 +109,28 @@ public class BooleanFunctionTest {
         String expected = sb.toString();
         assertEquals(expected, booleanFunction.toString());
     }
+
+    /**
+     * Verifies export of a Boolean function to a Java string.
+     */
+    @Test
+    public void shouldExportARichBooleanFunctionToJavaCorrectly() {
+        BooleanFunction booleanFunction = createRichBooleanFunction();
+        StringBuilder sb = new StringBuilder();
+        sb.append("assert i1 == true;\n");
+        sb.append("assert i2 == false;\n");
+        sb.append("assert i4 == i3;\n");
+        sb.append("assert i6 == !i5;\n");
+        sb.append("boolean v1 = i3 & i5 & !i7;\n");
+        sb.append("boolean v2 = i3 | i5 | !i7;\n");
+        sb.append("boolean v3 = i3 ^ i5;\n");
+        sb.append("boolean v4 = !i3 ^ i5;\n");
+        sb.append("boolean v5 = i3 & v2;\n");
+        sb.append("boolean v6 = i3 | v1;\n");
+        sb.append("boolean v7 = i3 ^ v1;\n");
+        sb.append("boolean o1 = i3 ^ v6;\n");
+        sb.append("boolean o2 = i3 ^ v7;");
+        String expected = sb.toString();
+        assertEquals(expected, booleanFunction.toJavaString());
+    }
 }

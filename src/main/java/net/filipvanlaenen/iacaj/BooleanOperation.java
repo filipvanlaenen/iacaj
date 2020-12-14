@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,11 @@ public class BooleanOperation extends BooleanExpression {
             }
 
             @Override
+            public String toJavaString() {
+                return (negated ? "!" : "") + operand;
+            }
+
+            @Override
             public String toString() {
                 return (negated ? "¬" : "") + operand;
             }
@@ -95,6 +101,10 @@ public class BooleanOperation extends BooleanExpression {
 
                 public boolean isInputParameter() {
                     return InputParameter.isInputParameter(name);
+                }
+
+                public String toJavaString() {
+                    return (negated ? "!" : "") + name;
                 }
 
                 @Override
@@ -148,7 +158,16 @@ public class BooleanOperation extends BooleanExpression {
             }
 
             @Override
+            public String toJavaString() {
+                return exportToString(operator.getJavaSymbol(), BooleanOperand::toJavaString);
+            }
+
+            @Override
             public String toString() {
+                return exportToString(operator.getSymbol(), BooleanOperand::toString);
+            }
+
+            private String exportToString(String operatorString, Function<BooleanOperand, String> operandExportMethod) {
                 operands.sort(new Comparator<BooleanOperand>() {
                     @Override
                     public int compare(BooleanOperand arg0, BooleanOperand arg1) {
@@ -165,8 +184,8 @@ public class BooleanOperation extends BooleanExpression {
                         }
                     }
                 });
-                return String.join(" " + operator.getSymbol() + " ",
-                        operands.stream().map(BooleanOperand::toString).collect(Collectors.toList()));
+                return String.join(" " + operatorString + " ",
+                        operands.stream().map(operandExportMethod).collect(Collectors.toList()));
             }
         }
 
@@ -190,6 +209,11 @@ public class BooleanOperation extends BooleanExpression {
             @Override
             protected Operator getOperator() {
                 return null;
+            }
+
+            @Override
+            public String toJavaString() {
+                return value ? "true" : "false";
             }
 
             @Override
@@ -221,6 +245,8 @@ public class BooleanOperation extends BooleanExpression {
         public abstract List<InternalVariable> getInternalVariables();
 
         protected abstract Operator getOperator();
+
+        protected abstract String toJavaString();
     }
 
     /**
@@ -230,28 +256,42 @@ public class BooleanOperation extends BooleanExpression {
         /**
          * The logical AND operator.
          */
-        And("∧"),
+        And("∧", "&"),
         /**
          * The logical OR operator.
          */
-        Or("∨"),
+        Or("∨", "|"),
         /**
          * The logical XOR operator.
          */
-        Xor("⊻");
+        Xor("⊻", "^");
 
         /**
          * The symbol.
          */
         private final String symbol;
+        /**
+         * The symbol for Java.
+         */
+        private final String javaSymbol;
 
         /**
          * Constructor using the symbol as the parameter.
          *
          * @param symbol The symbol for the operator.
          */
-        Operator(final String symbol) {
+        Operator(final String symbol, final String javaSymbol) {
             this.symbol = symbol;
+            this.javaSymbol = javaSymbol;
+        }
+
+        /**
+         * Returns the symbol of the operartor for Java.
+         *
+         * @return The symbol of the operator for Java.
+         */
+        public String getJavaSymbol() {
+            return javaSymbol;
         }
 
         /**
@@ -300,6 +340,11 @@ public class BooleanOperation extends BooleanExpression {
      */
     public Operator getOperator() {
         return rightHandSide.getOperator();
+    }
+
+    @Override
+    public String toJavaString() {
+        return "boolean " + name + " = " + rightHandSide.toJavaString() + ";";
     }
 
     @Override

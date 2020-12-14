@@ -74,12 +74,30 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * A True constraint is exported correctly to a Java string.
+     */
+    @Test
+    public void trueIsExportedToJavaCorrectly() {
+        BooleanConstraint constraint = BooleanConstraint.parse("i1", "True");
+        assertEquals("assert i1 == true;", constraint.toJavaString());
+    }
+
+    /**
      * A False constraint is exported correctly.
      */
     @Test
     public void falseIsExportedCorrectly() {
         BooleanConstraint constraint = BooleanConstraint.parse("i1", "False");
         assertEquals("i1 = False", constraint.toString());
+    }
+
+    /**
+     * A False constraint is exported correctly to a Java string.
+     */
+    @Test
+    public void falseIsExportedToJavaCorrectly() {
+        BooleanConstraint constraint = BooleanConstraint.parse("i1", "False");
+        assertEquals("assert i1 == false;", constraint.toJavaString());
     }
 
     /**
@@ -92,11 +110,29 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * An Equality constraint is exported correctly to a Java string.
+     */
+    @Test
+    public void equalityIsExportedToJavaCorrectly() {
+        BooleanConstraint constraint = BooleanConstraint.parse("i2", "i1");
+        assertEquals("assert i2 == i1;", constraint.toJavaString());
+    }
+
+    /**
      * An Negation constraint is exported correctly.
      */
     @Test
     public void negationIsExportedCorrectly() {
         BooleanConstraint constraint = BooleanConstraint.parse("i2", "¬i1");
         assertEquals("i2 = ¬i1", constraint.toString());
+    }
+
+    /**
+     * An Negation constraint is exported correctly to a Java string.
+     */
+    @Test
+    public void negationIsExportedToJavaCorrectly() {
+        BooleanConstraint constraint = BooleanConstraint.parse("i2", "¬i1");
+        assertEquals("assert i2 == !i1;", constraint.toJavaString());
     }
 }

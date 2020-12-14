@@ -5,6 +5,7 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -58,10 +59,23 @@ public class BooleanFunction {
     }
 
     /**
+     * Exports the Boolean function to a string with Java code.
+     *
+     * @return A string representing the Boolean function in Java code.
+     */
+    public String toJavaString() {
+        return exportToString(BooleanExpression::toJavaString);
+    }
+
+    /**
      * Exports the Boolean function to a string.
      */
     @Override
     public String toString() {
+        return exportToString(BooleanExpression::toString);
+    }
+    
+    private String exportToString(Function<BooleanExpression, String> exportMethod) {
         List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
         sortedExpressions.sort(new Comparator<BooleanExpression>() {
             @Override
@@ -97,7 +111,7 @@ public class BooleanFunction {
                 }
             }
         });
-        List<String> expressionStrings = sortedExpressions.stream().map(BooleanExpression::toString)
+        List<String> expressionStrings = sortedExpressions.stream().map(exportMethod)
                 .collect(Collectors.toList());
         return String.join("\n", expressionStrings);
     }

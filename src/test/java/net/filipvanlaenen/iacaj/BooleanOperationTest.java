@@ -66,12 +66,30 @@ public class BooleanOperationTest {
     }
 
     /**
+     * Verifies that a True expression is exported correctly to a Java string.
+     */
+    @Test
+    public void shouldExportTrueExpressionToJava() {
+        BooleanOperation operation = new BooleanOperation("v1", "True");
+        assertEquals("boolean v1 = true;", operation.toJavaString());
+    }
+
+    /**
      * Verifies that a False expression is exported correctly.
      */
     @Test
     public void shouldExportFalseExpression() {
         BooleanOperation operation = new BooleanOperation("v1", "False");
         assertEquals("v1 = False", operation.toString());
+    }
+
+    /**
+     * Verifies that a False expression is exported correctly to a Java string.
+     */
+    @Test
+    public void shouldExportFalseExpressionToJava() {
+        BooleanOperation operation = new BooleanOperation("v1", "False");
+        assertEquals("boolean v1 = false;", operation.toJavaString());
     }
 
     /**
@@ -82,6 +100,26 @@ public class BooleanOperationTest {
     public void shouldExportSimpleAndExpressionWithTwoInputParameters() {
         BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ i2");
         assertEquals("v1 = i1 ∧ i2", operation.toString());
+    }
+
+    /**
+     * Verifies that a simple AND expression with two input parameters is exported
+     * correctly to a Java string.
+     */
+    @Test
+    public void shouldExportSimpleAndExpressionWithTwoInputParametersToJava() {
+        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ i2");
+        assertEquals("boolean v1 = i1 & i2;", operation.toJavaString());
+    }
+
+    /**
+     * Verifies the export of a simple expression to a Java string is done
+     * correctly.
+     */
+    @Test
+    public void shouldExportAnExpressionWithANegationToJava() {
+        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ ¬i2");
+        assertEquals("boolean v1 = i1 & !i2;", operation.toJavaString());
     }
 
     /**

@@ -82,12 +82,18 @@ public final class CommandLineInterface {
                     BooleanFunction bf = producer.produce();
                     if (fileName == null) {
                         System.out.println(bf);
+                    } else if (fileName.endsWith(".java")) {
+                        writeFile(fileName, bf.toJavaString());
                     } else {
-                        Files.writeString(Paths.get(fileName), bf.toString(), StandardCharsets.UTF_8);
+                        writeFile(fileName, bf.toString());
                     }
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");
                 }
+            }
+
+            private void writeFile(String fileName, String content) throws IOException {
+                Files.writeString(Paths.get(fileName), content, StandardCharsets.UTF_8);
             }
         };
 

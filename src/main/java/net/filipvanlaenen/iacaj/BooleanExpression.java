@@ -1,7 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class representing a Boolean expression. A Boolean expression consists of a
@@ -36,4 +35,5 @@ public abstract class BooleanExpression {
      */
     public abstract List<InputParameter> getInputParameters();
 
+    public abstract String toJavaString();
 }

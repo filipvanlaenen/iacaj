@@ -1,17 +1,20 @@
 package net.filipvanlaenen.iacaj;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class representing a Boolean constraint.
  */
-public class BooleanConstraint extends BooleanExpression {
+public abstract class BooleanConstraint extends BooleanExpression {
     private static class BooleanTrueConstraint extends BooleanConstraint {
         public BooleanTrueConstraint(final String name) {
             super(name);
+        }
+
+        @Override
+        public String toJavaString() {
+            return "assert " + name + " == true;";
         }
 
         @Override
@@ -23,6 +26,11 @@ public class BooleanConstraint extends BooleanExpression {
     private static class BooleanFalseConstraint extends BooleanConstraint {
         public BooleanFalseConstraint(final String name) {
             super(name);
+        }
+
+        @Override
+        public String toJavaString() {
+            return "assert " + name + " == false;";
         }
 
         @Override
@@ -44,6 +52,11 @@ public class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        public String toJavaString() {
+            return "assert " + name + " == " + otherInputParameter + ";";
+        }
+
+        @Override
         public String toString() {
             return name + " = " + otherInputParameter;
         }
@@ -59,6 +72,11 @@ public class BooleanConstraint extends BooleanExpression {
             super(name);
             this.otherInputParameter = otherName;
             inputParameters.add(InputParameter.get(otherName));
+        }
+
+        @Override
+        public String toJavaString() {
+            return "assert " + name + " == !" + otherInputParameter + ";";
         }
 
         @Override
