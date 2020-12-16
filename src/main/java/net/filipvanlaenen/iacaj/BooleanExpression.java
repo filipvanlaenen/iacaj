@@ -7,7 +7,6 @@ import java.util.List;
  * result name, an equation sign, and operands and operators.
  */
 public abstract class BooleanExpression {
-
     /**
      * Parses a line into a Boolean expression.
      *
@@ -35,5 +34,10 @@ public abstract class BooleanExpression {
      */
     public abstract List<InputParameter> getInputParameters();
 
+    /**
+     * Returns a representation of the Boolean expression as Java code.
+     *
+     * @return Java code representing the Boolean expression.
+     */
     public abstract String toJavaString();
 }
