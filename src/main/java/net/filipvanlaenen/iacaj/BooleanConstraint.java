@@ -1,98 +1,168 @@
 package net.filipvanlaenen.iacaj;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Class representing a Boolean constraint.
  */
 public abstract class BooleanConstraint extends BooleanExpression {
+    /**
+     * Class representing a Boolean constraint requiring an input parameter to be
+     * true.
+     */
     private static class BooleanTrueConstraint extends BooleanConstraint {
-        public BooleanTrueConstraint(final String name) {
+        /**
+         * Constructor using the name of the input parameter as its parameter.
+         *
+         * @param name The name of the input parameter.
+         */
+        BooleanTrueConstraint(final String name) {
             super(name);
         }
 
         @Override
+        public List<InputParameter> getInputParameters() {
+            return Collections.emptyList();
+        }
+
+        @Override
         public String toJavaString() {
-            return "assert " + name + " == true;";
+            return "assert " + getName() + " == true;";
         }
 
         @Override
         public String toString() {
-            return name + " = True";
+            return getName() + " = True";
         }
     }
 
+    /**
+     * Class representing a Boolean constraint requiring an input parameter to be
+     * false.
+     */
     private static class BooleanFalseConstraint extends BooleanConstraint {
-        public BooleanFalseConstraint(final String name) {
+        /**
+         * Constructor using the name of the input parameter as its parameter.
+         *
+         * @param name The name of the input parameter.
+         */
+        BooleanFalseConstraint(final String name) {
             super(name);
         }
 
         @Override
+        public List<InputParameter> getInputParameters() {
+            return Collections.emptyList();
+        }
+
+        @Override
         public String toJavaString() {
-            return "assert " + name + " == false;";
+            return "assert " + getName() + " == false;";
         }
 
         @Override
         public String toString() {
-            return name + " = False";
+            return getName() + " = False";
         }
     }
 
+    /**
+     * Class representing a Boolean constraint requiring that two input parameters
+     * are equal to each other.
+     */
     private static class BooleanEqualityConstraint extends BooleanConstraint {
         /**
          * The name of the other input parameter.
          */
         private final String otherInputParameter;
+        /**
+         * A list with the other input parameter.
+         */
+        private final List<InputParameter> inputParameterList;
 
-        public BooleanEqualityConstraint(final String name, final String otherName) {
+        /**
+         * Constructor using the names of the input parameters as its parameters.
+         *
+         * @param name      The name of the first input parameter.
+         * @param otherName The name of the second input parameter.
+         */
+        BooleanEqualityConstraint(final String name, final String otherName) {
             super(name);
             this.otherInputParameter = otherName;
-            inputParameters.add(InputParameter.get(otherName));
+            inputParameterList = new ArrayList<InputParameter>();
+            inputParameterList.add(InputParameter.get(otherName));
+        }
+
+        @Override
+        public List<InputParameter> getInputParameters() {
+            return inputParameterList;
         }
 
         @Override
         public String toJavaString() {
-            return "assert " + name + " == " + otherInputParameter + ";";
+            return "assert " + getName() + " == " + otherInputParameter + ";";
         }
 
         @Override
         public String toString() {
-            return name + " = " + otherInputParameter;
+            return getName() + " = " + otherInputParameter;
         }
     }
 
-    private static class BooleanNegationConstraint extends BooleanConstraint {
+    /**
+     * Class representing a Boolean constraint requiring that two input parameters
+     * are opposite to each other.
+     */
+    private static class BooleanOppositionConstraint extends BooleanConstraint {
         /**
          * The name of the other input parameter.
          */
         private final String otherInputParameter;
+        /**
+         * A list with the other input parameter.
+         */
+        private final List<InputParameter> inputParameterList;
 
-        public BooleanNegationConstraint(final String name, final String otherName) {
+        /**
+         * Constructor using the names of the input variables as its parameters.
+         *
+         * @param name      The name of the first input parameter.
+         * @param otherName The name of the second input parameter.
+         */
+        BooleanOppositionConstraint(final String name, final String otherName) {
             super(name);
             this.otherInputParameter = otherName;
-            inputParameters.add(InputParameter.get(otherName));
+            inputParameterList = new ArrayList<InputParameter>();
+            inputParameterList.add(InputParameter.get(otherName));
+        }
+
+        @Override
+        public List<InputParameter> getInputParameters() {
+            return inputParameterList;
         }
 
         @Override
         public String toJavaString() {
-            return "assert " + name + " == !" + otherInputParameter + ";";
+            return "assert " + getName() + " == !" + otherInputParameter + ";";
         }
 
         @Override
         public String toString() {
-            return name + " = ¬" + otherInputParameter;
+            return getName() + " = ¬" + otherInputParameter;
         }
     }
 
     /**
-     * The input parameters used in the Boolean constraint.
+     * The name of the constrained input parameter, also used as the name of the
+     * constraint.
      */
-    List<InputParameter> inputParameters = new ArrayList<InputParameter>();
+    private final String name;
     /**
-     * The name of the constraint.
+     * The number of the constrained input parameter, also used as the number of the
+     * constraint.
      */
-    final String name;
     private final int number;
 
     /**
@@ -101,6 +171,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
      *
      * @param leftHandSide  The left hand side of the constraint.
      * @param rightHandSide The right hand side of the constraint.
+     * @return A Boolean constraint.
      */
     public static BooleanConstraint parse(final String leftHandSide, final String rightHandSide) {
         if ("True".equals(rightHandSide)) {
@@ -108,26 +179,43 @@ public abstract class BooleanConstraint extends BooleanExpression {
         } else if ("False".equals(rightHandSide)) {
             return new BooleanFalseConstraint(leftHandSide);
         } else if (rightHandSide.startsWith("¬")) {
-            return new BooleanNegationConstraint(leftHandSide, rightHandSide.substring(1));
+            return new BooleanOppositionConstraint(leftHandSide, rightHandSide.substring(1));
         } else {
             return new BooleanEqualityConstraint(leftHandSide, rightHandSide);
         }
     }
 
-    public BooleanConstraint(String name) {
+    /**
+     * Constructor using the name of the constrained input parameter as its
+     * parameter.
+     *
+     * @param name The name of the constrained input parameter.
+     */
+    public BooleanConstraint(final String name) {
         this.name = name;
         this.number = Integer.parseInt(name.substring(1));
     }
 
     @Override
-    public List<InputParameter> getInputParameters() {
-        return inputParameters;
-    }
+    public abstract List<InputParameter> getInputParameters();
 
+    /**
+     * Returns the name of the constraint, which is equal to the name of the
+     * constrained input parameter.
+     *
+     * @return The name of the constraint.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns the number of the constraint, which is equal to the number of the
+     * constrained input parameter. This number is useful for sorting the
+     * constraints numerically.
+     *
+     * @return The number of the constraint.
+     */
     public int getNumber() {
         return number;
     }
