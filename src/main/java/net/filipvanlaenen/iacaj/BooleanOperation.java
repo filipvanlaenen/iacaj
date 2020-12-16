@@ -79,12 +79,32 @@ public class BooleanOperation extends BooleanExpression {
             }
         }
 
+        /**
+         * Class representing a right hand side with a Boolean calculation.
+         */
         public static class BooleanCalculation extends BooleanRightHandSide {
+            /**
+             * Class representing an operand in a Boolean calculation.
+             */
             public class BooleanOperand {
+                /**
+                 * Whether or not the operand is negated in the calculation.
+                 */
                 private final boolean negated;
+                /**
+                 * The name of the operand.
+                 */
                 private final String name;
+                /**
+                 * The number of the operand, extracted from the name.
+                 */
                 private final int number;
 
+                /**
+                 * Constructor taking a string representing the operand as its parameter.
+                 *
+                 * @param operandString The string representing the operand.
+                 */
                 BooleanOperand(String operandString) {
                     negated = operandString.startsWith("¬");
                     if (negated) {
@@ -95,14 +115,38 @@ public class BooleanOperation extends BooleanExpression {
                     number = Integer.parseInt(name.substring(1));
                 }
 
+                /**
+                 * Returns the name of the operand.
+                 *
+                 * @return The name of the operand.
+                 */
                 public String getName() {
                     return name;
                 }
 
+                /**
+                 * Returns the number of the operand, useful for sorting.
+                 *
+                 * @return The number of the operand.
+                 */
+                public int getNumber() {
+                    return number;
+                }
+
+                /**
+                 * Returns whether the operand is an input parameter or not.
+                 *
+                 * @return True if the operand is an input parameter, false otherwise.
+                 */
                 public boolean isInputParameter() {
                     return InputParameter.isInputParameter(name);
                 }
 
+                /**
+                 * Returns a representation of the operand as a Java string.
+                 *
+                 * @return The operand as a Java string.
+                 */
                 public String toJavaString() {
                     return (negated ? "!" : "") + name;
                 }
@@ -111,16 +155,19 @@ public class BooleanOperation extends BooleanExpression {
                 public String toString() {
                     return (negated ? "¬" : "") + name;
                 }
-
-                public int getNumber() {
-                    return number;
-                }
             }
 
+            /**
+             * The operator for the calculation.
+             */
             private final Operator operator;
+            /**
+             * A list with the operands. Note that the same operand can appear more than
+             * once in a calculation, therefore this is not a Set.
+             */
             private List<BooleanOperand> operands = new ArrayList<BooleanOperand>();
 
-            public BooleanCalculation(Operator operator, String rightHandSide) {
+            public BooleanCalculation(final Operator operator, final String rightHandSide) {
                 this.operator = operator;
                 String[] operandStrings = Arrays.stream(rightHandSide.split(operator.getSymbol())).map(String::trim)
                         .toArray(String[]::new);
@@ -128,6 +175,28 @@ public class BooleanOperation extends BooleanExpression {
                     operands.add(new BooleanOperand(operandString));
 
                 }
+            }
+
+            private String exportToString(final String operatorString,
+                    final Function<BooleanOperand, String> operandExportMethod) {
+                operands.sort(new Comparator<BooleanOperand>() {
+                    @Override
+                    public int compare(BooleanOperand arg0, BooleanOperand arg1) {
+                        if (arg0.isInputParameter()) {
+                            if (arg1.isInputParameter()) {
+                                return arg0.getNumber() - arg1.getNumber();
+                            } else {
+                                return -1;
+                            }
+                        } else if (arg1.isInputParameter()) {
+                            return 1;
+                        } else {
+                            return arg0.getNumber() - arg1.getNumber();
+                        }
+                    }
+                });
+                return String.join(" " + operatorString + " ",
+                        operands.stream().map(operandExportMethod).collect(Collectors.toList()));
             }
 
             @Override
@@ -166,33 +235,12 @@ public class BooleanOperation extends BooleanExpression {
             public String toString() {
                 return exportToString(operator.getSymbol(), BooleanOperand::toString);
             }
-
-            private String exportToString(String operatorString, Function<BooleanOperand, String> operandExportMethod) {
-                operands.sort(new Comparator<BooleanOperand>() {
-                    @Override
-                    public int compare(BooleanOperand arg0, BooleanOperand arg1) {
-                        if (arg0.isInputParameter()) {
-                            if (arg1.isInputParameter()) {
-                                return arg0.getNumber() - arg1.getNumber();
-                            } else {
-                                return -1;
-                            }
-                        } else if (arg1.isInputParameter()) {
-                            return 1;
-                        } else {
-                            return arg0.getNumber() - arg1.getNumber();
-                        }
-                    }
-                });
-                return String.join(" " + operatorString + " ",
-                        operands.stream().map(operandExportMethod).collect(Collectors.toList()));
-            }
         }
 
         public static class BooleanConstant extends BooleanRightHandSide {
             private final boolean value;
 
-            public BooleanConstant(boolean value) {
+            public BooleanConstant(final boolean value) {
                 this.value = value;
             }
 
@@ -225,7 +273,7 @@ public class BooleanOperation extends BooleanExpression {
         private static final BooleanRightHandSide TRUE = new BooleanConstant(true);
         private static final BooleanRightHandSide FALSE = new BooleanConstant(false);
 
-        public static BooleanRightHandSide parse(String rightHandSide) {
+        public static BooleanRightHandSide parse(final String rightHandSide) {
             if (rightHandSide.equals("True")) {
                 return TRUE;
             } else if (rightHandSide.equals("False")) {
