@@ -59,6 +59,17 @@ public final class CommandLineInterface {
          * of rounds, and export it to a file.
          */
         Produce {
+            /**
+             * Utility method to write a string to a file.
+             *
+             * @param fileName The name for the file.
+             * @param content  The string to be written to the file.
+             * @throws IOException Thrown if an exception occurs related to IO.
+             */
+            private void writeFile(final String fileName, final String content) throws IOException {
+                Files.writeString(Paths.get(fileName), content, StandardCharsets.UTF_8);
+            }
+
             @Override
             void execute(final String[] args) throws IOException {
                 String hashFunction = args[1];
@@ -90,10 +101,6 @@ public final class CommandLineInterface {
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");
                 }
-            }
-
-            private void writeFile(String fileName, String content) throws IOException {
-                Files.writeString(Paths.get(fileName), content, StandardCharsets.UTF_8);
             }
         };
 
