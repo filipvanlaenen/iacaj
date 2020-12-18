@@ -3,13 +3,13 @@ package net.filipvanlaenen.iacaj;
 /**
  * Class representing an output parameter.
  */
-public class OutputParameter extends Variable {
+public final class OutputParameter extends Variable {
     /**
      * Constructor using the output parameter's name as parameter.
      *
      * @param name The name of the output parameter.
      */
-    protected OutputParameter(final String name) {
+    private OutputParameter(final String name) {
         super(name);
     }
 

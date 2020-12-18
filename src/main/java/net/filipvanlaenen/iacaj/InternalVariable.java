@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Class representing an internal variable.
  */
-public class InternalVariable extends Variable {
+public final class InternalVariable extends Variable {
     /**
      * A map with all the instances.
      */
@@ -33,7 +33,7 @@ public class InternalVariable extends Variable {
      *
      * @param name The name of the internal variable.
      */
-    protected InternalVariable(final String name) {
+    private InternalVariable(final String name) {
         super(name);
     }
 }

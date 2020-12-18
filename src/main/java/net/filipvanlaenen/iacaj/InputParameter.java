@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Class representing an input parameter.
  */
-public class InputParameter extends Variable {
+public final class InputParameter extends Variable {
     /**
      * A map with all the instances.
      */
@@ -33,7 +33,7 @@ public class InputParameter extends Variable {
      *
      * @param name The name of the input parameter.
      */
-    public InputParameter(final String name) {
+    private InputParameter(final String name) {
         super(name);
     }
 
