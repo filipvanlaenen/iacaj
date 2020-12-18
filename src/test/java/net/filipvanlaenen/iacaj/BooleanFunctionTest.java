@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -132,5 +133,77 @@ public class BooleanFunctionTest {
         sb.append("boolean o2 = i3 ^ v7;");
         String expected = sb.toString();
         assertEquals(expected, booleanFunction.toJavaString());
+    }
+
+    /**
+     * Verifies that input parameter 1 is exported before input paramater 2.
+     */
+    @Test
+    public void shouldSortInputParamatersCorrectly() {
+        BooleanFunction.BooleanExpressionComparator comparator = new BooleanFunction.BooleanExpressionComparator();
+        BooleanExpression expression0 = BooleanConstraint.parse("i1 = True");
+        BooleanExpression expression1 = BooleanConstraint.parse("i2 = True");
+        assertTrue(comparator.compare(expression0, expression1) < 0);
+        assertTrue(comparator.compare(expression1, expression0) > 0);
+    }
+
+    /**
+     * Verifies that internal variable 1 is exported before internal variable 2.
+     */
+    @Test
+    public void shouldSortInternalVariablesCorrectly() {
+        BooleanFunction.BooleanExpressionComparator comparator = new BooleanFunction.BooleanExpressionComparator();
+        BooleanExpression expression0 = BooleanConstraint.parse("v1 = True");
+        BooleanExpression expression1 = BooleanConstraint.parse("v2 = True");
+        assertTrue(comparator.compare(expression0, expression1) < 0);
+        assertTrue(comparator.compare(expression1, expression0) > 0);
+    }
+
+    /**
+     * Verifies that output parameter 1 is exported before output paramater 2.
+     */
+    @Test
+    public void shouldSortOutputParamatersCorrectly() {
+        BooleanFunction.BooleanExpressionComparator comparator = new BooleanFunction.BooleanExpressionComparator();
+        BooleanExpression expression0 = BooleanConstraint.parse("o1 = True");
+        BooleanExpression expression1 = BooleanConstraint.parse("o2 = True");
+        assertTrue(comparator.compare(expression0, expression1) < 0);
+        assertTrue(comparator.compare(expression1, expression0) > 0);
+    }
+
+    /**
+     * Verifies that input parameter 2 is exported before internal variable 1.
+     */
+    @Test
+    public void shouldSortInputParamatersBeforeInternalVariables() {
+        BooleanFunction.BooleanExpressionComparator comparator = new BooleanFunction.BooleanExpressionComparator();
+        BooleanExpression expression0 = BooleanConstraint.parse("i2 = True");
+        BooleanExpression expression1 = BooleanConstraint.parse("v1 = True");
+        assertTrue(comparator.compare(expression0, expression1) < 0);
+        assertTrue(comparator.compare(expression1, expression0) > 0);
+    }
+
+    /**
+     * Verifies that input parameter 2 is exported before output parameter 1.
+     */
+    @Test
+    public void shouldSortInputParamatersBeforeOutputParameters() {
+        BooleanFunction.BooleanExpressionComparator comparator = new BooleanFunction.BooleanExpressionComparator();
+        BooleanExpression expression0 = BooleanConstraint.parse("i2 = True");
+        BooleanExpression expression1 = BooleanConstraint.parse("o1 = True");
+        assertTrue(comparator.compare(expression0, expression1) < 0);
+        assertTrue(comparator.compare(expression1, expression0) > 0);
+    }
+
+    /**
+     * Verifies that internal variable 2 is exported before output parameter 1.
+     */
+    @Test
+    public void shouldSortInternalVariablesBeforeOutputParameters() {
+        BooleanFunction.BooleanExpressionComparator comparator = new BooleanFunction.BooleanExpressionComparator();
+        BooleanExpression expression0 = BooleanConstraint.parse("v2 = True");
+        BooleanExpression expression1 = BooleanConstraint.parse("o1 = True");
+        assertTrue(comparator.compare(expression0, expression1) < 0);
+        assertTrue(comparator.compare(expression1, expression0) > 0);
     }
 }

@@ -13,6 +13,64 @@ import java.util.stream.Collectors;
  */
 public class BooleanFunction {
     /**
+     * Comparator used to sort the Boolean expressions when exporting the Boolean
+     * function. Input parameters should come first, followed by internal variables,
+     * and output parameters at the end. Each group should internally be sorted
+     * ascending according to the variable's number.
+     */
+    static final class BooleanExpressionComparator implements Comparator<BooleanExpression> {
+        @Override
+        public int compare(final BooleanExpression expression0, final BooleanExpression expression1) {
+            if (expression0 instanceof BooleanConstraint) {
+                if (expression1 instanceof BooleanConstraint) {
+                    return compare((BooleanConstraint) expression0, (BooleanConstraint) expression1);
+                } else {
+                    return -1;
+                }
+            } else if (expression1 instanceof BooleanConstraint) {
+                return 1;
+            } else {
+                return compare((BooleanOperation) expression0, (BooleanOperation) expression1);
+            }
+        }
+
+        /**
+         * Compares two Boolean constraints for sorting. The comparison is done based on
+         * the numbers of the constraints.
+         *
+         * @param constraint0 The first Boolean constraint.
+         * @param constraint1 The second Boolean constraint.
+         * @return The result of the comparison.
+         */
+        private int compare(final BooleanConstraint constraint0, final BooleanConstraint constraint1) {
+            return constraint0.getNumber() - constraint1.getNumber();
+        }
+
+        /**
+         * Compares two Boolean operations for sorting. Output parameters are always
+         * larger than internal variables, otherwise the comparison is done based on the
+         * numbers.
+         *
+         * @param operation0 The first Boolean operation.
+         * @param operation1 The second Boolean operation.
+         * @return The result of the comparison.
+         */
+        public int compare(final BooleanOperation operation0, final BooleanOperation operation1) {
+            if (operation0.isOutputParameter()) {
+                if (operation1.isOutputParameter()) {
+                    return operation0.getNumber() - operation1.getNumber();
+                } else {
+                    return 1;
+                }
+            } else if (operation1.isOutputParameter()) {
+                return -1;
+            } else {
+                return operation0.getNumber() - operation1.getNumber();
+            }
+        }
+    }
+
+    /**
      * The Boolean expressions of the Boolean function.
      */
     private Set<BooleanExpression> expressions = new HashSet<BooleanExpression>();
@@ -58,57 +116,7 @@ public class BooleanFunction {
      */
     private String exportToString(final Function<BooleanExpression, String> exportMethod) {
         List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
-        sortedExpressions.sort(new Comparator<BooleanExpression>() {
-            @Override
-            public int compare(final BooleanExpression expression0, final BooleanExpression expression1) {
-                if (expression0 instanceof BooleanConstraint) {
-                    if (expression1 instanceof BooleanConstraint) {
-                        return compare((BooleanConstraint) expression0, (BooleanConstraint) expression1);
-                    } else {
-                        return -1;
-                    }
-                } else if (expression1 instanceof BooleanConstraint) {
-                    return 1;
-                } else {
-                    return compare((BooleanOperation) expression0, (BooleanOperation) expression1);
-                }
-            }
-
-            /**
-             * Compares two Boolean constraints for sorting. The comparison is done based on
-             * the numbers of the constraints.
-             *
-             * @param constraint0 The first Boolean constraint.
-             * @param constraint1 The second Boolean constraint.
-             * @return The result of the comparison.
-             */
-            private int compare(final BooleanConstraint constraint0, final BooleanConstraint constraint1) {
-                return constraint0.getNumber() - constraint1.getNumber();
-            }
-
-            /**
-             * Compares two Boolean operations for sorting. Output parameters are always
-             * larger than internal variables, otherwise the comparison is done based on the
-             * numbers.
-             *
-             * @param operation0 The first Boolean operation.
-             * @param operation1 The second Boolean operation.
-             * @return The result of the comparison.
-             */
-            public int compare(final BooleanOperation operation0, final BooleanOperation operation1) {
-                if (operation0.isOutputParameter()) {
-                    if (operation1.isOutputParameter()) {
-                        return operation0.getNumber() - operation1.getNumber();
-                    } else {
-                        return 1;
-                    }
-                } else if (operation1.isOutputParameter()) {
-                    return -1;
-                } else {
-                    return operation0.getNumber() - operation1.getNumber();
-                }
-            }
-        });
+        sortedExpressions.sort(new BooleanExpressionComparator());
         List<String> expressionStrings = sortedExpressions.stream().map(exportMethod).collect(Collectors.toList());
         return String.join("\n", expressionStrings);
     }
