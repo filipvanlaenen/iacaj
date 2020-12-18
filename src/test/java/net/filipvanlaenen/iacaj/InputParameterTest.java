@@ -1,5 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,5 +35,25 @@ public class InputParameterTest {
     @Test
     public void isInputParameterReturnsFalseWhenStartingWithO() {
         assertFalse(InputParameter.isInputParameter("o1"));
+    }
+
+    /**
+     * Verifies that an input parameter can be retrieved. The name used has a high
+     * number to increase the chance that it hasn't een used before.
+     */
+    @Test
+    public void getShouldReturnAnInputParameterWithTheCorrectName() {
+        assertEquals("i100001", InputParameter.get("i100001").getName());
+    }
+
+    /**
+     * Verifies that the same input parameter is retrieved when using the same name.
+     * The name used has a high number to increase the chance that it hasn't een
+     * used before.
+     */
+    @Test
+    public void getShouldReturnTheSameInputParameterForTheSameName() {
+        InputParameter expected = InputParameter.get("i100002");
+        assertEquals(expected, InputParameter.get("i100002"));
     }
 }
