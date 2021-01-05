@@ -130,6 +130,9 @@ public class BooleanFunction {
         return inputParameters;
     }
 
+    /**
+     * Resolves a Boolean function.
+     */
     public void resolve() {
     }
 

@@ -81,7 +81,7 @@ public final class CommandLineInterface {
                 }
                 if (hashFunction.equals("SHA-256")) {
                     BooleanFunction bf = producer.produce();
-                    outputBooleanFunction(fileName, bf);
+                    outputBooleanFunction(bf, fileName);
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");
                 }
@@ -93,7 +93,7 @@ public final class CommandLineInterface {
          */
         Resolve {
             @Override
-            void execute(String[] args) throws IOException {
+            void execute(final String[] args) throws IOException {
                 String inputFileName = args[1];
                 String outputFileName = null;
                 if (args.length > 2) {
@@ -101,7 +101,7 @@ public final class CommandLineInterface {
                 }
                 BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
                 bf.resolve();
-                outputBooleanFunction(outputFileName, bf);
+                outputBooleanFunction(bf, outputFileName);
             }
         };
 
@@ -113,7 +113,17 @@ public final class CommandLineInterface {
          */
         abstract void execute(String[] args) throws IOException;
 
-        private static void outputBooleanFunction(String fileName, BooleanFunction bf) throws IOException {
+        /**
+         * Outputs a Boolean function. If the file name is <code>null</code>, then the
+         * Boolean function is written to <code>stdout</code>. Otherwise, the Boolean
+         * function is written to a file, with the format depending on the extension of
+         * the file name.
+         * 
+         * @param bf       The Boolean function.
+         * @param fileName The name of the file, can be <code>null</code>.
+         * @throws IOException Thrown if an exception occurs related to IO.
+         */
+        private static void outputBooleanFunction(final BooleanFunction bf, final String fileName) throws IOException {
             if (fileName == null) {
                 System.out.println(bf);
             } else if (fileName.endsWith(".java")) {
@@ -123,6 +133,13 @@ public final class CommandLineInterface {
             }
         }
 
+        /**
+         * Utility method to read a file into an array of strings.
+         *
+         * @param fileName The name of the file to read from.
+         * @return The content of the file, as an array of strings.
+         * @throws IOException Thrown if an exception occurs related to IO.
+         */
         private static String[] readFile(final String fileName) throws IOException {
             return Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8).toArray(new String[] {});
         }
