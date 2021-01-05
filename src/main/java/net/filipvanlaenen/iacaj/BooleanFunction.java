@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -115,10 +116,14 @@ public class BooleanFunction {
      * @return A string representation of the Boolean function.
      */
     private String exportToString(final Function<BooleanExpression, String> exportMethod) {
+        List<String> expressionStrings = getSortedExpressions().stream().map(exportMethod).collect(Collectors.toList());
+        return String.join("\n", expressionStrings);
+    }
+
+    private List<BooleanExpression> getSortedExpressions() {
         List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
         sortedExpressions.sort(new BooleanExpressionComparator());
-        List<String> expressionStrings = sortedExpressions.stream().map(exportMethod).collect(Collectors.toList());
-        return String.join("\n", expressionStrings);
+        return sortedExpressions;
     }
 
     /**
@@ -134,6 +139,29 @@ public class BooleanFunction {
      * Resolves a Boolean function.
      */
     public void resolve() {
+        boolean changeDetected = true;
+        while (changeDetected) {
+            changeDetected = false;
+            Set<String> referencedInternalVariables = new HashSet<String>();
+            for (BooleanExpression expression : getSortedExpressions()) {
+                System.out.println("Checking: " + expression.getName());
+                changeDetected |= expression.resolve(this);
+                for (InternalVariable iv : expression.getInternalVariables()) {
+                    referencedInternalVariables.add(iv.getName());
+                }
+            }
+            int before = expressions.size();
+            expressions.removeIf(new Predicate<BooleanExpression>() {
+
+                @Override
+                public boolean test(BooleanExpression arg0) {
+                    return InternalVariable.isInternalVariable(arg0.getName())
+                            && !referencedInternalVariables.contains(arg0.getName());
+                }
+            });
+            changeDetected |= before != expressions.size();
+            System.out.println("Change detected: " + changeDetected);
+        }
     }
 
     /**
@@ -151,5 +179,15 @@ public class BooleanFunction {
     @Override
     public String toString() {
         return exportToString(BooleanExpression::toString);
+    }
+
+    public BooleanExpression get(String name) {
+        // TODO: Should maybe rather be fetched from a hash map?
+        for (BooleanExpression expression : expressions) {
+            if (expression.getName().equals(name)) {
+                return expression;
+            }
+        }
+        return null;
     }
 }

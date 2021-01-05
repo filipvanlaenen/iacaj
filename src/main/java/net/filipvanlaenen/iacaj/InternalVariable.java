@@ -36,4 +36,14 @@ public final class InternalVariable extends Variable {
     private InternalVariable(final String name) {
         super(name);
     }
+
+    /**
+     * Returns whether a variable name matches the pattern for an internal variable.
+     *
+     * @param variableName The variable name to check.
+     * @return True if the variable name starts with an v, false otherwise.
+     */
+    public static boolean isInternalVariable(final String variableName) {
+        return variableName.startsWith("v");
+    }
 }

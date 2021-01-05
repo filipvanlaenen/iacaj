@@ -69,6 +69,16 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             @Override
+            protected boolean isFalse() {
+                return false;
+            }
+
+            @Override
+            protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                return this;
+            }
+
+            @Override
             public String toJavaString() {
                 return (negated ? "!" : "") + operand;
             }
@@ -140,6 +150,10 @@ public final class BooleanOperation extends BooleanExpression {
                  */
                 public boolean isInputParameter() {
                     return InputParameter.isInputParameter(name);
+                }
+
+                public boolean isNegated() {
+                    return negated;
                 }
 
                 /**
@@ -240,6 +254,31 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             @Override
+            protected boolean isFalse() {
+                return false;
+            }
+
+            @Override
+            protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                List<BooleanOperand> toBeRemoved = new ArrayList<BooleanOperand>();
+                for (BooleanOperand operand : operands) {
+                    if (operator.equals(Operator.Xor) && !operand.isNegated()) {
+                        BooleanExpression be = booleanFunction.get(operand.getName());
+                        if (be != null && be.isFalse()) {
+                            toBeRemoved.add(operand);
+                        }
+                    }
+                }
+                operands.removeAll(toBeRemoved);
+                if (operands.isEmpty()) {
+                    if (operator.equals(Operator.Xor)) {
+                        return new BooleanConstant(false);
+                    }
+                }
+                return this;
+            }
+
+            @Override
             public String toJavaString() {
                 return exportToString(operator.getJavaSymbol(), BooleanOperand::toJavaString);
             }
@@ -282,6 +321,16 @@ public final class BooleanOperation extends BooleanExpression {
             @Override
             protected Operator getOperator() {
                 return null;
+            }
+
+            @Override
+            protected boolean isFalse() {
+                return !value;
+            }
+
+            @Override
+            protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                return this;
             }
 
             @Override
@@ -345,6 +394,10 @@ public final class BooleanOperation extends BooleanExpression {
          * @return The operator used in the right hand side.
          */
         protected abstract Operator getOperator();
+
+        protected abstract boolean isFalse();
+
+        protected abstract BooleanRightHandSide resolve(final BooleanFunction booleanFunction);
 
         /**
          * Exports the right hand side to a Java code string.
@@ -441,6 +494,11 @@ public final class BooleanOperation extends BooleanExpression {
         return rightHandSide.getInputParameters();
     }
 
+    @Override
+    public List<InternalVariable> getInternalVariables() {
+        return rightHandSide.getInternalVariables();
+    }
+
     /**
      * Returns the name of the operation.
      *
@@ -468,6 +526,11 @@ public final class BooleanOperation extends BooleanExpression {
         return rightHandSide.getOperator();
     }
 
+    @Override
+    protected boolean isFalse() {
+        return rightHandSide.isFalse();
+    }
+
     /**
      * Returns whether the Boolean operation calculates an output parameter or not.
      *
@@ -475,6 +538,14 @@ public final class BooleanOperation extends BooleanExpression {
      */
     public boolean isOutputParameter() {
         return OutputParameter.isOutputParameter(name);
+    }
+
+    @Override
+    protected boolean resolve(final BooleanFunction booleanFunction) {
+        String before = rightHandSide.toString();
+        rightHandSide = rightHandSide.resolve(booleanFunction);
+        String after = rightHandSide.toString();
+        return !before.equals(after);
     }
 
     @Override

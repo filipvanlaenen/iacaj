@@ -28,6 +28,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        protected boolean isFalse() {
+            return false;
+        }
+
+        @Override
         public String toJavaString() {
             return "assert " + getName() + " == true;";
         }
@@ -55,6 +60,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         @Override
         public List<InputParameter> getInputParameters() {
             return Collections.emptyList();
+        }
+
+        @Override
+        protected boolean isFalse() {
+            return true;
         }
 
         @Override
@@ -101,6 +111,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        protected boolean isFalse() {
+            return false;
+        }
+
+        @Override
         public String toJavaString() {
             return "assert " + getName() + " == " + otherInputParameter + ";";
         }
@@ -141,6 +156,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         @Override
         public List<InputParameter> getInputParameters() {
             return inputParameterList;
+        }
+
+        @Override
+        protected boolean isFalse() {
+            return false;
         }
 
         @Override
@@ -199,6 +219,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
     @Override
     public abstract List<InputParameter> getInputParameters();
 
+    @Override
+    public List<InternalVariable> getInternalVariables() {
+        return Collections.emptyList();
+    }
+
     /**
      * Returns the name of the constraint, which is equal to the name of the
      * constrained input parameter.
@@ -218,5 +243,10 @@ public abstract class BooleanConstraint extends BooleanExpression {
      */
     public int getNumber() {
         return number;
+    }
+
+    @Override
+    protected boolean resolve(final BooleanFunction booleanFunction) {
+        return false;
     }
 }

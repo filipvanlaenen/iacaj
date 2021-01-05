@@ -206,4 +206,26 @@ public class BooleanFunctionTest {
         assertTrue(comparator.compare(expression0, expression1) < 0);
         assertTrue(comparator.compare(expression1, expression0) > 0);
     }
+
+    /**
+     * Verifies that a binary xor expression with false is resolved to equality.
+     */
+    @Test
+    public void shouldResolveBinaryXorWithFalseToEquality() {
+        String[] content = new String[] {"v1 = False", "o1 = i1 ⊻ v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = i1", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that a binary xor expression with two falses is resolved to false.
+     */
+    @Test
+    public void shouldResolveBinaryXorWithTwoFalsesToFalse() {
+        String[] content = new String[] {"v1 = False", "v2 = False", "o1 = v1 ⊻ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = False", booleanFunction.toString());
+    }
 }

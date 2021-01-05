@@ -34,6 +34,14 @@ public abstract class BooleanExpression {
      */
     public abstract List<InputParameter> getInputParameters();
 
+    protected abstract List<InternalVariable> getInternalVariables();
+
+    protected abstract String getName();
+
+    protected abstract boolean isFalse();
+
+    protected abstract boolean resolve(final BooleanFunction booleanFunction);
+
     /**
      * Returns a representation of the Boolean expression as Java code.
      *
