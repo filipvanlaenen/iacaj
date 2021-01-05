@@ -42,6 +42,7 @@ public final class CommandLineInterface {
     private static void printUsage() {
         System.out.println("Usage:");
         System.out.println("  produce <hash-function> [<no-of-rounds>] [<file-name>]");
+        System.out.println("  resolve <file-name> [<file-name>]");
     }
 
     /**
@@ -59,17 +60,6 @@ public final class CommandLineInterface {
          * of rounds, and export it to a file.
          */
         Produce {
-            /**
-             * Utility method to write a string to a file.
-             *
-             * @param fileName The name for the file.
-             * @param content  The string to be written to the file.
-             * @throws IOException Thrown if an exception occurs related to IO.
-             */
-            private void writeFile(final String fileName, final String content) throws IOException {
-                Files.writeString(Paths.get(fileName), content, StandardCharsets.UTF_8);
-            }
-
             @Override
             void execute(final String[] args) throws IOException {
                 String hashFunction = args[1];
@@ -91,16 +81,27 @@ public final class CommandLineInterface {
                 }
                 if (hashFunction.equals("SHA-256")) {
                     BooleanFunction bf = producer.produce();
-                    if (fileName == null) {
-                        System.out.println(bf);
-                    } else if (fileName.endsWith(".java")) {
-                        writeFile(fileName, bf.toJavaString());
-                    } else {
-                        writeFile(fileName, bf.toString());
-                    }
+                    outputBooleanFunction(fileName, bf);
                 } else {
                     System.out.println("Unknown hash function " + hashFunction + ".");
                 }
+            }
+        },
+        /**
+         * Command to read in a Boolean function from a file, resolve it, and export it
+         * to a file.
+         */
+        Resolve {
+            @Override
+            void execute(String[] args) throws IOException {
+                String inputFileName = args[1];
+                String outputFileName = null;
+                if (args.length > 2) {
+                    outputFileName = args[2];
+                }
+                BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
+                bf.resolve();
+                outputBooleanFunction(outputFileName, bf);
             }
         };
 
@@ -111,5 +112,31 @@ public final class CommandLineInterface {
          * @throws IOException Thrown if something related to IO goes wrong.
          */
         abstract void execute(String[] args) throws IOException;
+
+        private static void outputBooleanFunction(String fileName, BooleanFunction bf) throws IOException {
+            if (fileName == null) {
+                System.out.println(bf);
+            } else if (fileName.endsWith(".java")) {
+                writeFile(fileName, bf.toJavaString());
+            } else {
+                writeFile(fileName, bf.toString());
+            }
+        }
+
+        private static String[] readFile(final String fileName) throws IOException {
+            return Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8).toArray(new String[] {});
+        }
+
+        /**
+         * Utility method to write a string to a file.
+         *
+         * @param fileName The name for the file.
+         * @param content  The string to be written to the file.
+         * @throws IOException Thrown if an exception occurs related to IO.
+         */
+        private static void writeFile(final String fileName, final String content) throws IOException {
+            Files.writeString(Paths.get(fileName), content, StandardCharsets.UTF_8);
+        }
+
     }
 }

@@ -130,6 +130,9 @@ public class BooleanFunction {
         return inputParameters;
     }
 
+    public void resolve() {
+    }
+
     /**
      * Exports the Boolean function to a string with Java code.
      *
