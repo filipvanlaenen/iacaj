@@ -240,7 +240,6 @@ public final class BooleanOperation extends BooleanExpression {
             @Override
             public List<InternalVariable> getInternalVariables() {
                 return operands.stream().filter(new Predicate<BooleanOperand>() {
-
                     @Override
                     public boolean test(final BooleanOperand operand) {
                         return !InputParameter.isInputParameter(operand.getName());

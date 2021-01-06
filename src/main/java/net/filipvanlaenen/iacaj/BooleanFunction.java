@@ -2,8 +2,10 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -76,6 +78,10 @@ public class BooleanFunction {
      */
     private Set<BooleanExpression> expressions = new HashSet<BooleanExpression>();
     /**
+     * A map with the Boolean expressions of the Boolean function.
+     */
+    private Map<String, BooleanExpression> expressionMap = new HashMap<String, BooleanExpression>();
+    /**
      * The input parameters of the Boolean function.
      */
     private Set<InputParameter> inputParameters = new HashSet<InputParameter>();
@@ -105,6 +111,7 @@ public class BooleanFunction {
      */
     public void addExpression(final BooleanExpression booleanExpression) {
         expressions.add(booleanExpression);
+        expressionMap.put(booleanExpression.getName(), booleanExpression);
         inputParameters.addAll(booleanExpression.getInputParameters());
     }
 
@@ -139,29 +146,30 @@ public class BooleanFunction {
      * Resolves a Boolean function.
      */
     public void resolve() {
-        boolean changeDetected = true;
-        while (changeDetected) {
-            changeDetected = false;
-            Set<String> referencedInternalVariables = new HashSet<String>();
-            for (BooleanExpression expression : getSortedExpressions()) {
-                System.out.println("Checking: " + expression.getName());
-                changeDetected |= expression.resolve(this);
-                for (InternalVariable iv : expression.getInternalVariables()) {
-                    referencedInternalVariables.add(iv.getName());
-                }
+        Set<String> referencedInternalVariables = new HashSet<String>();
+        for (BooleanExpression expression : getSortedExpressions()) {
+            expression.resolve(this);
+            for (InternalVariable iv : expression.getInternalVariables()) {
+                referencedInternalVariables.add(iv.getName());
             }
-            int before = expressions.size();
+        }
+        int before;
+        do {
+            before = expressions.size();
             expressions.removeIf(new Predicate<BooleanExpression>() {
-
                 @Override
                 public boolean test(BooleanExpression arg0) {
                     return InternalVariable.isInternalVariable(arg0.getName())
                             && !referencedInternalVariables.contains(arg0.getName());
                 }
             });
-            changeDetected |= before != expressions.size();
-            System.out.println("Change detected: " + changeDetected);
-        }
+            referencedInternalVariables.clear();
+            for (BooleanExpression expression : getSortedExpressions()) {
+                for (InternalVariable iv : expression.getInternalVariables()) {
+                    referencedInternalVariables.add(iv.getName());
+                }
+            }
+        } while (expressions.size() != before);
     }
 
     /**
@@ -182,12 +190,6 @@ public class BooleanFunction {
     }
 
     public BooleanExpression get(String name) {
-        // TODO: Should maybe rather be fetched from a hash map?
-        for (BooleanExpression expression : expressions) {
-            if (expression.getName().equals(name)) {
-                return expression;
-            }
-        }
-        return null;
+        return expressionMap.get(name);
     }
 }
