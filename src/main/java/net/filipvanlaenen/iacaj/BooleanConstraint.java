@@ -33,6 +33,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        protected boolean isTrue() {
+            return true;
+        }
+
+        @Override
         public String toJavaString() {
             return "assert " + getName() + " == true;";
         }
@@ -65,6 +70,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         @Override
         protected boolean isFalse() {
             return true;
+        }
+
+        @Override
+        protected boolean isTrue() {
+            return false;
         }
 
         @Override
@@ -116,6 +126,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        protected boolean isTrue() {
+            return false;
+        }
+
+        @Override
         public String toJavaString() {
             return "assert " + getName() + " == " + otherInputParameter + ";";
         }
@@ -160,6 +175,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
 
         @Override
         protected boolean isFalse() {
+            return false;
+        }
+
+        @Override
+        protected boolean isTrue() {
             return false;
         }
 

@@ -56,6 +56,13 @@ public abstract class BooleanExpression {
     protected abstract boolean isFalse();
 
     /**
+     * Returns whether the Boolean expression evaluates to True.
+     *
+     * @return True if the Boolean expression evaluates to True.
+     */
+    protected abstract boolean isTrue();
+    
+    /**
      * Resolves the Boolean expressions.
      *
      * @param booleanFunction The Boolean function giving the context for the

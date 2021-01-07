@@ -78,6 +78,11 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             @Override
+            protected boolean isTrue() {
+                return false;
+            }
+
+            @Override
             protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
                 return this;
             }
@@ -176,19 +181,30 @@ public final class BooleanOperation extends BooleanExpression {
 
                 @Override
                 protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
-                    List<BooleanOperand> operandsToBeRemoved = new ArrayList<BooleanOperand>();
+                    List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
+                    List<BooleanOperand> trueOperands = new ArrayList<BooleanOperand>();
                     for (BooleanOperand operand : getOperands()) {
                         if (!operand.isNegated()) {
                             BooleanExpression be = booleanFunction.getExpression(operand.getName());
-                            if (be != null && be.isFalse()) {
-                                operandsToBeRemoved.add(operand);
+                            if (be != null ) {
+                                if (be.isTrue()) {
+                                    trueOperands.add(operand);
+                                } else if (be.isFalse()) {
+                                    falseOperands.add(operand);
+                                }
                             }
                         }
                     }
-                    removeOperands(operandsToBeRemoved);
+                    removeOperands(falseOperands);
+                    removeOperands(trueOperands);
+                    boolean numberOfTrueOperandsIsEven = trueOperands.size() % 2 == 0;
                     if (getNumberOfOperands() == 0) {
-                        return new BooleanConstant(false);
-                    }
+                        return new BooleanConstant(!numberOfTrueOperandsIsEven);
+                    } else if (!numberOfTrueOperandsIsEven) {
+                        BooleanOperand firstOperand = getOperands().get(0);
+                        removeOperand(firstOperand);
+                        addOperand(firstOperand.negated());
+                    }  
                     return this;
                 }
             }
@@ -222,6 +238,18 @@ public final class BooleanOperation extends BooleanExpression {
                     } else {
                         name = operandString;
                     }
+                    number = Integer.parseInt(name.substring(1));
+                }
+
+                /**
+                 * Constructor taking the name and whether the operand is negated as its parameters.
+                 *
+                 * @param name The name of the operand.
+                 * @param negated Whether the operand is negated.
+                 */
+                BooleanOperand(final String name, final boolean negated) {
+                    this.name = name;
+                    this.negated = negated;
                     number = Integer.parseInt(name.substring(1));
                 }
 
@@ -262,6 +290,15 @@ public final class BooleanOperation extends BooleanExpression {
                 }
 
                 /**
+                 * Returns a negated version of the operand.
+                 * 
+                 * @return A negated version.
+                 */
+                public BooleanOperand negated() {
+                    return new BooleanOperand(name, !negated);
+                }
+
+                /**
                  * Returns a representation of the operand as a Java string.
                  *
                  * @return The operand as a Java string.
@@ -295,6 +332,16 @@ public final class BooleanOperation extends BooleanExpression {
                 }
             }
 
+            /**
+             * Add an operand to the Boolean calculation.
+             *
+             * @param operandToBeAdded The operand to be added to the Boolean
+             *                            calculation.
+             */
+            protected void addOperand(final BooleanOperand operandToBeAdded) {
+                operands.add(operandToBeAdded);
+            }
+            
             /**
              * Exports the Boolean calculation to a string.
              *
@@ -368,6 +415,21 @@ public final class BooleanOperation extends BooleanExpression {
                 return false;
             }
 
+            @Override
+            protected final boolean isTrue() {
+                return false;
+            }
+
+            /**
+             * Remove an operand from the Boolean calculation.
+             *
+             * @param operandToBeRemoved The operand to be removed from the Boolean
+             *                            calculation.
+             */
+            protected void removeOperand(final BooleanOperand operandToBeRemoved) {
+                operands.remove(operandToBeRemoved);
+            }
+
             /**
              * Removes a list of operands from the Boolean calculation.
              *
@@ -426,6 +488,11 @@ public final class BooleanOperation extends BooleanExpression {
             @Override
             protected boolean isFalse() {
                 return !value;
+            }
+
+            @Override
+            protected boolean isTrue() {
+                return value;
             }
 
             @Override
@@ -501,6 +568,13 @@ public final class BooleanOperation extends BooleanExpression {
          * @return True if the right hand side evaluates to False.
          */
         protected abstract boolean isFalse();
+
+        /**
+         * Returns whether the right hand side evaluates to True.
+         *
+         * @return True if the right hand side evaluates to True.
+         */
+        protected abstract boolean isTrue();
 
         /**
          * Resolves the right hand side.
@@ -674,6 +748,11 @@ public final class BooleanOperation extends BooleanExpression {
      */
     public boolean isOutputParameter() {
         return OutputParameter.isOutputParameter(name);
+    }
+
+    @Override
+    protected boolean isTrue() {
+        return rightHandSide.isTrue();
     }
 
     @Override
