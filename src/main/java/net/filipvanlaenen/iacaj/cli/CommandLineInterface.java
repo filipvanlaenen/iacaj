@@ -118,7 +118,7 @@ public final class CommandLineInterface {
          * Boolean function is written to <code>stdout</code>. Otherwise, the Boolean
          * function is written to a file, with the format depending on the extension of
          * the file name.
-         * 
+         *
          * @param bf       The Boolean function.
          * @param fileName The name of the file, can be <code>null</code>.
          * @throws IOException Thrown if an exception occurs related to IO.

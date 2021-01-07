@@ -34,13 +34,34 @@ public abstract class BooleanExpression {
      */
     public abstract List<InputParameter> getInputParameters();
 
+    /**
+     * Returns the internal variables of the Boolean expression.
+     *
+     * @return The internal variables of the Boolean expression.
+     */
     protected abstract List<InternalVariable> getInternalVariables();
 
+    /**
+     * Returns the name of the Boolean expression.
+     *
+     * @return The name of the Boolean expression.
+     */
     protected abstract String getName();
 
+    /**
+     * Returns whether the Boolean expression evaluates to False.
+     *
+     * @return True if the Boolean expression evaluates to False.
+     */
     protected abstract boolean isFalse();
 
-    protected abstract boolean resolve(final BooleanFunction booleanFunction);
+    /**
+     * Resolves the Boolean expressions.
+     *
+     * @param booleanFunction The Boolean function giving the context for the
+     *                        expression.
+     */
+    protected abstract void resolve(BooleanFunction booleanFunction);
 
     /**
      * Returns a representation of the Boolean expression as Java code.

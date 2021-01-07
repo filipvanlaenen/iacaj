@@ -152,6 +152,11 @@ public final class BooleanOperation extends BooleanExpression {
                     return InputParameter.isInputParameter(name);
                 }
 
+                /**
+                 * Returns whether the operand is negated.
+                 *
+                 * @return True if the operand is negated.
+                 */
                 public boolean isNegated() {
                     return negated;
                 }
@@ -262,7 +267,7 @@ public final class BooleanOperation extends BooleanExpression {
                 List<BooleanOperand> toBeRemoved = new ArrayList<BooleanOperand>();
                 for (BooleanOperand operand : operands) {
                     if (operator.equals(Operator.Xor) && !operand.isNegated()) {
-                        BooleanExpression be = booleanFunction.get(operand.getName());
+                        BooleanExpression be = booleanFunction.getExpression(operand.getName());
                         if (be != null && be.isFalse()) {
                             toBeRemoved.add(operand);
                         }
@@ -394,9 +399,21 @@ public final class BooleanOperation extends BooleanExpression {
          */
         protected abstract Operator getOperator();
 
+        /**
+         * Returns whether the right hand side evaluates to False.
+         *
+         * @return True if the right hand side evaluates to False.
+         */
         protected abstract boolean isFalse();
 
-        protected abstract BooleanRightHandSide resolve(final BooleanFunction booleanFunction);
+        /**
+         * Resolves the right hand side.
+         *
+         * @param booleanFunction The Boolean function giving the context for the right
+         *                        hand side.
+         * @return The result of resolving the right hand side.
+         */
+        protected abstract BooleanRightHandSide resolve(BooleanFunction booleanFunction);
 
         /**
          * Exports the right hand side to a Java code string.
@@ -540,11 +557,8 @@ public final class BooleanOperation extends BooleanExpression {
     }
 
     @Override
-    protected boolean resolve(final BooleanFunction booleanFunction) {
-        String before = rightHandSide.toString();
+    protected void resolve(final BooleanFunction booleanFunction) {
         rightHandSide = rightHandSide.resolve(booleanFunction);
-        String after = rightHandSide.toString();
-        return !before.equals(after);
     }
 
     @Override

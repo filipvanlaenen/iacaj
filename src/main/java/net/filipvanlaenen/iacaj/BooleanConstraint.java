@@ -220,7 +220,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     public abstract List<InputParameter> getInputParameters();
 
     @Override
-    public List<InternalVariable> getInternalVariables() {
+    public final List<InternalVariable> getInternalVariables() {
         return Collections.emptyList();
     }
 
@@ -246,7 +246,6 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     @Override
-    protected boolean resolve(final BooleanFunction booleanFunction) {
-        return false;
+    protected void resolve(final BooleanFunction booleanFunction) {
     }
 }

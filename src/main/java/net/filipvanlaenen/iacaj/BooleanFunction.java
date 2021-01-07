@@ -127,6 +127,21 @@ public class BooleanFunction {
         return String.join("\n", expressionStrings);
     }
 
+    /**
+     * Returns the Boolean expression with the given name.
+     *
+     * @param name The name of the requested Boolean expression.
+     * @return The Boolean expression with the given name.
+     */
+    public BooleanExpression getExpression(final String name) {
+        return expressionMap.get(name);
+    }
+
+    /**
+     * Returns the Boolean expressions in sorted order.
+     *
+     * @return A sorted list with the Boolean expressions.
+     */
     private List<BooleanExpression> getSortedExpressions() {
         List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
         sortedExpressions.sort(new BooleanExpressionComparator());
@@ -158,9 +173,9 @@ public class BooleanFunction {
             before = expressions.size();
             expressions.removeIf(new Predicate<BooleanExpression>() {
                 @Override
-                public boolean test(BooleanExpression arg0) {
-                    return InternalVariable.isInternalVariable(arg0.getName())
-                            && !referencedInternalVariables.contains(arg0.getName());
+                public boolean test(final BooleanExpression expression) {
+                    return InternalVariable.isInternalVariable(expression.getName())
+                            && !referencedInternalVariables.contains(expression.getName());
                 }
             });
             referencedInternalVariables.clear();
@@ -187,9 +202,5 @@ public class BooleanFunction {
     @Override
     public String toString() {
         return exportToString(BooleanExpression::toString);
-    }
-
-    public BooleanExpression get(String name) {
-        return expressionMap.get(name);
     }
 }
