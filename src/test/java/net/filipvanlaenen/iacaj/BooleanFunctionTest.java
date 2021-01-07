@@ -252,6 +252,27 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a binary xor expression with true is resolved to negation.
+     */
+    @Test
+    public void shouldResolveBinaryXorWithTrueToNegation() {
+        String[] content = new String[] {"v1 = True", "o1 = i1 ⊻ v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = ¬i1", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that a binary xor expression with two trues is resolved to false.
+     */
+    @Test
+    public void shouldResolveBinaryXorWithTwoTruesToFalse() {
+        String[] content = new String[] {"v1 = True", "v2 = True", "o1 = v1 ⊻ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = False", booleanFunction.toString());
+    }
+        /**
      * Verifies that a binary xor expression with false is resolved to equality.
      */
     @Test
@@ -271,5 +292,16 @@ public class BooleanFunctionTest {
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         booleanFunction.resolve();
         assertEquals("o1 = False", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that a binary xor expression with true and false is resolved to true
+     */
+    @Test
+    public void shouldResolveBinaryXorWithTrueAndFalseToTrue() {
+        String[] content = new String[] {"v1 = True", "v2 = False", "o1 = v1 ⊻ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = True", booleanFunction.toString());
     }
 }
