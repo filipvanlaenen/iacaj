@@ -96,10 +96,19 @@ public final class BooleanOperation extends BooleanExpression {
         /**
          * Class representing a right hand side with a Boolean calculation.
          */
-        public static abstract class BooleanCalculation extends BooleanRightHandSide {
-            public static class BooleanAndCalculation extends BooleanCalculation {
-                public BooleanAndCalculation(String rightHandSide) {
-                    super(rightHandSide);
+        public abstract static class BooleanCalculation extends BooleanRightHandSide {
+            /**
+             * Class representing an And calculation.
+             */
+            public static final class BooleanAndCalculation extends BooleanCalculation {
+                /**
+                 * Constructor taking the right hand side string as parameter.
+                 *
+                 * @param rightHandSideString A right hand side string representing the Xor
+                 *                            calculation.
+                 */
+                public BooleanAndCalculation(final String rightHandSideString) {
+                    super(rightHandSideString);
                 }
 
                 @Override
@@ -113,9 +122,18 @@ public final class BooleanOperation extends BooleanExpression {
                 }
             }
 
-            public static class BooleanOrCalculation extends BooleanCalculation {
-                public BooleanOrCalculation(String rightHandSide) {
-                    super(rightHandSide);
+            /**
+             * Class representing an Or calculation.
+             */
+            public static final class BooleanOrCalculation extends BooleanCalculation {
+                /**
+                 * Constructor taking the right hand side string as parameter.
+                 *
+                 * @param rightHandSideString A right hand side string representing the Xor
+                 *                            calculation.
+                 */
+                public BooleanOrCalculation(final String rightHandSideString) {
+                    super(rightHandSideString);
                 }
 
                 @Override
@@ -129,9 +147,18 @@ public final class BooleanOperation extends BooleanExpression {
                 }
             }
 
-            public static class BooleanXorCalculation extends BooleanCalculation {
-                public BooleanXorCalculation(String rightHandSide) {
-                    super(rightHandSide);
+            /**
+             * Class representing an Xor calculation.
+             */
+            public static final class BooleanXorCalculation extends BooleanCalculation {
+                /**
+                 * Constructor taking the right hand side string as parameter.
+                 *
+                 * @param rightHandSideString A right hand side string representing the Xor
+                 *                            calculation.
+                 */
+                public BooleanXorCalculation(final String rightHandSideString) {
+                    super(rightHandSideString);
                 }
 
                 @Override
@@ -290,7 +317,7 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             @Override
-            public List<InputParameter> getInputParameters() {
+            public final List<InputParameter> getInputParameters() {
                 return operands.stream().filter(new Predicate<BooleanOperand>() {
 
                     @Override
@@ -301,7 +328,7 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             @Override
-            public List<InternalVariable> getInternalVariables() {
+            public final List<InternalVariable> getInternalVariables() {
                 return operands.stream().filter(new Predicate<BooleanOperand>() {
                     @Override
                     public boolean test(final BooleanOperand operand) {
@@ -310,30 +337,46 @@ public final class BooleanOperation extends BooleanExpression {
                 }).map(BooleanOperand::getName).map(InternalVariable::get).collect(Collectors.toList());
             }
 
+            /**
+             * Returns the number of operands in the Boolean calculation.
+             *
+             * @return The number of operands in the Boolean calculation.
+             */
             protected int getNumberOfOperands() {
                 return operands.size();
             }
 
+            /**
+             * Returns an unmodifiable list of operands.
+             *
+             * @return An unmodifiable list of operands.
+             */
             protected List<BooleanOperand> getOperands() {
                 return Collections.unmodifiableList(operands);
             }
 
             @Override
-            protected boolean isFalse() {
+            protected final boolean isFalse() {
                 return false;
             }
 
-            protected void removeOperands(List<BooleanOperand> operandsToBeRemoved) {
+            /**
+             * Removes a list of operands from the Boolean calculation.
+             *
+             * @param operandsToBeRemoved The operands to be removed from the Boolean
+             *                            calculation.
+             */
+            protected void removeOperands(final List<BooleanOperand> operandsToBeRemoved) {
                 operands.removeAll(operandsToBeRemoved);
             }
 
             @Override
-            public String toJavaString() {
+            public final String toJavaString() {
                 return exportToString(getOperator().getJavaSymbol(), BooleanOperand::toJavaString);
             }
 
             @Override
-            public String toString() {
+            public final String toString() {
                 return exportToString(getOperator().getSymbol(), BooleanOperand::toString);
             }
         }
@@ -477,8 +520,8 @@ public final class BooleanOperation extends BooleanExpression {
          */
         And("∧", "&") {
             @Override
-            BooleanRightHandSide createBooleanCalculation(String rightHandSide) {
-                return new BooleanAndCalculation(rightHandSide);
+            BooleanRightHandSide createBooleanCalculation(final String rightHandSideString) {
+                return new BooleanAndCalculation(rightHandSideString);
             }
         },
         /**
@@ -486,8 +529,8 @@ public final class BooleanOperation extends BooleanExpression {
          */
         Or("∨", "|") {
             @Override
-            BooleanRightHandSide createBooleanCalculation(String rightHandSide) {
-                return new BooleanOrCalculation(rightHandSide);
+            BooleanRightHandSide createBooleanCalculation(final String rightHandSideString) {
+                return new BooleanOrCalculation(rightHandSideString);
             }
         },
         /**
@@ -495,8 +538,8 @@ public final class BooleanOperation extends BooleanExpression {
          */
         Xor("⊻", "^") {
             @Override
-            BooleanRightHandSide createBooleanCalculation(String rightHandSide) {
-                return new BooleanXorCalculation(rightHandSide);
+            BooleanRightHandSide createBooleanCalculation(final String rightHandSideString) {
+                return new BooleanXorCalculation(rightHandSideString);
             }
         };
 
@@ -520,7 +563,14 @@ public final class BooleanOperation extends BooleanExpression {
             this.javaSymbol = javaSymbol;
         }
 
-        abstract BooleanRightHandSide createBooleanCalculation(String rightHandSide);
+        /**
+         * Creates a right hand side object based from a string.
+         *
+         * @param rightHandSideString The string representing a right hand side
+         *                            expression.
+         * @return A right hand side object parsed from the string.
+         */
+        abstract BooleanRightHandSide createBooleanCalculation(String rightHandSideString);
 
         /**
          * Returns the symbol of the operartor for Java.
