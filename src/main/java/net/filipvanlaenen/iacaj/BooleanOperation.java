@@ -9,6 +9,10 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.filipvanlaenen.iacaj.BooleanOperation.BooleanRightHandSide.BooleanCalculation.BooleanAndCalculation;
+import net.filipvanlaenen.iacaj.BooleanOperation.BooleanRightHandSide.BooleanCalculation.BooleanOrCalculation;
+import net.filipvanlaenen.iacaj.BooleanOperation.BooleanRightHandSide.BooleanCalculation.BooleanXorCalculation;
+
 /**
  * Class representing a Boolean operation.
  */
@@ -92,7 +96,68 @@ public final class BooleanOperation extends BooleanExpression {
         /**
          * Class representing a right hand side with a Boolean calculation.
          */
-        public static final class BooleanCalculation extends BooleanRightHandSide {
+        public static abstract class BooleanCalculation extends BooleanRightHandSide {
+            public static class BooleanAndCalculation extends BooleanCalculation {
+                public BooleanAndCalculation(String rightHandSide) {
+                    super(rightHandSide);
+                }
+
+                @Override
+                protected Operator getOperator() {
+                    return Operator.And;
+                }
+
+                @Override
+                protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                    return this;
+                }
+            }
+
+            public static class BooleanOrCalculation extends BooleanCalculation {
+                public BooleanOrCalculation(String rightHandSide) {
+                    super(rightHandSide);
+                }
+
+                @Override
+                protected Operator getOperator() {
+                    return Operator.Or;
+                }
+
+                @Override
+                protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                    return this;
+                }
+            }
+
+            public static class BooleanXorCalculation extends BooleanCalculation {
+                public BooleanXorCalculation(String rightHandSide) {
+                    super(rightHandSide);
+                }
+
+                @Override
+                protected Operator getOperator() {
+                    return Operator.Xor;
+                }
+
+                @Override
+                protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                    List<BooleanOperand> operandsToBeRemoved = new ArrayList<BooleanOperand>();
+                    for (BooleanOperand operand : getOperands()) {
+                        if (!operand.isNegated()) {
+                            BooleanExpression be = booleanFunction.getExpression(operand.getName());
+                            if (be != null && be.isFalse()) {
+                                operandsToBeRemoved.add(operand);
+                            }
+                        }
+                    }
+                    removeOperands(operandsToBeRemoved);
+                    if (getNumberOfOperands() == 0) {
+                        return new BooleanConstant(false);
+                    }
+                    return this;
+                }
+            }
+
             /**
              * Class representing an operand in a Boolean calculation.
              */
@@ -177,10 +242,6 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             /**
-             * The operator for the calculation.
-             */
-            private final Operator operator;
-            /**
              * A list with the operands. Note that the same operand can appear more than
              * once in a calculation, therefore this is not a Set.
              */
@@ -189,16 +250,13 @@ public final class BooleanOperation extends BooleanExpression {
             /**
              * Constructor taking the operator and the right hand side as its parameters.
              *
-             * @param operator      The operator for the Boolean calculation.
              * @param rightHandSide The right hand side.
              */
-            public BooleanCalculation(final Operator operator, final String rightHandSide) {
-                this.operator = operator;
-                String[] operandStrings = Arrays.stream(rightHandSide.split(operator.getSymbol())).map(String::trim)
-                        .toArray(String[]::new);
+            public BooleanCalculation(final String rightHandSide) {
+                String[] operandStrings = Arrays.stream(rightHandSide.split(getOperator().getSymbol()))
+                        .map(String::trim).toArray(String[]::new);
                 for (String operandString : operandStrings) {
                     operands.add(new BooleanOperand(operandString));
-
                 }
             }
 
@@ -252,9 +310,12 @@ public final class BooleanOperation extends BooleanExpression {
                 }).map(BooleanOperand::getName).map(InternalVariable::get).collect(Collectors.toList());
             }
 
-            @Override
-            protected Operator getOperator() {
-                return operator;
+            protected int getNumberOfOperands() {
+                return operands.size();
+            }
+
+            protected List<BooleanOperand> getOperands() {
+                return Collections.unmodifiableList(operands);
             }
 
             @Override
@@ -262,34 +323,18 @@ public final class BooleanOperation extends BooleanExpression {
                 return false;
             }
 
-            @Override
-            protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
-                List<BooleanOperand> toBeRemoved = new ArrayList<BooleanOperand>();
-                for (BooleanOperand operand : operands) {
-                    if (operator.equals(Operator.Xor) && !operand.isNegated()) {
-                        BooleanExpression be = booleanFunction.getExpression(operand.getName());
-                        if (be != null && be.isFalse()) {
-                            toBeRemoved.add(operand);
-                        }
-                    }
-                }
-                operands.removeAll(toBeRemoved);
-                if (operands.isEmpty()) {
-                    if (operator.equals(Operator.Xor)) {
-                        return new BooleanConstant(false);
-                    }
-                }
-                return this;
+            protected void removeOperands(List<BooleanOperand> operandsToBeRemoved) {
+                operands.removeAll(operandsToBeRemoved);
             }
 
             @Override
             public String toJavaString() {
-                return exportToString(operator.getJavaSymbol(), BooleanOperand::toJavaString);
+                return exportToString(getOperator().getJavaSymbol(), BooleanOperand::toJavaString);
             }
 
             @Override
             public String toString() {
-                return exportToString(operator.getSymbol(), BooleanOperand::toString);
+                return exportToString(getOperator().getSymbol(), BooleanOperand::toString);
             }
         }
 
@@ -371,7 +416,7 @@ public final class BooleanOperation extends BooleanExpression {
             } else {
                 for (Operator o : Operator.values()) {
                     if (rightHandSide.contains(o.getSymbol())) {
-                        return new BooleanCalculation(o, rightHandSide);
+                        return o.createBooleanCalculation(rightHandSide);
                     }
                 }
                 return new BooleanEquation(rightHandSide);
@@ -430,15 +475,30 @@ public final class BooleanOperation extends BooleanExpression {
         /**
          * The logical AND operator.
          */
-        And("∧", "&"),
+        And("∧", "&") {
+            @Override
+            BooleanRightHandSide createBooleanCalculation(String rightHandSide) {
+                return new BooleanAndCalculation(rightHandSide);
+            }
+        },
         /**
          * The logical OR operator.
          */
-        Or("∨", "|"),
+        Or("∨", "|") {
+            @Override
+            BooleanRightHandSide createBooleanCalculation(String rightHandSide) {
+                return new BooleanOrCalculation(rightHandSide);
+            }
+        },
         /**
          * The logical XOR operator.
          */
-        Xor("⊻", "^");
+        Xor("⊻", "^") {
+            @Override
+            BooleanRightHandSide createBooleanCalculation(String rightHandSide) {
+                return new BooleanXorCalculation(rightHandSide);
+            }
+        };
 
         /**
          * The symbol.
@@ -459,6 +519,8 @@ public final class BooleanOperation extends BooleanExpression {
             this.symbol = symbol;
             this.javaSymbol = javaSymbol;
         }
+
+        abstract BooleanRightHandSide createBooleanCalculation(String rightHandSide);
 
         /**
          * Returns the symbol of the operartor for Java.
