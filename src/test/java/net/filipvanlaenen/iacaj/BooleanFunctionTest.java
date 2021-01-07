@@ -208,6 +208,17 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a binary and expression with two open operands is not resolved.
+     */
+    @Test
+    public void shouldNotResolveBinaryAndWithOpenOperands() {
+        String[] content = new String[] {"o1 = i1 ∧ i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = i1 ∧ i2", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a binary and expression with false is resolved to false.
      */
     @Test
@@ -227,6 +238,17 @@ public class BooleanFunctionTest {
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         booleanFunction.resolve();
         assertEquals("o1 = False", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that a binary xor expression with two open operands is not resolved.
+     */
+    @Test
+    public void shouldNotResolveBinaryXorWithOpenOperands() {
+        String[] content = new String[] {"o1 = i1 ⊻ i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = i1 ⊻ i2", booleanFunction.toString());
     }
 
     /**
