@@ -208,6 +208,28 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a binary and expression with false is resolved to false.
+     */
+    @Test
+    public void shouldResolveBinaryAndWithFalseToFalse() {
+        String[] content = new String[] {"v1 = False", "o1 = i1 ∧ v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = False", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that a binary and expression with two falses is resolved to false.
+     */
+    @Test
+    public void shouldResolveBinaryAndWithTwoFalsesToFalse() {
+        String[] content = new String[] {"v1 = False", "v2 = False", "o1 = v1 ∧ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = False", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a binary xor expression with false is resolved to equality.
      */
     @Test

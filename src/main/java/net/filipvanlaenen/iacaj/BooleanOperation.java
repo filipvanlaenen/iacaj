@@ -118,6 +118,14 @@ public final class BooleanOperation extends BooleanExpression {
 
                 @Override
                 protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                    for (BooleanOperand operand : getOperands()) {
+                        if (!operand.isNegated()) {
+                            BooleanExpression be = booleanFunction.getExpression(operand.getName());
+                            if (be != null && be.isFalse()) {
+                                return new BooleanConstant(false);
+                            }
+                        }
+                    }
                     return this;
                 }
             }
