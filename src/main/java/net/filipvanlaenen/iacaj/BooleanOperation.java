@@ -123,13 +123,22 @@ public final class BooleanOperation extends BooleanExpression {
 
                 @Override
                 protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+                    List<BooleanOperand> trueOperands = new ArrayList<BooleanOperand>();
                     for (BooleanOperand operand : getOperands()) {
                         if (!operand.isNegated()) {
                             BooleanExpression be = booleanFunction.getExpression(operand.getName());
-                            if (be != null && be.isFalse()) {
-                                return new BooleanConstant(false);
+                            if (be != null) {
+                                if (be.isTrue()) {
+                                    trueOperands.add(operand);
+                                } else if (be.isFalse()) {
+                                    return FALSE;
+                                }
                             }
                         }
+                    }
+                    removeOperands(trueOperands);
+                    if (getNumberOfOperands() == 0) {
+                        return TRUE;
                     }
                     return this;
                 }

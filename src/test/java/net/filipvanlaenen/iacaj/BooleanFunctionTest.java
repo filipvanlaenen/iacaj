@@ -219,6 +219,28 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a binary and expression with true is resolved to equality.
+     */
+    @Test
+    public void shouldResolveBinaryAndWithTrueToEquality() {
+        String[] content = new String[] {"v1 = True", "o1 = i1 ∧ v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = i1", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that a binary and expression with two trues is resolved to true.
+     */
+    @Test
+    public void shouldResolveBinaryAndWithTwoTruesToTrue() {
+        String[] content = new String[] {"v1 = True", "v2 = True", "o1 = v1 ∧ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = True", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a binary and expression with false is resolved to false.
      */
     @Test
