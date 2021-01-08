@@ -208,6 +208,28 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that equality to True is resolved to True.
+     */
+    @Test
+    public void shouldResolveEqualityToTrueToTrue() {
+        String[] content = new String[] {"v1 = True", "o1 = v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = True", booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that equality to False is resolved to False.
+     */
+    @Test
+    public void shouldResolveEqualityToFalseToFalse() {
+        String[] content = new String[] {"v1 = False", "o1 = v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = False", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a negation of True is resolved to False.
      */
     @Test

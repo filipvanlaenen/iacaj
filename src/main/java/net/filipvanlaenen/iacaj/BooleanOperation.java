@@ -85,11 +85,19 @@ public final class BooleanOperation extends BooleanExpression {
             @Override
             protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
                 BooleanExpression be = booleanFunction.getExpression(operand);
-                if (be != null && negated) {
-                    if (be.isTrue()) {
-                        return FALSE;
-                    } else if (be.isFalse()) {
-                        return TRUE;
+                if (be != null) {
+                    if (negated) {
+                        if (be.isTrue()) {
+                            return FALSE;
+                        } else if (be.isFalse()) {
+                            return TRUE;
+                        }
+                    } else {
+                        if (be.isTrue()) {
+                            return TRUE;
+                        } else if (be.isFalse()) {
+                            return FALSE;
+                        }
                     }
                 }
                 return this;
