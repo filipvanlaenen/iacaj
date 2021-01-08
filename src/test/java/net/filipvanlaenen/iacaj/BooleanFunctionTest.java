@@ -219,6 +219,17 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a negation of False is resolved to True.
+     */
+    @Test
+    public void shouldResolveNegatedFalseToTrue() {
+        String[] content = new String[] {"v1 = False", "o1 = ¬v1"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = True", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a binary and expression with two open operands is not resolved.
      */
     @Test
