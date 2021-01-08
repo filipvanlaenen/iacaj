@@ -272,7 +272,8 @@ public class BooleanFunctionTest {
         booleanFunction.resolve();
         assertEquals("o1 = False", booleanFunction.toString());
     }
-        /**
+
+    /**
      * Verifies that a binary xor expression with false is resolved to equality.
      */
     @Test
@@ -295,7 +296,8 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that a binary xor expression with true and false is resolved to true
+     * Verifies that a binary xor expression with true and false is resolved to
+     * true.
      */
     @Test
     public void shouldResolveBinaryXorWithTrueAndFalseToTrue() {

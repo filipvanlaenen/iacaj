@@ -61,7 +61,7 @@ public abstract class BooleanExpression {
      * @return True if the Boolean expression evaluates to True.
      */
     protected abstract boolean isTrue();
-    
+
     /**
      * Resolves the Boolean expressions.
      *

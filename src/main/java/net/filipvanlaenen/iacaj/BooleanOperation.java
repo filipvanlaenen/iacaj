@@ -186,7 +186,7 @@ public final class BooleanOperation extends BooleanExpression {
                     for (BooleanOperand operand : getOperands()) {
                         if (!operand.isNegated()) {
                             BooleanExpression be = booleanFunction.getExpression(operand.getName());
-                            if (be != null ) {
+                            if (be != null) {
                                 if (be.isTrue()) {
                                     trueOperands.add(operand);
                                 } else if (be.isFalse()) {
@@ -204,7 +204,7 @@ public final class BooleanOperation extends BooleanExpression {
                         BooleanOperand firstOperand = getOperands().get(0);
                         removeOperand(firstOperand);
                         addOperand(firstOperand.negated());
-                    }  
+                    }
                     return this;
                 }
             }
@@ -242,9 +242,10 @@ public final class BooleanOperation extends BooleanExpression {
                 }
 
                 /**
-                 * Constructor taking the name and whether the operand is negated as its parameters.
+                 * Constructor taking the name and whether the operand is negated as its
+                 * parameters.
                  *
-                 * @param name The name of the operand.
+                 * @param name    The name of the operand.
                  * @param negated Whether the operand is negated.
                  */
                 BooleanOperand(final String name, final boolean negated) {
@@ -291,7 +292,7 @@ public final class BooleanOperation extends BooleanExpression {
 
                 /**
                  * Returns a negated version of the operand.
-                 * 
+                 *
                  * @return A negated version.
                  */
                 public BooleanOperand negated() {
@@ -335,13 +336,12 @@ public final class BooleanOperation extends BooleanExpression {
             /**
              * Add an operand to the Boolean calculation.
              *
-             * @param operandToBeAdded The operand to be added to the Boolean
-             *                            calculation.
+             * @param operandToBeAdded The operand to be added to the Boolean calculation.
              */
             protected void addOperand(final BooleanOperand operandToBeAdded) {
                 operands.add(operandToBeAdded);
             }
-            
+
             /**
              * Exports the Boolean calculation to a string.
              *
@@ -424,7 +424,7 @@ public final class BooleanOperation extends BooleanExpression {
              * Remove an operand from the Boolean calculation.
              *
              * @param operandToBeRemoved The operand to be removed from the Boolean
-             *                            calculation.
+             *                           calculation.
              */
             protected void removeOperand(final BooleanOperand operandToBeRemoved) {
                 operands.remove(operandToBeRemoved);
