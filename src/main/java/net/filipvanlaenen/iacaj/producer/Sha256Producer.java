@@ -198,19 +198,6 @@ public class Sha256Producer extends Producer {
     }
 
     /**
-     * Appends a word to the result, with a given offset.
-     *
-     * @param bf     The Boolean function.
-     * @param word   The word to be added to the result.
-     * @param offset The offset where to add the result.
-     */
-    private void appendWordToResult(final BooleanFunction bf, final Word word, final int offset) {
-        for (int i = 1; i <= WORD_LENGTH; i++) {
-            bf.addExpression(new BooleanOperation("o" + (WORD_LENGTH * offset + i), word.get(WORD_LENGTH - i)));
-        }
-    }
-
-    /**
      * Composes the result of the SHA-256 algorithm.
      *
      * @param bf The Boolean function.
@@ -218,7 +205,7 @@ public class Sha256Producer extends Producer {
     private void composeResult(final BooleanFunction bf) {
         Word[] words = new Word[] {h0, h1, h2, h3, h4, h5, h6, h7};
         for (int i = 0; i < words.length; i++) {
-            appendWordToResult(bf, words[i], i);
+            appendWordToOutput(bf, words[i], i);
         }
     }
 

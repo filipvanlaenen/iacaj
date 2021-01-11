@@ -5,10 +5,24 @@ import net.filipvanlaenen.iacaj.BooleanOperation;
 import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
 
 public abstract class Producer {
+    // TODO: Should be factored out.
     /**
      * Counter for the internal variables added to the Boolean function.
      */
     protected long vCounter = 0;
+
+    /**
+     * Appends a word to the output, with a given offset.
+     *
+     * @param bf        The Boolean function.
+     * @param word      The word to be added to the output.
+     * @param wordIndex The offset where to add the output.
+     */
+    protected void appendWordToOutput(final BooleanFunction bf, final Word word, final int wordIndex) {
+        for (int i = 0; i < getWordLength(); i++) {
+            bf.addExpression(new BooleanOperation("o" + (getWordLength() * wordIndex + i + 1), word.get(i)));
+        }
+    }
 
     /**
      * Performs an atomic Boolean operations on a set of words.
@@ -33,6 +47,14 @@ public abstract class Producer {
         return result;
     }
 
+    protected Word extractWordFromInput(int wordIndex) {
+        Word first = new Word(getWordLength());
+        for (int i = 0; i < getWordLength(); i++) {
+            first.put(i, "i" + (wordIndex * getWordLength() + i + 1));
+        }
+        return first;
+    }
+
     protected abstract int getWordLength();
 
     /**
@@ -47,4 +69,5 @@ public abstract class Producer {
     }
 
     public abstract BooleanFunction produce();
+
 }

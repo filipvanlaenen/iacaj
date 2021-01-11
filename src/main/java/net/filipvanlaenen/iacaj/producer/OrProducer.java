@@ -3,7 +3,6 @@ package net.filipvanlaenen.iacaj.producer;
 import java.util.List;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
-import net.filipvanlaenen.iacaj.BooleanOperation;
 
 public class OrProducer extends Producer {
     /**
@@ -37,18 +36,10 @@ public class OrProducer extends Producer {
     @Override
     public BooleanFunction produce() {
         BooleanFunction bf = new BooleanFunction();
-        Word first = new Word(wordLength);
-        for (int j = 0; j < wordLength; j++) {
-            first.put(j, "i" + (j + 1));
-        }
-        Word second = new Word(wordLength);
-        for (int j = 0; j < wordLength; j++) {
-            second.put(j, "i" + (wordLength + j + 1));
-        }
+        Word first = extractWordFromInput(0);
+        Word second = extractWordFromInput(1);
         Word result = orWords(bf, first, second);
-        for (int i = 0; i < wordLength; i++) {
-            bf.addExpression(new BooleanOperation("o" + (i + 1), result.get(i)));
-        }
+        appendWordToOutput(bf, result, 0);
         return bf;
     }
 }
