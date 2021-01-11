@@ -19,8 +19,10 @@ public abstract class Producer {
      * @param wordIndex The offset where to add the output.
      */
     protected void appendWordToOutput(final BooleanFunction bf, final Word word, final int wordIndex) {
-        for (int i = 0; i < getWordLength(); i++) {
-            bf.addExpression(new BooleanOperation("o" + (getWordLength() * wordIndex + i + 1), word.get(i)));
+        int wordLength = getWordLength();
+        int bitIndexOffset = wordLength * wordIndex;
+        for (int i = 0; i < wordLength; i++) {
+            bf.addExpression(new BooleanOperation("o" + (bitIndexOffset + i + 1), word.get(i)));
         }
     }
 
@@ -33,10 +35,12 @@ public abstract class Producer {
      * @return A word holding the result.
      */
     protected Word atomicOperationOnWords(final BooleanFunction bf, final Operator operator, final Word... words) {
-        Word result = new Word(getWordLength());
-        for (int i = 0; i < getWordLength(); i++) {
-            String[] operands = new String[words.length];
-            for (int j = 0; j < words.length; j++) {
+        int wordLength = getWordLength();
+        int numberOfWords = words.length;
+        Word result = new Word(wordLength);
+        for (int i = 0; i < wordLength; i++) {
+            String[] operands = new String[numberOfWords];
+            for (int j = 0; j < numberOfWords; j++) {
                 operands[j] = words[j].get(i);
             }
             BooleanOperation bo = new BooleanOperation("v" + (++vCounter),
@@ -48,9 +52,11 @@ public abstract class Producer {
     }
 
     protected Word extractWordFromInput(int wordIndex) {
-        Word first = new Word(getWordLength());
-        for (int i = 0; i < getWordLength(); i++) {
-            first.put(i, "i" + (wordIndex * getWordLength() + i + 1));
+        int wordLength = getWordLength();
+        int bitIndexOffset = wordLength * wordIndex;
+        Word first = new Word(wordLength);
+        for (int i = 0; i < wordLength; i++) {
+            first.put(i, "i" + (bitIndexOffset + i + 1));
         }
         return first;
     }
@@ -69,5 +75,4 @@ public abstract class Producer {
     }
 
     public abstract BooleanFunction produce();
-
 }
