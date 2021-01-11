@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj.producer;
 
 import java.math.BigInteger;
+import java.util.List;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
@@ -12,78 +13,11 @@ import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
  * The pseudocode can be found here:
  * https://en.wikipedia.org/wiki/SHA-2#Pseudocode
  */
-public class Sha256Producer {
-    /**
-     * Class representing a Word, holding references to variables.
-     */
-    public class Word {
-        /**
-         * The length of the word.
-         */
-        private final int length;
-        /**
-         * The references to the variables.
-         */
-        private final String[] variableNames;
-
-        /**
-         * Constructor, creating an empty word of a given length.
-         *
-         * @param length The length of the word.
-         */
-        public Word(final int length) {
-            this.length = length;
-            variableNames = new String[length];
-        }
-
-        /**
-         * Returns the variable name at position i.
-         *
-         * @param i The position for which the variable name should be returned.
-         * @return The variable name at position i.
-         */
-        public String get(final int i) {
-            return variableNames[i];
-        }
-
-        /**
-         * Returns the length of the word.
-         *
-         * @return The length of the word.
-         */
-        int getLength() {
-            return length;
-        }
-
-        /**
-         * Puts a variable name in the word at position i.
-         *
-         * @param i            The position where to place the variable name.
-         * @param variableName The name of the variable.
-         */
-        public void put(final int i, final String variableName) {
-            variableNames[i] = variableName;
-        }
-
-        /**
-         * Returns a word with all variable names rotated to the right with r positions.
-         *
-         * @param r The number of positions to rotate.
-         * @return A word with all variable names rotated to the right with r positions.
-         */
-        public Word rightRotate(final int r) {
-            Word result = new Word(length);
-            for (int i = 0; i < length; i++) {
-                result.put(i, get((i + r) % length));
-            }
-            return result;
-        }
-    }
-
+public class Sha256Producer extends Producer {
     /**
      * Word length for the SHA-256 algorithm.
      */
-    private static final int WORD_LENGTH = 32;
+    static final int WORD_LENGTH = 32;
     /**
      * The default number of rounds for the SHA-256 algorithm.
      */
@@ -145,10 +79,6 @@ public class Sha256Producer {
      */
     private int numberOfRounds;
     /**
-     * Counter for the internal variables added to the Boolean function.
-     */
-    private long vCounter = 0;
-    /**
      * Working variables for SHA-256.
      */
     private Word a, b, c, d, e, f, g, h;
@@ -166,19 +96,17 @@ public class Sha256Producer {
     private Word[] w;
 
     /**
-     * The default constructor.
-     */
-    public Sha256Producer() {
-        this(DEFAULT_NUMBER_OF_ROUNDS);
-    }
-
-    /**
-     * Creates a producer for SHA-256 with a specified number of rounds.
+     * Creates a producer for SHA-256. If parameters are provided, the first
+     * parameter is used as the number of rounds.
      *
-     * @param numberOfRounds The number of rounds.
+     * @param parameters A list with parameters.
      */
-    public Sha256Producer(final int numberOfRounds) {
-        this.numberOfRounds = numberOfRounds;
+    public Sha256Producer(final List<Integer> parameters) {
+        if (parameters.isEmpty()) {
+            this.numberOfRounds = DEFAULT_NUMBER_OF_ROUNDS;
+        } else {
+            this.numberOfRounds = parameters.get(0);
+        }
     }
 
     /**
@@ -283,29 +211,6 @@ public class Sha256Producer {
     }
 
     /**
-     * Performs an atomic Boolean operations on a set of words.
-     *
-     * @param bf       The Boolean function.
-     * @param operator The operator to apply.
-     * @param words    The words on which to perform the operation.
-     * @return A word holding the result.
-     */
-    private Word atomicOperationOnWords(final BooleanFunction bf, final Operator operator, final Word... words) {
-        Word result = new Word(WORD_LENGTH);
-        for (int i = 0; i < WORD_LENGTH; i++) {
-            String[] operands = new String[words.length];
-            for (int j = 0; j < words.length; j++) {
-                operands[j] = words[j].get(i);
-            }
-            BooleanOperation bo = new BooleanOperation("v" + (++vCounter),
-                    String.join(" " + operator.getSymbol() + " ", operands));
-            bf.addExpression(bo);
-            result.put(i, bo.getName());
-        }
-        return result;
-    }
-
-    /**
      * Composes the result of the SHA-256 algorithm.
      *
      * @param bf The Boolean function.
@@ -360,6 +265,11 @@ public class Sha256Producer {
                     rightShift(bf, w[i - 2], TEN));
             w[i] = addWords(bf, addWords(bf, addWords(bf, w[i - SIXTEEN], s0), w[i - SEVEN]), s1);
         }
+    }
+
+    @Override
+    protected int getWordLength() {
+        return WORD_LENGTH;
     }
 
     /**
@@ -430,11 +340,7 @@ public class Sha256Producer {
         return result;
     }
 
-    /**
-     * Produces a Boolean function for the SHA-256 hash function.
-     *
-     * @return A Boolean function representing the SHA-256 hash function.
-     */
+    @Override
     public BooleanFunction produce() {
         BooleanFunction result = new BooleanFunction();
         initializeH(result);
