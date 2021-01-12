@@ -8,7 +8,7 @@ import net.filipvanlaenen.iacaj.BooleanFunction;
  * Class producing a Boolean function XORing the first half of the input
  * parameters with the second half.
  */
-public class XorProducer extends Producer {
+public final class XorProducer extends Producer {
     /**
      * The default word length.
      */

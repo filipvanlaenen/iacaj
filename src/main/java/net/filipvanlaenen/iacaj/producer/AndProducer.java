@@ -8,7 +8,7 @@ import net.filipvanlaenen.iacaj.BooleanFunction;
  * Class producing a Boolean function ANDing the first half of the input
  * parameters with the second half.
  */
-public class AndProducer extends Producer {
+public final class AndProducer extends Producer {
     /**
      * The default word length.
      */
