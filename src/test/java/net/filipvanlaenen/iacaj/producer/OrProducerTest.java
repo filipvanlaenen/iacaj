@@ -8,7 +8,14 @@ import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 
+/**
+ * Unit tests on the <code>OrProducer</code> class.
+ */
 public class OrProducerTest {
+    /**
+     * Verifies that the producer can produce a Boolean function implementing OR for
+     * words of length 1.
+     */
     @Test
     public void shouldProduceOrFunctionWithWordLength1() {
         Producer producer = new OrProducer(Arrays.asList(new Integer[] {1}));
@@ -20,6 +27,10 @@ public class OrProducerTest {
         assertEquals(expected, booleanFunction.toString());
     }
 
+    /**
+     * Verifies that the producer can produce a Boolean function implementing OR for
+     * words of length 2.
+     */
     @Test
     public void shouldProduceOrFunctionWithWordLength2() {
         Producer producer = new OrProducer(Arrays.asList(new Integer[] {2}));
