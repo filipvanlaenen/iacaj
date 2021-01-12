@@ -4,7 +4,11 @@ import java.util.List;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 
-public class OrProducer extends Producer {
+/**
+ * Class producing a Boolean function ORing the first half of the input
+ * parameters with the second half.
+ */
+public final class OrProducer extends Producer {
     /**
      * The default word length.
      */
