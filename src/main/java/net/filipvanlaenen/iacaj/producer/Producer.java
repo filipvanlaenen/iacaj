@@ -4,12 +4,14 @@ import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
 import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
 
+/**
+ * Abstract superclass for producers of Boolean functions.
+ */
 public abstract class Producer {
-    // TODO: Should be factored out.
     /**
      * Counter for the internal variables added to the Boolean function.
      */
-    protected long vCounter = 0;
+    private long vCounter = 0;
 
     /**
      * Appends a word to the output, with a given offset.
@@ -43,7 +45,7 @@ public abstract class Producer {
             for (int j = 0; j < numberOfWords; j++) {
                 operands[j] = words[j].get(i);
             }
-            BooleanOperation bo = new BooleanOperation("v" + (++vCounter),
+            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(),
                     String.join(" " + operator.getSymbol() + " ", operands));
             bf.addExpression(bo);
             result.put(i, bo.getName());
@@ -51,7 +53,14 @@ public abstract class Producer {
         return result;
     }
 
-    protected Word extractWordFromInput(int wordIndex) {
+    /**
+     * Extracts a word from the input parameters.
+     *
+     * @param wordIndex The index of the word to extract from the input parameters,
+     *                  starting from 0.
+     * @return A word containing the input parameters.
+     */
+    protected Word extractWordFromInput(final int wordIndex) {
         int wordLength = getWordLength();
         int bitIndexOffset = wordLength * wordIndex;
         Word first = new Word(wordLength);
@@ -61,7 +70,29 @@ public abstract class Producer {
         return first;
     }
 
+    /**
+     * Returns the name for the next internal variable that can be used to add a
+     * Boolean expression to the Boolean function.
+     *
+     * @return The name for the next internal variable.
+     */
+    protected String getNextInternalVariableName() {
+        return "v" + (++vCounter);
+    }
+
+    /**
+     * Returns the length of the words.
+     *
+     * @return The length of the words.
+     */
     protected abstract int getWordLength();
+
+    /**
+     * Produces the producer's Boolean function.
+     *
+     * @return The Boolean function.
+     */
+    public abstract BooleanFunction produce();
 
     /**
      * Combines to words using OR.
@@ -73,6 +104,4 @@ public abstract class Producer {
     protected Word orWords(final BooleanFunction bf, final Word... words) {
         return atomicOperationOnWords(bf, Operator.Or, words);
     }
-
-    public abstract BooleanFunction produce();
 }

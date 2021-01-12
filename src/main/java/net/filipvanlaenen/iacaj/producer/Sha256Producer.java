@@ -135,26 +135,27 @@ public final class Sha256Producer extends Producer {
      */
     private Word addWords(final BooleanFunction bf, final Word w0, final Word w1) {
         Word result = new Word(WORD_LENGTH);
-        BooleanOperation b0 = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ⊻ " + w1.get(0));
+        BooleanOperation b0 = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ⊻ " + w1.get(0));
         bf.addExpression(b0);
         result.put(0, b0.getName());
-        BooleanOperation carry = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ∧ " + w1.get(0));
+        BooleanOperation carry = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ∧ " + w1.get(0));
         bf.addExpression(carry);
         for (int i = 1; i < WORD_LENGTH - 1; i++) {
-            BooleanOperation bi = new BooleanOperation("v" + (++vCounter),
+            BooleanOperation bi = new BooleanOperation(getNextInternalVariableName(),
                     w0.get(i) + " ⊻ " + w1.get(i) + " ⊻ " + carry.getName());
             bf.addExpression(bi);
             result.put(i, bi.getName());
-            BooleanOperation p1 = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ∧ " + w1.get(0));
+            BooleanOperation p1 = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ∧ " + w1.get(0));
             bf.addExpression(p1);
-            BooleanOperation p2 = new BooleanOperation("v" + (++vCounter), w0.get(0) + " ⊻ " + w1.get(0));
+            BooleanOperation p2 = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ⊻ " + w1.get(0));
             bf.addExpression(p2);
-            BooleanOperation p3 = new BooleanOperation("v" + (++vCounter), carry.getName() + " ∧ " + p2.getName());
+            BooleanOperation p3 = new BooleanOperation(getNextInternalVariableName(),
+                    carry.getName() + " ∧ " + p2.getName());
             bf.addExpression(p3);
-            carry = new BooleanOperation("v" + (++vCounter), p1.getName() + " ⊻ " + p3.getName());
+            carry = new BooleanOperation(getNextInternalVariableName(), p1.getName() + " ⊻ " + p3.getName());
             bf.addExpression(carry);
         }
-        BooleanOperation bl = new BooleanOperation("v" + (++vCounter),
+        BooleanOperation bl = new BooleanOperation(getNextInternalVariableName(),
                 w0.get(WORD_LENGTH - 1) + " ⊻ " + w1.get(WORD_LENGTH - 1) + " ⊻ " + carry.getName());
         bf.addExpression(bl);
         result.put(WORD_LENGTH - 1, bl.getName());
@@ -178,7 +179,7 @@ public final class Sha256Producer extends Producer {
             } else {
                 rightHandSide = "True";
             }
-            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), rightHandSide);
+            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), rightHandSide);
             bf.addExpression(bo);
             result.put(i, bo.getName());
             value = value.divide(new BigInteger("2"));
@@ -320,7 +321,7 @@ public final class Sha256Producer extends Producer {
     private Word negateWord(final BooleanFunction bf, final Word word) {
         Word result = new Word(WORD_LENGTH);
         for (int i = 0; i < WORD_LENGTH; i++) {
-            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "¬" + word.get(i));
+            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), "¬" + word.get(i));
             bf.addExpression(bo);
             result.put(i, bo.getName());
         }
@@ -358,7 +359,7 @@ public final class Sha256Producer extends Producer {
             result.put(i, word.get(i + r));
         }
         for (int i = length - r; i < length; i++) {
-            BooleanOperation bo = new BooleanOperation("v" + (++vCounter), "False");
+            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), "False");
             bf.addExpression(bo);
             result.put(i, bo.getName());
         }
