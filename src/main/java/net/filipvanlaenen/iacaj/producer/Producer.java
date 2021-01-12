@@ -14,6 +14,17 @@ public abstract class Producer {
     private long vCounter = 0;
 
     /**
+     * Combines to words using AND.
+     *
+     * @param bf    The Boolean function.
+     * @param words The words to be ANDed together.
+     * @return A word holding the result.
+     */
+    protected Word andWords(final BooleanFunction bf, final Word... words) {
+        return atomicOperationOnWords(bf, Operator.And, words);
+    }
+
+    /**
      * Appends a word to the output, with a given offset.
      *
      * @param bf        The Boolean function.
@@ -88,13 +99,6 @@ public abstract class Producer {
     protected abstract int getWordLength();
 
     /**
-     * Produces the producer's Boolean function.
-     *
-     * @return The Boolean function.
-     */
-    public abstract BooleanFunction produce();
-
-    /**
      * Combines to words using OR.
      *
      * @param bf    The Boolean function.
@@ -103,5 +107,23 @@ public abstract class Producer {
      */
     protected Word orWords(final BooleanFunction bf, final Word... words) {
         return atomicOperationOnWords(bf, Operator.Or, words);
+    }
+
+    /**
+     * Produces the producer's Boolean function.
+     *
+     * @return The Boolean function.
+     */
+    public abstract BooleanFunction produce();
+
+    /**
+     * Combines to words using XOR.
+     *
+     * @param bf    The Boolean function.
+     * @param words The words to be XORed together.
+     * @return A word holding the result.
+     */
+    protected Word xorWords(final BooleanFunction bf, final Word... words) {
+        return atomicOperationOnWords(bf, Operator.Xor, words);
     }
 }

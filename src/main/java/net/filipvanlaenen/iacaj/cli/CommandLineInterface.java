@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.iacaj.producer.AndProducer;
 import net.filipvanlaenen.iacaj.producer.OrProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
+import net.filipvanlaenen.iacaj.producer.XorProducer;
 
 /**
  * Class implementing a command line interface.
@@ -41,8 +43,10 @@ public final class CommandLineInterface {
     private static void printUsage() {
         System.out.println("Usage:");
         System.out.println("  produce <function> <numeric-parameter>* [<file-name>]");
+        System.out.println("    produce AND [<word-length>] [<file-name>]");
         System.out.println("    produce OR [<word-length>] [<file-name>]");
         System.out.println("    produce SHA-256 [<no-of-rounds>] [<file-name>]");
+        System.out.println("    produce XOR [<word-length>] [<file-name>]");
         System.out.println("  resolve <file-name> [<file-name>]");
     }
 
@@ -78,10 +82,14 @@ public final class CommandLineInterface {
                     i++;
                 }
                 Producer producer = null;
-                if (function.equals("OR")) {
+                if (function.equals("AND")) {
+                    producer = new AndProducer(parameters);
+                } else if (function.equals("OR")) {
                     producer = new OrProducer(parameters);
                 } else if (function.equals("SHA-256")) {
                     producer = new Sha256Producer(parameters);
+                } else if (function.equals("XOR")) {
+                    producer = new XorProducer(parameters);
                 }
                 BooleanFunction bf = producer.produce();
                 outputBooleanFunction(bf, fileName);

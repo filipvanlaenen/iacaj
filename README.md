@@ -41,8 +41,28 @@ hash function, or one of the trivial sample Boolean functions. The trivial
 functions are added for testing purposes. Currently, the following functions can
 be produced:
 
+* AND
 * OR
 * SHA-256 (under development)
+* XOR
+
+### AND
+
+The following commands produce Boolean functions ANDing the first half of the
+input parameters with the second half:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce AND
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce AND AND32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce AND AND32.java
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce AND 4
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce AND 4 AND4.bf
+```
+
+If no parameters are provided, a word length of 32 is used and the output is
+printed out on the command line. If a file name is provided, the result will be
+written to the file. If a numeric parameter is provided first, it will be used
+as the word length. 
 
 ### OR
 
@@ -61,7 +81,6 @@ If no parameters are provided, a word length of 32 is used and the output is
 printed out on the command line. If a file name is provided, the result will be
 written to the file. If a numeric parameter is provided first, it will be used
 as the word length. 
-
 
 ### SHA-256
 
@@ -86,5 +105,24 @@ that file:
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 SHA-256.bf
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32 SHA-256-R32.bf
 ```
+
+### XOR
+
+The following commands produce Boolean functions XORing the first half of the
+input parameters with the second half:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce XOR
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce XOR XOR32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce XOR XOR32.java
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce XOR 4
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce XOR 4 XOR4.bf
+```
+
+If no parameters are provided, a word length of 32 is used and the output is
+printed out on the command line. If a file name is provided, the result will be
+written to the file. If a numeric parameter is provided first, it will be used
+as the word length. 
+
 
 ## Resolve a Boolean Function

@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
-import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
 
 /**
  * Class producing a Boolean function for the SHA-256 hash function.
@@ -188,17 +187,6 @@ public final class Sha256Producer extends Producer {
     }
 
     /**
-     * Combines to words using AND.
-     *
-     * @param bf    The Boolean function.
-     * @param words The words to be ANDed together.
-     * @return A word holding the result.
-     */
-    private Word andWords(final BooleanFunction bf, final Word... words) {
-        return atomicOperationOnWords(bf, Operator.And, words);
-    }
-
-    /**
      * Composes the result of the SHA-256 algorithm.
      *
      * @param bf The Boolean function.
@@ -364,16 +352,5 @@ public final class Sha256Producer extends Producer {
             result.put(i, bo.getName());
         }
         return result;
-    }
-
-    /**
-     * Combines to words using XOR.
-     *
-     * @param bf    The Boolean function.
-     * @param words The words to be XORed together.
-     * @return A word holding the result.
-     */
-    private Word xorWords(final BooleanFunction bf, final Word... words) {
-        return atomicOperationOnWords(bf, Operator.Xor, words);
     }
 }
