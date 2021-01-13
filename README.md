@@ -41,10 +41,29 @@ hash function, or one of the trivial sample Boolean functions. The trivial
 functions are added for testing purposes. Currently, the following functions can
 be produced:
 
+* ADD
 * AND
 * OR
 * SHA-256 (under development)
 * XOR
+
+### ADD
+
+The following commands produce Boolean functions ADDing the first half of the
+input parameters with the second half:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ADD
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ADD ADD32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ADD ADD32.java
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ADD 4
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ADD 4 ADD4.bf
+```
+
+If no parameters are provided, a word length of 32 is used and the output is
+printed out on the command line. If a file name is provided, the result will be
+written to the file. If a numeric parameter is provided first, it will be used
+as the word length. 
 
 ### AND
 

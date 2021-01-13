@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.iacaj.producer.AddProducer;
 import net.filipvanlaenen.iacaj.producer.AndProducer;
 import net.filipvanlaenen.iacaj.producer.OrProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
@@ -82,7 +83,9 @@ public final class CommandLineInterface {
                     i++;
                 }
                 Producer producer = null;
-                if (function.equals("AND")) {
+                if (function.equals("ADD")) {
+                    producer = new AddProducer(parameters);
+                } else if (function.equals("AND")) {
                     producer = new AndProducer(parameters);
                 } else if (function.equals("OR")) {
                     producer = new OrProducer(parameters);

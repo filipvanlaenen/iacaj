@@ -9,9 +9,57 @@ import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
  */
 public abstract class Producer {
     /**
+     * The magic number 3.
+     */
+    private static final int THREE = 3;
+    /**
      * Counter for the internal variables added to the Boolean function.
      */
     private long vCounter = 0;
+
+    /**
+     * Adds two words.
+     *
+     * @param bf The Boolean function.
+     * @param w0 The first word.
+     * @param w1 The second word.
+     * @return A word holding the addition of the two words.
+     */
+    protected Word addWords(final BooleanFunction bf, final Word w0, final Word w1) {
+        int wordLength = getWordLength();
+        Word result = new Word(wordLength);
+        BooleanOperation sum = new BooleanOperation(getNextInternalVariableName(),
+                w0.get(wordLength - 1) + " ⊻ " + w1.get(wordLength - 1));
+        bf.addExpression(sum);
+        result.put(wordLength - 1, sum.getName());
+        if (wordLength > 1) {
+            BooleanOperation carry = new BooleanOperation(getNextInternalVariableName(),
+                    w0.get(wordLength - 1) + " ∧ " + w1.get(wordLength - 1));
+            bf.addExpression(carry);
+            sum = new BooleanOperation(getNextInternalVariableName(),
+                    w0.get(wordLength - 2) + " ⊻ " + w1.get(wordLength - 2) + " ⊻ " + carry.getName());
+            bf.addExpression(sum);
+            result.put(wordLength - 2, sum.getName());
+            for (int i = wordLength - THREE; i >= 0; i--) {
+                BooleanOperation p1 = new BooleanOperation(getNextInternalVariableName(),
+                        w0.get(i + 1) + " ⊻ " + w1.get(i + 1));
+                bf.addExpression(p1);
+                BooleanOperation p2 = new BooleanOperation(getNextInternalVariableName(),
+                        carry.getName() + " ∧ " + p1.getName());
+                bf.addExpression(p2);
+                BooleanOperation p3 = new BooleanOperation(getNextInternalVariableName(),
+                        w0.get(i + 1) + " ∧ " + w1.get(i + 1));
+                bf.addExpression(p3);
+                carry = new BooleanOperation(getNextInternalVariableName(), p2.getName() + " ⊻ " + p3.getName());
+                bf.addExpression(carry);
+                sum = new BooleanOperation(getNextInternalVariableName(),
+                        w0.get(i) + " ⊻ " + w1.get(i) + " ⊻ " + carry.getName());
+                bf.addExpression(sum);
+                result.put(i, sum.getName());
+            }
+        }
+        return result;
+    }
 
     /**
      * Combines to words using AND.

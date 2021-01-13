@@ -125,43 +125,6 @@ public final class Sha256Producer extends Producer {
     }
 
     /**
-     * Adds two words.
-     *
-     * @param bf The Boolean function.
-     * @param w0 The first word.
-     * @param w1 The second word.
-     * @return A word holding the addition of the two words.
-     */
-    private Word addWords(final BooleanFunction bf, final Word w0, final Word w1) {
-        Word result = new Word(WORD_LENGTH);
-        BooleanOperation b0 = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ⊻ " + w1.get(0));
-        bf.addExpression(b0);
-        result.put(0, b0.getName());
-        BooleanOperation carry = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ∧ " + w1.get(0));
-        bf.addExpression(carry);
-        for (int i = 1; i < WORD_LENGTH - 1; i++) {
-            BooleanOperation bi = new BooleanOperation(getNextInternalVariableName(),
-                    w0.get(i) + " ⊻ " + w1.get(i) + " ⊻ " + carry.getName());
-            bf.addExpression(bi);
-            result.put(i, bi.getName());
-            BooleanOperation p1 = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ∧ " + w1.get(0));
-            bf.addExpression(p1);
-            BooleanOperation p2 = new BooleanOperation(getNextInternalVariableName(), w0.get(0) + " ⊻ " + w1.get(0));
-            bf.addExpression(p2);
-            BooleanOperation p3 = new BooleanOperation(getNextInternalVariableName(),
-                    carry.getName() + " ∧ " + p2.getName());
-            bf.addExpression(p3);
-            carry = new BooleanOperation(getNextInternalVariableName(), p1.getName() + " ⊻ " + p3.getName());
-            bf.addExpression(carry);
-        }
-        BooleanOperation bl = new BooleanOperation(getNextInternalVariableName(),
-                w0.get(WORD_LENGTH - 1) + " ⊻ " + w1.get(WORD_LENGTH - 1) + " ⊻ " + carry.getName());
-        bf.addExpression(bl);
-        result.put(WORD_LENGTH - 1, bl.getName());
-        return result;
-    }
-
-    /**
      * Adds a constant to the Boolean function.
      *
      * @param bf       The Boolean function.
