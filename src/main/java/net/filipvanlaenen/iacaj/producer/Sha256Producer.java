@@ -193,10 +193,7 @@ public final class Sha256Producer extends Producer {
     private void createW(final BooleanFunction bf) {
         w = new Word[numberOfRounds];
         for (int i = 0; i < SIXTEEN && i < numberOfRounds; i++) {
-            w[i] = new Word(WORD_LENGTH);
-            for (int j = 0; j < WORD_LENGTH; j++) {
-                w[i].put(j, "i" + ((i + 1) * WORD_LENGTH - j));
-            }
+            w[i] = extractWordFromInput(i);
         }
         for (int i = SIXTEEN; i < numberOfRounds; i++) {
             Word s0 = xorWords(bf, w[i - FIFTEEN].rightRotate(SEVEN), w[i - FIFTEEN].rightRotate(EIGHTEEN),
