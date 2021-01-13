@@ -16,7 +16,7 @@ public final class Sha256Producer extends Producer {
     /**
      * Word length for the SHA-256 algorithm.
      */
-    static final int WORD_LENGTH = 32;
+    private static final int WORD_LENGTH = 32;
     /**
      * The default number of rounds for the SHA-256 algorithm.
      */
@@ -101,6 +101,7 @@ public final class Sha256Producer extends Producer {
      * @param parameters A list with parameters.
      */
     public Sha256Producer(final List<Integer> parameters) {
+        super(WORD_LENGTH);
         if (parameters.isEmpty()) {
             this.numberOfRounds = DEFAULT_NUMBER_OF_ROUNDS;
         } else {
@@ -204,11 +205,6 @@ public final class Sha256Producer extends Producer {
                     rightShift(bf, w[i - 2], TEN));
             w[i] = addWords(bf, addWords(bf, addWords(bf, w[i - SIXTEEN], s0), w[i - SEVEN]), s1);
         }
-    }
-
-    @Override
-    protected int getWordLength() {
-        return WORD_LENGTH;
     }
 
     /**

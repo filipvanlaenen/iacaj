@@ -10,31 +10,13 @@ import net.filipvanlaenen.iacaj.BooleanFunction;
  */
 public final class OrProducer extends Producer {
     /**
-     * The default word length.
-     */
-    private static final int DEFAULT_WORD_LENGTH = 32;
-    /**
-     * The word length.
-     */
-    private int wordLength;
-
-    /**
      * Creates a producer for OR. If parameters are provided, the first parameter is
      * used as the word length.
      *
      * @param parameters A list with parameters.
      */
     public OrProducer(final List<Integer> parameters) {
-        if (parameters.isEmpty()) {
-            this.wordLength = DEFAULT_WORD_LENGTH;
-        } else {
-            this.wordLength = parameters.get(0);
-        }
-    }
-
-    @Override
-    protected int getWordLength() {
-        return wordLength;
+        super(getItemOrNull(parameters, 0));
     }
 
     @Override

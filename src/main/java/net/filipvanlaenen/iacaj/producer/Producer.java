@@ -1,5 +1,7 @@
 package net.filipvanlaenen.iacaj.producer;
 
+import java.util.List;
+
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
 import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
@@ -9,13 +11,32 @@ import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
  */
 public abstract class Producer {
     /**
+     * The default word length.
+     */
+    private static final int DEFAULT_WORD_LENGTH = 32;
+    /**
      * The magic number 3.
      */
     private static final int THREE = 3;
+
     /**
      * Counter for the internal variables added to the Boolean function.
      */
     private long vCounter = 0;
+    /**
+     * The word length.
+     */
+    private int wordLength;
+
+    /**
+     * Constructor taking the word length as its parameter. If the word length is
+     * <code>null</code>, the default word length will be used.
+     *
+     * @param wordLength The word length.
+     */
+    public Producer(final Integer wordLength) {
+        this.wordLength = wordLength == null ? DEFAULT_WORD_LENGTH : wordLength;
+    }
 
     /**
      * Adds two words.
@@ -26,7 +47,6 @@ public abstract class Producer {
      * @return A word holding the addition of the two words.
      */
     protected Word addWords(final BooleanFunction bf, final Word w0, final Word w1) {
-        int wordLength = getWordLength();
         Word result = new Word(wordLength);
         BooleanOperation sum = new BooleanOperation(getNextInternalVariableName(),
                 w0.get(wordLength - 1) + " ⊻ " + w1.get(wordLength - 1));
@@ -80,7 +100,6 @@ public abstract class Producer {
      * @param wordIndex The offset where to add the output.
      */
     protected void appendWordToOutput(final BooleanFunction bf, final Word word, final int wordIndex) {
-        int wordLength = getWordLength();
         int bitIndexOffset = wordLength * wordIndex;
         for (int i = 0; i < wordLength; i++) {
             bf.addExpression(new BooleanOperation("o" + (bitIndexOffset + i + 1), word.get(i)));
@@ -96,7 +115,6 @@ public abstract class Producer {
      * @return A word holding the result.
      */
     protected Word atomicOperationOnWords(final BooleanFunction bf, final Operator operator, final Word... words) {
-        int wordLength = getWordLength();
         int numberOfWords = words.length;
         Word result = new Word(wordLength);
         for (int i = 0; i < wordLength; i++) {
@@ -120,13 +138,25 @@ public abstract class Producer {
      * @return A word containing the input parameters.
      */
     protected Word extractWordFromInput(final int wordIndex) {
-        int wordLength = getWordLength();
         int bitIndexOffset = wordLength * wordIndex;
         Word first = new Word(wordLength);
         for (int i = 0; i < wordLength; i++) {
             first.put(i, "i" + (bitIndexOffset + i + 1));
         }
         return first;
+    }
+
+    /**
+     * Returns an item in a list, or <code>null</code> if the list is too short for
+     * the provided index.
+     *
+     * @param <T>   The type for the list items.
+     * @param list  The list with items.
+     * @param index The index for which to return the item.
+     * @return The item at the provided index, or null if the list is too short.
+     */
+    protected static <T> T getItemOrNull(final List<T> list, final int index) {
+        return index < list.size() ? list.get(index) : null;
     }
 
     /**
@@ -144,7 +174,9 @@ public abstract class Producer {
      *
      * @return The length of the words.
      */
-    protected abstract int getWordLength();
+    protected final int getWordLength() {
+        return wordLength;
+    }
 
     /**
      * Combines to words using OR.
