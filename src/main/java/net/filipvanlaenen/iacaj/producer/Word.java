@@ -52,7 +52,7 @@ public class Word {
     public Word rightRotate(final int r) {
         Word result = new Word(length);
         for (int i = 0; i < length; i++) {
-            result.put(i, get((i + r) % length));
+            result.put(i, get((length + i - r) % length));
         }
         return result;
     }

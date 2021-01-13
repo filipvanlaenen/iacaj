@@ -44,6 +44,7 @@ be produced:
 * ADD
 * AND
 * OR
+* ROTATE
 * SHA-256 (under development)
 * XOR
 
@@ -94,6 +95,27 @@ java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce OR OR32.bf
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce OR OR32.java
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce OR 4
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce OR 4 OR4.bf
+```
+
+If no parameters are provided, a word length of 32 is used and the output is
+printed out on the command line. If a file name is provided, the result will be
+written to the file. If a numeric parameter is provided first, it will be used
+as the word length. 
+
+### ROTATE
+
+The following commands produce Boolean functions ORing the first half of the
+input parameters with the second half:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE ROTATE32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE ROTATE32.java
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4 ROTATE4.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4 1
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4 1 ROTATE4-1.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4 -1
 ```
 
 If no parameters are provided, a word length of 32 is used and the output is
