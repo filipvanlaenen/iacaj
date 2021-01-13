@@ -297,12 +297,11 @@ public final class Sha256Producer extends Producer {
      * @return A word with all variable names shifted to the right with r positions.
      */
     private Word rightShift(final BooleanFunction bf, final Word word, final int r) {
-        int length = word.getLength();
-        Word result = new Word(length);
-        for (int i = 0; i < length - r; i++) {
+        Word result = new Word(WORD_LENGTH);
+        for (int i = 0; i < WORD_LENGTH - r; i++) {
             result.put(i, word.get(i + r));
         }
-        for (int i = length - r; i < length; i++) {
+        for (int i = WORD_LENGTH - r; i < WORD_LENGTH; i++) {
             BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), "False");
             bf.addExpression(bo);
             result.put(i, bo.getName());

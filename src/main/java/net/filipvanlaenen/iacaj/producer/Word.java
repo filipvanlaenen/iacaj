@@ -34,15 +34,6 @@ public class Word {
     }
 
     /**
-     * Returns the length of the word.
-     *
-     * @return The length of the word.
-     */
-    int getLength() {
-        return length;
-    }
-
-    /**
      * Puts a variable name in the word at position i.
      *
      * @param i            The position where to place the variable name.
