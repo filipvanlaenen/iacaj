@@ -170,15 +170,6 @@ public abstract class Producer {
     }
 
     /**
-     * Returns the length of the words.
-     *
-     * @return The length of the words.
-     */
-    protected final int getWordLength() {
-        return wordLength;
-    }
-
-    /**
      * Combines to words using OR.
      *
      * @param bf    The Boolean function.
