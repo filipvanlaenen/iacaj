@@ -19,6 +19,22 @@ public class RotateProducerTest {
 
     /**
      * Verifies that the producer can produce a Boolean function implementing ROTATE
+     * 0 for words of length 3.
+     */
+    @Test
+    public void shouldProduceNoRotateFunctionWithWordLength3() {
+        Producer producer = new RotateProducer(Arrays.asList(new Integer[] {THREE}));
+        BooleanFunction booleanFunction = producer.produce();
+        StringBuilder sb = new StringBuilder();
+        sb.append("o1 = i1\n");
+        sb.append("o2 = i2\n");
+        sb.append("o3 = i3");
+        String expected = sb.toString();
+        assertEquals(expected, booleanFunction.toString());
+    }
+
+    /**
+     * Verifies that the producer can produce a Boolean function implementing ROTATE
      * +1 for words of length 3.
      */
     @Test

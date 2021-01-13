@@ -77,7 +77,7 @@ public final class CommandLineInterface {
                 int i = 2;
                 while (i < args.length) {
                     String parameterString = args[i];
-                    boolean isNumeric = Pattern.matches("\\d+", parameterString);
+                    boolean isNumeric = Pattern.matches("-?\\d+", parameterString);
                     if (isNumeric) {
                         parameters.add(Integer.parseInt(parameterString));
                     } else {
