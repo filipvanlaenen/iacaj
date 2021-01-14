@@ -46,6 +46,7 @@ be produced:
 * OR
 * ROTATE
 * SHA-256 (under development)
+* SHIFT
 * XOR
 
 ### ADD
@@ -104,8 +105,8 @@ as the word length.
 
 ### ROTATE
 
-The following commands produce Boolean functions ORing the first half of the
-input parameters with the second half:
+The following commands produce Boolean functions rotating the input parameters
+to the right:
 
 ```
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE
@@ -121,7 +122,8 @@ java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4 -1
 If no parameters are provided, a word length of 32 is used and the output is
 printed out on the command line. If a file name is provided, the result will be
 written to the file. If a numeric parameter is provided first, it will be used
-as the word length. 
+as the word length. A second numeric parameter will be used as the number of
+positions to rotate the input parameters.
 
 ### SHA-256
 
@@ -146,6 +148,28 @@ that file:
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 SHA-256.bf
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32 SHA-256-R32.bf
 ```
+
+### SHIFT
+
+The following commands produce Boolean functions shifting the input parameters
+to the right:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT SHIFT32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT SHIFTE32.java
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT 4
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT 4 SHIFT4.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT 4 1
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT 4 1 SHIFT4-1.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHIFT 4 -1
+```
+
+If no parameters are provided, a word length of 32 is used and the output is
+printed out on the command line. If a file name is provided, the result will be
+written to the file. If a numeric parameter is provided first, it will be used
+as the word length. A second numeric parameter will be used as the number of
+positions to shift the input parameters.
 
 ### XOR
 

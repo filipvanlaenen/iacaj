@@ -188,6 +188,35 @@ public abstract class Producer {
     public abstract BooleanFunction produce();
 
     /**
+     * Returns a word with all variables names shifted to the right with r
+     * positions.
+     *
+     * @param bf   The Boolean function.
+     * @param word The word to be shifted to the right.
+     * @param r    The number of positions to shift.
+     * @return A word with all variable names shifted to the right with r positions.
+     */
+    protected Word rightShift(final BooleanFunction bf, final Word word, final int r) {
+        Word result = new Word(wordLength);
+        for (int i = 0; i < r; i++) {
+            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), "False");
+            bf.addExpression(bo);
+            result.put(i, bo.getName());
+        }
+        int lowerBound = r < 0 ? 0 : r;
+        int upperBound = r < 0 ? wordLength + r : wordLength;
+        for (int i = lowerBound; i < upperBound; i++) {
+            result.put(i, word.get(i - r));
+        }
+        for (int i = wordLength + r; i < wordLength; i++) {
+            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), "False");
+            bf.addExpression(bo);
+            result.put(i, bo.getName());
+        }
+        return result;
+    }
+
+    /**
      * Combines to words using XOR.
      *
      * @param bf    The Boolean function.

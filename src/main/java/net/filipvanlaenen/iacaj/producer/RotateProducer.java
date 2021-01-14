@@ -33,8 +33,8 @@ public final class RotateProducer extends Producer {
     @Override
     public BooleanFunction produce() {
         BooleanFunction bf = new BooleanFunction();
-        Word first = extractWordFromInput(0);
-        Word result = first.rightRotate(numberOfPositions);
+        Word word = extractWordFromInput(0);
+        Word result = word.rightRotate(numberOfPositions);
         appendWordToOutput(bf, result, 0);
         return bf;
     }

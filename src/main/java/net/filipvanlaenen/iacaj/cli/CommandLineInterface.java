@@ -15,6 +15,7 @@ import net.filipvanlaenen.iacaj.producer.OrProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.RotateProducer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
+import net.filipvanlaenen.iacaj.producer.ShiftProducer;
 import net.filipvanlaenen.iacaj.producer.XorProducer;
 
 /**
@@ -50,6 +51,7 @@ public final class CommandLineInterface {
         System.out.println("    produce OR [<word-length>] [<file-name>]");
         System.out.println("    produce ROTATE [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce SHA-256 [<no-of-rounds>] [<file-name>]");
+        System.out.println("    produce SHIFT [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce XOR [<word-length>] [<file-name>]");
         System.out.println("  resolve <file-name> [<file-name>]");
     }
@@ -96,6 +98,8 @@ public final class CommandLineInterface {
                     producer = new RotateProducer(parameters);
                 } else if (function.equals("SHA-256")) {
                     producer = new Sha256Producer(parameters);
+                } else if (function.equals("SHIFT")) {
+                    producer = new ShiftProducer(parameters);
                 } else if (function.equals("XOR")) {
                     producer = new XorProducer(parameters);
                 }

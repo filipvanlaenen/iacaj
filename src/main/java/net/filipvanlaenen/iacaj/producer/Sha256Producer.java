@@ -16,7 +16,7 @@ public final class Sha256Producer extends Producer {
     /**
      * Word length for the SHA-256 algorithm.
      */
-    private static final int WORD_LENGTH = 32;
+    static final int WORD_LENGTH = 32;
     /**
      * The default number of rounds for the SHA-256 algorithm.
      */
@@ -284,28 +284,6 @@ public final class Sha256Producer extends Producer {
         }
         addCompressionResultToHash(result);
         composeResult(result);
-        return result;
-    }
-
-    /**
-     * Returns a word with all variables names shifted to the right with r
-     * positions.
-     *
-     * @param bf   The Boolean function.
-     * @param word The word to be shifted to the right.
-     * @param r    The number of positions to shift.
-     * @return A word with all variable names shifted to the right with r positions.
-     */
-    private Word rightShift(final BooleanFunction bf, final Word word, final int r) {
-        Word result = new Word(WORD_LENGTH);
-        for (int i = 0; i < WORD_LENGTH - r; i++) {
-            result.put(i, word.get(i + r));
-        }
-        for (int i = WORD_LENGTH - r; i < WORD_LENGTH; i++) {
-            BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), "False");
-            bf.addExpression(bo);
-            result.put(i, bo.getName());
-        }
         return result;
     }
 }
