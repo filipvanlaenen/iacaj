@@ -135,7 +135,7 @@ public final class Sha256Producer extends Producer {
     private Word addConstant(final BooleanFunction bf, final String hexValue) {
         BigInteger value = new BigInteger(hexValue, SIXTEEN);
         Word result = new Word(WORD_LENGTH);
-        for (int i = 0; i < WORD_LENGTH; i++) {
+        for (int i = 1; i <= WORD_LENGTH; i++) {
             String rightHandSide;
             if (value.mod(new BigInteger("2")).equals(BigInteger.ZERO)) {
                 rightHandSide = "False";
@@ -144,7 +144,7 @@ public final class Sha256Producer extends Producer {
             }
             BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), rightHandSide);
             bf.addExpression(bo);
-            result.put(i, bo.getName());
+            result.put(WORD_LENGTH - i, bo.getName());
             value = value.divide(new BigInteger("2"));
         }
         return result;
