@@ -41,7 +41,7 @@ hash function, or one of the trivial sample Boolean functions. The trivial
 functions are added for testing purposes. Currently, the following functions can
 be produced:
 
-* [ADD](ADD)
+* [ADD](#ADD)
 * AND
 * OR
 * ROTATE
