@@ -32,7 +32,10 @@ o3 = v3
 o4 = v4
 ```
 
-The sections below explain how to use the tool to perform different actions.
+The sections below explain how to use the tool to perform different actions:
+
+* [Produce a Hash Function](#produce-a-hash-function)
+* [Resolve a Boolean Function](#resolve-a-boolean-function)
 
 ## Produce a Hash Function
 
