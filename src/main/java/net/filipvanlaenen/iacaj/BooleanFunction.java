@@ -116,6 +116,17 @@ public class BooleanFunction {
     }
 
     /**
+     * Adds a set of expressions to the Boolean function.
+     *
+     * @param booleanExpressions A set of expressions.
+     */
+    public void addExpressions(final Set<BooleanExpression> booleanExpressions) {
+        for (BooleanExpression booleanExpression : booleanExpressions) {
+            addExpression(booleanExpression);
+        }
+    }
+
+    /**
      * Exports the Boolean function to a string. The type of string is controlled by
      * the export method provided to export the Boolean expression.
      *

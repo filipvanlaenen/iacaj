@@ -48,7 +48,7 @@ be produced:
 * [AND](#and)
 * [OR](#or)
 * [ROTATE](#rotate)
-* [SHA-256](#sha-256) (under development)
+* [SHA-256](#sha-256)
 * [SHIFT](#shift)
 * [XOR](#xor)
 
