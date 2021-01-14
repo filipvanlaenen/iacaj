@@ -41,13 +41,13 @@ hash function, or one of the trivial sample Boolean functions. The trivial
 functions are added for testing purposes. Currently, the following functions can
 be produced:
 
-* [ADD](#ADD)
-* AND
-* OR
-* ROTATE
-* SHA-256 (under development)
-* SHIFT
-* XOR
+* [ADD](#add)
+* [AND](#and)
+* [OR](#or)
+* [ROTATE](#rotate)
+* [SHA-256](#sha-256) (under development)
+* [SHIFT](#shift)
+* [XOR](#xor)
 
 ### ADD
 
