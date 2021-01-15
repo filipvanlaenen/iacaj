@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.producer.AddProducer;
 import net.filipvanlaenen.iacaj.producer.AndProducer;
 import net.filipvanlaenen.iacaj.producer.OrProducer;
@@ -53,6 +54,7 @@ public final class CommandLineInterface {
         System.out.println("    produce SHA-256 [<no-of-rounds>] [<file-name>]");
         System.out.println("    produce SHIFT [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce XOR [<word-length>] [<file-name>]");
+        System.out.println("  report <file-name> [<file-name>]");
         System.out.println("  resolve <file-name> [<file-name>]");
     }
 
@@ -105,6 +107,27 @@ public final class CommandLineInterface {
                 }
                 BooleanFunction bf = producer.produce();
                 outputBooleanFunction(bf, fileName);
+            }
+        },
+        /**
+         * Command to read in a Boolean function from a file and produce a report on its
+         * complexity.
+         */
+        Report {
+            @Override
+            void execute(String[] args) throws IOException {
+                String inputFileName = args[1];
+                String outputFileName = null;
+                if (args.length > 2) {
+                    outputFileName = args[2];
+                }
+                BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
+                ComplexityReport complexityReport = new ComplexityReport(bf);
+                if (outputFileName == null) {
+                    System.out.println(complexityReport.toString());
+                } else {
+                    writeFile(outputFileName, complexityReport.toYaml());
+                }
             }
         },
         /**
