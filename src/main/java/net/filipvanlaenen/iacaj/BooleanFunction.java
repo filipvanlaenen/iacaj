@@ -168,6 +168,20 @@ public class BooleanFunction {
         return inputParameters;
     }
 
+    private int getNumberOfConstrains() {
+        int result = 0;
+        for (BooleanExpression expression : expressions) {
+            if (expression instanceof BooleanConstraint) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public int getNumberOfBooleanExpressions() {
+        return expressions.size() - getNumberOfConstrains();
+    }
+
     /**
      * Resolves a Boolean function.
      */
