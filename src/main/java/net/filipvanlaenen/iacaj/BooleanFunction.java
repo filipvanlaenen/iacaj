@@ -168,7 +168,7 @@ public class BooleanFunction {
         return inputParameters;
     }
 
-    private int getNumberOfConstrains() {
+    private int getNumberOfConstraints() {
         int result = 0;
         for (BooleanExpression expression : expressions) {
             if (expression instanceof BooleanConstraint) {
@@ -179,7 +179,7 @@ public class BooleanFunction {
     }
 
     public int getNumberOfBooleanExpressions() {
-        return expressions.size() - getNumberOfConstrains();
+        return expressions.size() - getNumberOfConstraints();
     }
 
     /**
