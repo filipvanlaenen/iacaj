@@ -115,7 +115,7 @@ public final class CommandLineInterface {
          */
         Report {
             @Override
-            void execute(String[] args) throws IOException {
+            void execute(final String[] args) throws IOException {
                 String inputFileName = args[1];
                 String outputFileName = null;
                 if (args.length > 2) {

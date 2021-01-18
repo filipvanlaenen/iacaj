@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests on the <code>ComplexityReport</code> class.
+ */
 public class ComplexityReportTest {
     /**
      * Verifies that it reports one Boolean expression correctly.

@@ -168,6 +168,11 @@ public class BooleanFunction {
         return inputParameters;
     }
 
+    /**
+     * Calculates the number of constraints in the Boolean function.
+     *
+     * @return The number of constraints in the Boolean function.
+     */
     private int getNumberOfConstraints() {
         int result = 0;
         for (BooleanExpression expression : expressions) {
@@ -178,6 +183,11 @@ public class BooleanFunction {
         return result;
     }
 
+    /**
+     * Returns the number of Boolean expressions in the Boolean function.
+     *
+     * @return The number of Boolean expressions in the Boolean function.
+     */
     public int getNumberOfBooleanExpressions() {
         return expressions.size() - getNumberOfConstraints();
     }
