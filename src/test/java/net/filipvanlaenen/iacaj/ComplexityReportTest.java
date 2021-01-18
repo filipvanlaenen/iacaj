@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -29,5 +30,17 @@ public class ComplexityReportTest {
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         ComplexityReport complexityReport = new ComplexityReport(booleanFunction);
         assertEquals(1, complexityReport.getAggregatedValue(ComplexityReport.Metric.NumberOfExpressions));
+    }
+
+    /**
+     * Verifies that <code>toString</code> includes an entry for the number of
+     * Boolean expressions, using the human readable name for the metric.
+     */
+    @Test
+    public void toStringUsesTheHumanReadableNameForNumberOfExpressions() {
+        String[] content = new String[] {"o1 = i1 ∧ i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        ComplexityReport complexityReport = new ComplexityReport(booleanFunction);
+        assertTrue(complexityReport.toString().contains("Number of expressions: 1"));
     }
 }
