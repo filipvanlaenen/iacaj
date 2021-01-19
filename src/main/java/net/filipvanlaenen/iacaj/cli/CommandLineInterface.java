@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import net.filipvanlaenen.iacaj.Attack;
+import net.filipvanlaenen.iacaj.AttackResult;
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.producer.AddProducer;
@@ -46,6 +48,7 @@ public final class CommandLineInterface {
      */
     private static void printUsage() {
         System.out.println("Usage:");
+        System.out.println("  attack <file-name> [<file-name>]");
         System.out.println("  produce <function> <numeric-parameter>* [<file-name>]");
         System.out.println("    produce ADD [<word-length>] [<file-name>]");
         System.out.println("    produce AND [<word-length>] [<file-name>]");
@@ -68,6 +71,27 @@ public final class CommandLineInterface {
      * Enumeration with the available commands.
      */
     enum Command {
+        /**
+         * Command to read in a Boolean function from a file and find a collision.
+         */
+        Attack {
+            @Override
+            void execute(final String[] args) throws IOException {
+                String inputFileName = args[1];
+                String outputFileName = null;
+                if (args.length > 2) {
+                    outputFileName = args[2];
+                }
+                BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
+                Attack attack = new Attack(bf);
+                AttackResult attackResult = attack.perform();
+                if (outputFileName == null) {
+                    System.out.println(attackResult.toString());
+                } else {
+                    writeFile(outputFileName, attackResult.toString());
+                }
+            }
+        },
         /**
          * Command to produce a specific hash function, possibly with a specified number
          * of rounds, and export it to a file.
