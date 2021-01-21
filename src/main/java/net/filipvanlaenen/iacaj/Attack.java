@@ -20,8 +20,6 @@ public class Attack {
         if (inputParameters.isEmpty()) {
             return new AllInputParametersEliminated();
         }
-        System.out.println(initialInputParameters.size());
-        System.out.println(inputParameters.size());
         if (inputParameters.size() < initialInputParameters.size()) {
             return new SomeInputParametersEliminated();
         }
