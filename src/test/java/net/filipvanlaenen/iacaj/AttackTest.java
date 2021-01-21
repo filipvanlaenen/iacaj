@@ -40,4 +40,15 @@ public class AttackTest {
         Attack attack = new Attack(booleanFunction);
         assertTrue(attack.perform() instanceof SomeInputParametersEliminated);
     }
+
+    /**
+     * Verifies that it finds a collission for a simple OR expression.
+     */
+    @Test
+    public void shouldReturnCollissionForOR() {
+        String[] content = new String[] {"o1 = i1 ∨ i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        Attack attack = new Attack(booleanFunction);
+        assertTrue(attack.perform() instanceof CollissionFound);
+    }
 }
