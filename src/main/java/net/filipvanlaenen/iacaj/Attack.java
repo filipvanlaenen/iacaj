@@ -1,12 +1,30 @@
 package net.filipvanlaenen.iacaj;
 
+import java.util.Set;
+
 public class Attack {
 
-    public Attack(BooleanFunction bf) {
+    private final BooleanFunction booleanFunction;
+
+    public Attack(BooleanFunction booleanFunction) {
+        this.booleanFunction = booleanFunction;
     }
 
     public AttackResult perform() {
+        Set<InputParameter> initialInputParameters = booleanFunction.getInputParameters();
+        if (initialInputParameters.isEmpty()) {
+            return new NoInputParameters();
+        }
+        booleanFunction.resolve();
+        Set<InputParameter> inputParameters = booleanFunction.getInputParameters();
+        if (inputParameters.isEmpty()) {
+            return new AllInputParametersEliminated();
+        }
+        System.out.println(initialInputParameters.size());
+        System.out.println(inputParameters.size());
+        if (inputParameters.size() < initialInputParameters.size()) {
+            return new SomeInputParametersEliminated();
+        }
         return null;
     }
-
 }

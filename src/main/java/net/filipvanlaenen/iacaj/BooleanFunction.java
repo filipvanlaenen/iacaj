@@ -165,7 +165,7 @@ public class BooleanFunction {
      * @return The input parameters of the Boolean function.
      */
     public Set<InputParameter> getInputParameters() {
-        return inputParameters;
+        return Set.copyOf(inputParameters);
     }
 
     /**
@@ -220,6 +220,10 @@ public class BooleanFunction {
                 }
             }
         } while (expressions.size() != before);
+        inputParameters.clear();
+        for (BooleanExpression expression : expressions) {
+            inputParameters.addAll(expression.getInputParameters());
+        }
     }
 
     /**
