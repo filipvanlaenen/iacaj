@@ -60,7 +60,8 @@ public class Attack {
             collissionCandidate = findNextCollissionCandidate(extensionSource, attackRows[numberOfConstraints]);
             collissionCandidate.resolve();
             attackRows[numberOfConstraints].add(collissionCandidate);
-            collissionFound = collissionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
+            collissionFound = numberOfConstraints
+                    + collissionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }
         return new CollissionFound(collissionCandidate);
     }
