@@ -1,11 +1,18 @@
 package net.filipvanlaenen.iacaj;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Attack {
-
     public class AttackRow {
+        private Set<BooleanFunction> booleanFunctions = new HashSet<BooleanFunction>();
+
         public void add(BooleanFunction booleanFunction) {
+            booleanFunctions.add(booleanFunction);
+        }
+
+        public BooleanFunction findNextExtenstionPoint() {
+            return booleanFunctions.iterator().next(); // TODO
         }
     }
 
@@ -16,15 +23,14 @@ public class Attack {
     }
 
     private BooleanFunction extendParent(BooleanFunction parent, AttackRow attackRow) {
-        return null;
-    }
-
-    private BooleanFunction findNextParent(AttackRow attackRow) {
-        return null;
+        BooleanFunction result = new BooleanFunction(parent);
+        InputParameter inputParameter = parent.getInputParameters().iterator().next(); // TODO
+        result.addExpression(BooleanExpression.parse(inputParameter.getName() + " = True")); // TODO
+        return result;
     }
 
     private int findNextRowToAttack(AttackRow[] attackRows) {
-        return 1;
+        return 1; // TODO
     }
 
     public AttackResult perform() {
@@ -42,18 +48,19 @@ public class Attack {
             return new SomeInputParametersEliminated();
         }
         AttackRow[] attackRows = new AttackRow[numberOfInputParameters];
-        attackRows[0] = new AttackRow();
+        for (int i = 0; i < numberOfInputParameters; i++) {
+            attackRows[i] = new AttackRow();
+        }
         attackRows[0].add(booleanFunction);
         boolean collissionFound = false;
         BooleanFunction collissionCandidate = booleanFunction;
         while (!collissionFound) {
             int numberOfConstraints = findNextRowToAttack(attackRows);
-            BooleanFunction extensionPoint = findNextParent(attackRows[numberOfConstraints - 1]);
+            BooleanFunction extensionPoint = attackRows[numberOfConstraints - 1].findNextExtenstionPoint();
             collissionCandidate = extendParent(extensionPoint, attackRows[numberOfConstraints]);
             collissionCandidate.resolve();
             attackRows[numberOfConstraints].add(collissionCandidate);
-            collissionFound = numberOfConstraints
-                    + collissionCandidate.getInputParameters().size() < numberOfInputParameters;
+            collissionFound = collissionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }
         return new CollissionFound(collissionCandidate);
     }

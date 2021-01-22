@@ -86,6 +86,16 @@ public class BooleanFunction {
      */
     private Set<InputParameter> inputParameters = new HashSet<InputParameter>();
 
+    public BooleanFunction() {
+    }
+
+    public BooleanFunction(BooleanFunction parent) {
+        this();
+        for (BooleanExpression expression : parent.getExpressions()) {
+            addExpression(expression);
+        }
+    }
+
     /**
      * Factory method creating a BooleanFunction instance based on an array of
      * strings.
@@ -148,15 +158,8 @@ public class BooleanFunction {
         return expressionMap.get(name);
     }
 
-    /**
-     * Returns the Boolean expressions in sorted order.
-     *
-     * @return A sorted list with the Boolean expressions.
-     */
-    private List<BooleanExpression> getSortedExpressions() {
-        List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
-        sortedExpressions.sort(new BooleanExpressionComparator());
-        return sortedExpressions;
+    private Set<BooleanExpression> getExpressions() {
+        return Set.copyOf(expressions);
     }
 
     /**
@@ -166,6 +169,15 @@ public class BooleanFunction {
      */
     public Set<InputParameter> getInputParameters() {
         return Set.copyOf(inputParameters);
+    }
+
+    /**
+     * Returns the number of Boolean expressions in the Boolean function.
+     *
+     * @return The number of Boolean expressions in the Boolean function.
+     */
+    public int getNumberOfBooleanExpressions() {
+        return expressions.size() - getNumberOfConstraints();
     }
 
     /**
@@ -183,13 +195,19 @@ public class BooleanFunction {
         return result;
     }
 
+    public int getNumberOfInputParameters() {
+        return inputParameters.size();
+    }
+
     /**
-     * Returns the number of Boolean expressions in the Boolean function.
+     * Returns the Boolean expressions in sorted order.
      *
-     * @return The number of Boolean expressions in the Boolean function.
+     * @return A sorted list with the Boolean expressions.
      */
-    public int getNumberOfBooleanExpressions() {
-        return expressions.size() - getNumberOfConstraints();
+    private List<BooleanExpression> getSortedExpressions() {
+        List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
+        sortedExpressions.sort(new BooleanExpressionComparator());
+        return sortedExpressions;
     }
 
     /**
