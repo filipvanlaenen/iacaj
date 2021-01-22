@@ -11,7 +11,7 @@ public class Attack {
             booleanFunctions.add(booleanFunction);
         }
 
-        public BooleanFunction findNextExtenstionPoint() {
+        public BooleanFunction findNextExtensionSource() {
             return booleanFunctions.iterator().next(); // TODO
         }
     }
@@ -22,10 +22,10 @@ public class Attack {
         this.booleanFunction = booleanFunction;
     }
 
-    private BooleanFunction extendParent(BooleanFunction parent, AttackRow attackRow) {
+    private BooleanFunction findNextCollissionCandidate(BooleanFunction parent, AttackRow attackRow) {
         BooleanFunction result = new BooleanFunction(parent);
         InputParameter inputParameter = parent.getInputParameters().iterator().next(); // TODO
-        result.addExpression(BooleanExpression.parse(inputParameter.getName() + " = True")); // TODO
+        result.addExpression(BooleanExpression.parse(inputParameter.getName() + " = False")); // TODO
         return result;
     }
 
@@ -54,10 +54,10 @@ public class Attack {
         attackRows[0].add(booleanFunction);
         boolean collissionFound = false;
         BooleanFunction collissionCandidate = booleanFunction;
-        while (!collissionFound) {
+        while (!collissionFound) { // TODO: Avoid infinite loops
             int numberOfConstraints = findNextRowToAttack(attackRows);
-            BooleanFunction extensionPoint = attackRows[numberOfConstraints - 1].findNextExtenstionPoint();
-            collissionCandidate = extendParent(extensionPoint, attackRows[numberOfConstraints]);
+            BooleanFunction extensionSource = attackRows[numberOfConstraints - 1].findNextExtensionSource();
+            collissionCandidate = findNextCollissionCandidate(extensionSource, attackRows[numberOfConstraints]);
             collissionCandidate.resolve();
             attackRows[numberOfConstraints].add(collissionCandidate);
             collissionFound = collissionCandidate.getNumberOfInputParameters() < numberOfInputParameters;

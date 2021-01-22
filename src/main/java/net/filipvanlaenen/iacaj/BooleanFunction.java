@@ -92,7 +92,7 @@ public class BooleanFunction {
     public BooleanFunction(BooleanFunction parent) {
         this();
         for (BooleanExpression expression : parent.getExpressions()) {
-            addExpression(expression);
+            addExpression(BooleanExpression.parse(expression.toString())); // TODO
         }
     }
 
