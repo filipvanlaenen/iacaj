@@ -42,13 +42,13 @@ public class AttackTest {
     }
 
     /**
-     * Verifies that it finds a collission for a simple OR expression.
+     * Verifies that it finds a collision for a simple AND expression.
      */
     @Test
-    public void shouldReturnCollissionForOR() {
+    public void shouldReturnCollisionForAND() {
         String[] content = new String[] {"o1 = i1 ∧ i2"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         Attack attack = new Attack(booleanFunction);
-        assertTrue(attack.perform() instanceof CollissionFound);
+        assertTrue(attack.perform() instanceof CollisionFound);
     }
 }

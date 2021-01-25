@@ -1,36 +1,12 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class Attack {
-    public class AttackRow {
-        private Set<BooleanFunction> booleanFunctions = new HashSet<BooleanFunction>();
-
-        public void add(BooleanFunction booleanFunction) {
-            booleanFunctions.add(booleanFunction);
-        }
-
-        public BooleanFunction findNextExtensionSource() {
-            return booleanFunctions.iterator().next(); // TODO
-        }
-    }
-
     private final BooleanFunction booleanFunction;
 
     public Attack(BooleanFunction booleanFunction) {
         this.booleanFunction = booleanFunction;
-    }
-
-    private BooleanFunction findNextCollissionCandidate(BooleanFunction parent, AttackRow attackRow) {
-        BooleanFunction result = new BooleanFunction(parent);
-        InputParameter inputParameter = parent.getInputParameters().iterator().next(); // TODO
-        result.addExpression(BooleanExpression.parse(inputParameter.getName() + " = False")); // TODO
-        return result;
-    }
-
-    private int findNextRowToAttack(AttackRow[] attackRows) {
-        return 1; // TODO
     }
 
     public AttackResult perform() {
@@ -47,22 +23,19 @@ public class Attack {
         if (numberOfInputParameters < initialInputParameters.size()) {
             return new SomeInputParametersEliminated();
         }
-        AttackRow[] attackRows = new AttackRow[numberOfInputParameters];
-        for (int i = 0; i < numberOfInputParameters; i++) {
-            attackRows[i] = new AttackRow();
+        AttackOverview overview = new AttackOverview();
+        overview.add(booleanFunction);
+        boolean collisionFound = false;
+        BooleanFunction collisionCandidate = booleanFunction;
+        while (!collisionFound) {
+            int numberOfConstraints = overview.findNextRowToAttack();
+            BooleanFunction extensionSource = overview.findNextExtensionSource(numberOfConstraints);
+            collisionCandidate = overview.findNextCollisionCandidate(extensionSource);
+            collisionCandidate.resolve();
+            overview.add(collisionCandidate);
+            collisionFound = numberOfConstraints
+                    + collisionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }
-        attackRows[0].add(booleanFunction);
-        boolean collissionFound = false;
-        BooleanFunction collissionCandidate = booleanFunction;
-        while (!collissionFound) { // TODO: Avoid infinite loops
-            int numberOfConstraints = findNextRowToAttack(attackRows);
-            BooleanFunction extensionSource = attackRows[numberOfConstraints - 1].findNextExtensionSource();
-            collissionCandidate = findNextCollissionCandidate(extensionSource, attackRows[numberOfConstraints]);
-            collissionCandidate.resolve();
-            attackRows[numberOfConstraints].add(collissionCandidate);
-            collissionFound = numberOfConstraints
-                    + collissionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
-        }
-        return new CollissionFound(collissionCandidate);
+        return new CollisionFound(collisionCandidate);
     }
 }
