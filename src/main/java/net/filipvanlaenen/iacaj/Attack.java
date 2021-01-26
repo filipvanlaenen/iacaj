@@ -36,6 +36,6 @@ public class Attack {
             collisionFound = numberOfConstraints
                     + collisionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }
-        return new CollisionFound(collisionCandidate);
+        return new CollisionFound(collisionCandidate, inputParameters);
     }
 }

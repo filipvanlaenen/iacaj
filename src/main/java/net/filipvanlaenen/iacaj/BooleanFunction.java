@@ -78,6 +78,10 @@ public class BooleanFunction {
      */
     private Set<BooleanExpression> expressions = new HashSet<BooleanExpression>();
     /**
+     * The Boolean constraints of the Boolean function.
+     */
+    private Set<BooleanConstraint> constraints = new HashSet<BooleanConstraint>();
+    /**
      * A map with the Boolean expressions of the Boolean function.
      */
     private Map<String, BooleanExpression> expressionMap = new HashMap<String, BooleanExpression>();
@@ -123,6 +127,9 @@ public class BooleanFunction {
         expressions.add(booleanExpression);
         expressionMap.put(booleanExpression.getName(), booleanExpression);
         inputParameters.addAll(booleanExpression.getInputParameters());
+        if (booleanExpression instanceof BooleanConstraint) {
+            constraints.add((BooleanConstraint) booleanExpression);
+        }
     }
 
     /**
@@ -197,6 +204,17 @@ public class BooleanFunction {
 
     public int getNumberOfInputParameters() {
         return inputParameters.size();
+    }
+
+    /**
+     * Returns the Boolean constraints in sorted order.
+     *
+     * @return A sorted list with the Boolean constraints.
+     */
+    List<BooleanConstraint> getSortedConstraints() {
+        List<BooleanConstraint> sortedConstraints = new ArrayList<BooleanConstraint>(constraints);
+        sortedConstraints.sort(new BooleanExpressionComparator());
+        return sortedConstraints;
     }
 
     /**
