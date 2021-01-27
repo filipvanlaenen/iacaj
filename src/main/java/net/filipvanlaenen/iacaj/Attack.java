@@ -28,7 +28,6 @@ public class Attack {
         BooleanFunction collisionCandidate = booleanFunction;
         while (!collisionFound) {
             int numberOfConstraints = records.findNextLineToAttack();
-            System.out.println(numberOfConstraints);
             BooleanFunction extensionSource = records.findNextExtensionSource(numberOfConstraints - 1);
             collisionCandidate = records.findNextCollisionCandidate(extensionSource);
             collisionCandidate.resolve();
