@@ -14,7 +14,7 @@ public class VariableTest {
      */
     @Test
     public void nameShouldBeWiredCorrectlyFromConstructorToGetter() {
-        Variable v = new Variable("foo");
-        assertEquals("foo", v.getName());
+        Variable v = new Variable("a1");
+        assertEquals("a1", v.getName());
     }
 }
