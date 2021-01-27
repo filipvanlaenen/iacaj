@@ -23,16 +23,16 @@ public class Attack {
         if (numberOfInputParameters < initialInputParameters.size()) {
             return new SomeInputParametersEliminated();
         }
-        AttackOverview overview = new AttackOverview();
-        overview.add(booleanFunction);
+        AttackRecords records = new AttackRecords(booleanFunction);
         boolean collisionFound = false;
         BooleanFunction collisionCandidate = booleanFunction;
         while (!collisionFound) {
-            int numberOfConstraints = overview.findNextRowToAttack();
-            BooleanFunction extensionSource = overview.findNextExtensionSource(numberOfConstraints);
-            collisionCandidate = overview.findNextCollisionCandidate(extensionSource);
+            int numberOfConstraints = records.findNextLineToAttack();
+            System.out.println(numberOfConstraints);
+            BooleanFunction extensionSource = records.findNextExtensionSource(numberOfConstraints - 1);
+            collisionCandidate = records.findNextCollisionCandidate(extensionSource);
             collisionCandidate.resolve();
-            overview.add(collisionCandidate);
+            records.add(collisionCandidate);
             collisionFound = numberOfConstraints
                     + collisionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }

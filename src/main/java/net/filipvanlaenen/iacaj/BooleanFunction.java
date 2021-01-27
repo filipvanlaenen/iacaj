@@ -192,14 +192,8 @@ public class BooleanFunction {
      *
      * @return The number of constraints in the Boolean function.
      */
-    private int getNumberOfConstraints() {
-        int result = 0;
-        for (BooleanExpression expression : expressions) {
-            if (expression instanceof BooleanConstraint) {
-                result++;
-            }
-        }
-        return result;
+    int getNumberOfConstraints() {
+        return constraints.size();
     }
 
     public int getNumberOfInputParameters() {
