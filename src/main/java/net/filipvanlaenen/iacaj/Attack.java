@@ -27,12 +27,13 @@ public class Attack {
         boolean collisionFound = false;
         BooleanFunction collisionCandidate = booleanFunction;
         while (!collisionFound) {
-            int numberOfConstraints = records.findNextLineToAttack();
-            BooleanFunction extensionSource = records.findNextExtensionSource(numberOfConstraints - 1);
-            collisionCandidate = records.findNextCollisionCandidate(extensionSource);
+            collisionCandidate = records.findNextCollisionCandidate();
+            if (collisionCandidate == null) {
+                return new NoCollisionFound();
+            }
             collisionCandidate.resolve();
             records.add(collisionCandidate);
-            collisionFound = numberOfConstraints
+            collisionFound = collisionCandidate.getNumberOfConstraints()
                     + collisionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }
         return new CollisionFound(collisionCandidate, inputParameters);

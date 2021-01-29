@@ -18,23 +18,46 @@ public class AttackRecords {
         booleanFunctions.get(booleanFunction.getNumberOfConstraints()).add(booleanFunction);
     }
 
-    public BooleanFunction findNextCollisionCandidate(BooleanFunction parent) {
+    private BooleanFunction findNextCollisionCandidate(BooleanFunction parent) {
         BooleanFunction result = new BooleanFunction(parent);
         InputParameter inputParameter = parent.getInputParameters().iterator().next();
         result.addExpression(BooleanExpression.parse(inputParameter.getName() + " = False"));
         return result;
     }
 
-    public BooleanFunction findNextExtensionSource(int numberOfConstraints) {
+    private BooleanFunction findNextExtensionSource(int numberOfConstraints) {
         return booleanFunctions.get(numberOfConstraints).iterator().next();
     }
 
-    public int findNextLineToAttack() {
+    int findNextLineToAttack() {
         for (int i = 0; i < booleanFunctions.size(); i++) {
             if (booleanFunctions.get(i).size() == 0) {
                 return i;
             }
         }
         return 1;
+    }
+
+    BooleanFunction findNextCollisionCandidate() {
+        /*
+         * List<AttackLine> sortedLines = sortAttackLines();
+         * 
+         * for (AttackLine line : sortedLines) {
+         * 
+         * · candidate = line.findNextCollisionCandidate();
+         * 
+         * · if (candidate != null) {
+         * 
+         * · · return candidate;
+         * 
+         * · }
+         * 
+         * }
+         * 
+         * return null;
+         */
+        int numberOfConstraints = findNextLineToAttack();
+        BooleanFunction extensionSource = findNextExtensionSource(numberOfConstraints - 1);
+        return findNextCollisionCandidate(extensionSource);
     }
 }
