@@ -56,7 +56,7 @@ public class AttackTest {
      * Verifies that it returns that no collision could be found for a double
      * identity function.
      */
-    // TODO @Test
+     @Test
     public void shouldReturnNoCollisionFoundForIdentityWithTwoParameters() {
         String[] content = new String[] {"o1 = i1", "o2 = i2"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);

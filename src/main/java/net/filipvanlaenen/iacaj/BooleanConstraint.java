@@ -28,6 +28,21 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        public boolean equals(Object object) {
+            if (object instanceof BooleanTrueConstraint) {
+                BooleanTrueConstraint other = (BooleanTrueConstraint) object;
+                return other.getName().equals(getName());
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return getName().hashCode();
+        }
+
+        @Override
         protected boolean isFalse() {
             return false;
         }
@@ -60,6 +75,21 @@ public abstract class BooleanConstraint extends BooleanExpression {
          */
         BooleanFalseConstraint(final String name) {
             super(name);
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (object instanceof BooleanFalseConstraint) {
+                BooleanFalseConstraint other = (BooleanFalseConstraint) object;
+                return other.getName().equals(getName());
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public int hashCode() {
+            return getName().hashCode();
         }
 
         @Override

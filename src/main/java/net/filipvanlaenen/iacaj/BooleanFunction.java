@@ -156,6 +156,15 @@ public class BooleanFunction {
     }
 
     /**
+     * Returns the constraints of the Boolean function.
+     *
+     * @return The constraints of the Boolean function.
+     */
+    public Set<BooleanConstraint> getConstraints() {
+        return Set.copyOf(constraints);
+    }
+
+    /**
      * Returns the Boolean expression with the given name.
      *
      * @param name The name of the requested Boolean expression.
