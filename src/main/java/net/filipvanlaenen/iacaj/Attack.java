@@ -3,6 +3,7 @@ package net.filipvanlaenen.iacaj;
 import java.util.Set;
 
 public class Attack {
+    private static final int MAXIMUM_NUMBER_OF_ITERATIONS = 128;
     private final BooleanFunction booleanFunction;
 
     public Attack(BooleanFunction booleanFunction) {
@@ -26,7 +27,7 @@ public class Attack {
         AttackRecords records = new AttackRecords(booleanFunction);
         boolean collisionFound = false;
         BooleanFunction collisionCandidate = booleanFunction;
-        while (!collisionFound) {
+        for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS && !collisionFound; i++) {
             collisionCandidate = records.findNextCollisionCandidate();
             if (collisionCandidate == null) {
                 return new NoCollisionFound();
@@ -36,6 +37,10 @@ public class Attack {
             collisionFound = collisionCandidate.getNumberOfConstraints()
                     + collisionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
         }
-        return new CollisionFound(collisionCandidate, inputParameters);
+        if (collisionFound) {
+            return new CollisionFound(collisionCandidate, inputParameters);
+        } else {
+            return new NoCollisionFoundYet();
+        }
     }
 }

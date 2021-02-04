@@ -56,11 +56,22 @@ public class AttackTest {
      * Verifies that it returns that no collision could be found for a double
      * identity function.
      */
-     @Test
+    @Test
     public void shouldReturnNoCollisionFoundForIdentityWithTwoParameters() {
         String[] content = new String[] {"o1 = i1", "o2 = i2"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         Attack attack = new Attack(booleanFunction);
         assertTrue(attack.perform() instanceof NoCollisionFound);
+    }
+
+    /**
+     * Verifies that it returns after a limited number of iterations.
+     */
+    @Test
+    public void shouldReturnNoCollisionFoundYetForIdentityWithSixParameters() {
+        String[] content = new String[] {"o1 = i1", "o2 = i2", "o3 = i3", "o4 = i4", "o5 = i5", "o6 = i6", };
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        Attack attack = new Attack(booleanFunction);
+        assertTrue(attack.perform() instanceof NoCollisionFoundYet);
     }
 }
