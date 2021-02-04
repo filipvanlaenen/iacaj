@@ -5,26 +5,39 @@ import java.util.Set;
 public class Attack {
     private static final int MAXIMUM_NUMBER_OF_ITERATIONS = 128;
     private final BooleanFunction booleanFunction;
+    private AttackRecords records;
+    private int numberOfInputParameters;
+    private Set<InputParameter> inputParameters;
 
     public Attack(BooleanFunction booleanFunction) {
         this.booleanFunction = booleanFunction;
     }
 
-    public AttackResult perform() {
+    private AttackResult initialize() {
         Set<InputParameter> initialInputParameters = booleanFunction.getInputParameters();
         if (initialInputParameters.isEmpty()) {
             return new NoInputParameters();
         }
         booleanFunction.resolve();
-        Set<InputParameter> inputParameters = booleanFunction.getInputParameters();
+        inputParameters = booleanFunction.getInputParameters();
         if (inputParameters.isEmpty()) {
             return new AllInputParametersEliminated();
         }
-        int numberOfInputParameters = inputParameters.size();
+        numberOfInputParameters = inputParameters.size();
         if (numberOfInputParameters < initialInputParameters.size()) {
             return new SomeInputParametersEliminated();
         }
-        AttackRecords records = new AttackRecords(booleanFunction);
+        records = new AttackRecords(booleanFunction);
+        return null;
+    }
+
+    public AttackResult perform() {
+        if (records == null) {
+            AttackResult result = initialize();
+            if (result != null) {
+                return result;
+            }
+        }
         boolean collisionFound = false;
         BooleanFunction collisionCandidate = booleanFunction;
         for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS && !collisionFound; i++) {

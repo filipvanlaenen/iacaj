@@ -12,6 +12,7 @@ import net.filipvanlaenen.iacaj.Attack;
 import net.filipvanlaenen.iacaj.AttackResult;
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.ComplexityReport;
+import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
 import net.filipvanlaenen.iacaj.producer.AddProducer;
 import net.filipvanlaenen.iacaj.producer.AndProducer;
 import net.filipvanlaenen.iacaj.producer.OrProducer;
@@ -85,6 +86,10 @@ public final class CommandLineInterface {
                 BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
                 Attack attack = new Attack(bf);
                 AttackResult attackResult = attack.perform();
+                while (attackResult instanceof NoCollisionFoundYet) {
+                    System.out.println(attackResult.toString());
+                    attackResult = attack.perform();
+                }
                 if (outputFileName == null) {
                     System.out.println(attackResult.toString());
                 } else {
