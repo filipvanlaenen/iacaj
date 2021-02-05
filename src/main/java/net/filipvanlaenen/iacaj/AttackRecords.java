@@ -47,7 +47,7 @@ public class AttackRecords {
                 return false;
             }
         }
-        
+
         @Override
         public int hashCode() {
             int result = 0;
@@ -122,6 +122,10 @@ public class AttackRecords {
         public void add(BooleanFunction booleanFunction) {
             booleanFunctions.put(new BooleanConstraints(booleanFunction.getConstraints()), booleanFunction);
         }
+
+        public int size() {
+            return booleanFunctions.size();
+        }
     }
 
     private final AttackLine[] attackLines;
@@ -148,6 +152,14 @@ public class AttackRecords {
             }
         }
         return null;
+    }
+
+    int size() {
+        int result = 0;
+        for (AttackLine attackLine : attackLines) {
+            result += attackLine.size();
+        }
+        return result;
     }
 
     private List<AttackLine> sortAttackLines() {

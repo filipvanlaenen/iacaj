@@ -53,7 +53,7 @@ public class Attack {
         if (collisionFound) {
             return new CollisionFound(collisionCandidate, inputParameters);
         } else {
-            return new NoCollisionFoundYet();
+            return new NoCollisionFoundYet(records.size());
         }
     }
 }
