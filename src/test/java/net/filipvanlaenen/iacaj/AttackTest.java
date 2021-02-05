@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+/**
+ * Unit tests on the <code>Attack</code> class.
+ */
 public class AttackTest {
     /**
      * Verifies that when a Boolean doesn't use any input parameters, the attack
@@ -69,7 +72,7 @@ public class AttackTest {
      */
     @Test
     public void shouldReturnNoCollisionFoundYetForIdentityWithSixParameters() {
-        String[] content = new String[] {"o1 = i1", "o2 = i2", "o3 = i3", "o4 = i4", "o5 = i5", "o6 = i6", };
+        String[] content = new String[] {"o1 = i1", "o2 = i2", "o3 = i3", "o4 = i4", "o5 = i5", "o6 = i6"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         Attack attack = new Attack(booleanFunction);
         assertTrue(attack.perform() instanceof NoCollisionFoundYet);
