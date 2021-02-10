@@ -28,7 +28,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
-        public boolean equals(Object object) {
+        public boolean equals(final Object object) {
             if (object instanceof BooleanTrueConstraint) {
                 BooleanTrueConstraint other = (BooleanTrueConstraint) object;
                 return other.getName().equals(getName());
@@ -78,7 +78,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
-        public boolean equals(Object object) {
+        public boolean equals(final Object object) {
             if (object instanceof BooleanFalseConstraint) {
                 BooleanFalseConstraint other = (BooleanFalseConstraint) object;
                 return other.getName().equals(getName());
