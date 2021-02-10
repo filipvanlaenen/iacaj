@@ -90,13 +90,23 @@ public class BooleanFunction {
      */
     private Set<InputParameter> inputParameters = new HashSet<InputParameter>();
 
+    /**
+     * Constructor to create an empty Boolean function.
+     */
     public BooleanFunction() {
     }
 
-    public BooleanFunction(BooleanFunction parent) {
+    /**
+     * Constructor copying the expressions from another Boolean function.
+     *
+     * @param prototype The Boolean function to copy the expressions from.
+     */
+    public BooleanFunction(final BooleanFunction prototype) {
         this();
-        for (BooleanExpression expression : parent.getExpressions()) {
-            addExpression(BooleanExpression.parse(expression.toString())); // TODO
+        for (BooleanExpression expression : prototype.getExpressions()) {
+            // TODO: Should copy in a more elegant way than to export to a String and parse
+            // it again.
+            addExpression(BooleanExpression.parse(expression.toString()));
         }
     }
 
@@ -174,6 +184,11 @@ public class BooleanFunction {
         return expressionMap.get(name);
     }
 
+    /**
+     * Returns the expressions of the Boolean function as a new set.
+     *
+     * @return A new set with all the expressions of the Boolean function.
+     */
     private Set<BooleanExpression> getExpressions() {
         return Set.copyOf(expressions);
     }
@@ -197,7 +212,7 @@ public class BooleanFunction {
     }
 
     /**
-     * Calculates the number of constraints in the Boolean function.
+     * Returns the number of constraints in the Boolean function.
      *
      * @return The number of constraints in the Boolean function.
      */
@@ -205,6 +220,11 @@ public class BooleanFunction {
         return constraints.size();
     }
 
+    /**
+     * Returns the number of input parameters of the Boolean function.
+     *
+     * @return The number of input parameters of the Boolean function.
+     */
     public int getNumberOfInputParameters() {
         return inputParameters.size();
     }
