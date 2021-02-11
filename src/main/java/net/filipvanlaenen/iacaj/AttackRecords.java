@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Class keeping track of all performed attacks on a Boolean function.
+ */
 public class AttackRecords {
     public class BooleanConstraints {
         private Set<BooleanConstraint> constraints;
@@ -128,9 +131,19 @@ public class AttackRecords {
         }
     }
 
+    /**
+     * The attack lines in which the resolved Boolean functions are stored by number
+     * of constraints.
+     */
     private final AttackLine[] attackLines;
 
-    public AttackRecords(BooleanFunction booleanFunction) {
+    /**
+     * Constructor taking a Boolean function as its parameter. It is assumed that
+     * the Boolean function has no constraints.
+     *
+     * @param booleanFunction The Boolean function to attack.
+     */
+    public AttackRecords(final BooleanFunction booleanFunction) {
         attackLines = new AttackLine[booleanFunction.getNumberOfInputParameters()];
         attackLines[0] = new AttackLine();
         for (int i = 1; i < attackLines.length; i++) {
@@ -139,7 +152,14 @@ public class AttackRecords {
         add(booleanFunction);
     }
 
-    public void add(BooleanFunction booleanFunction) {
+    /**
+     * Adds a Boolean function to the attack records. It is assumed that the Boolean
+     * function is already resolved.
+     *
+     * @param booleanFunction The Boolean function to be added to the attack
+     *                        records.
+     */
+    public void add(final BooleanFunction booleanFunction) {
         attackLines[booleanFunction.getNumberOfConstraints()].add(booleanFunction);
     }
 
@@ -154,12 +174,17 @@ public class AttackRecords {
         return null;
     }
 
+    /**
+     * Calculates the number of attacks stored.
+     *
+     * @return The number of attacks stored.
+     */
     int size() {
         int result = 0;
         for (AttackLine attackLine : attackLines) {
             result += attackLine.size();
         }
-        return result;
+        return result - 1;
     }
 
     private List<AttackLine> sortAttackLines() {
