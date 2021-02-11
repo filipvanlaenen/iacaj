@@ -23,6 +23,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        protected BooleanExpression deepClone() {
+            return new BooleanTrueConstraint(getName());
+        }
+
+        @Override
         public List<InputParameter> getInputParameters() {
             return Collections.emptyList();
         }
@@ -75,6 +80,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
          */
         BooleanFalseConstraint(final String name) {
             super(name);
+        }
+
+        @Override
+        protected BooleanExpression deepClone() {
+            return new BooleanFalseConstraint(getName());
         }
 
         @Override
@@ -146,6 +156,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        protected BooleanExpression deepClone() {
+            return new BooleanEqualityConstraint(getName(), otherInputParameter);
+        }
+
+        @Override
         public List<InputParameter> getInputParameters() {
             return inputParameterList;
         }
@@ -196,6 +211,11 @@ public abstract class BooleanConstraint extends BooleanExpression {
             this.otherInputParameter = otherName;
             inputParameterList = new ArrayList<InputParameter>();
             inputParameterList.add(InputParameter.get(otherName));
+        }
+
+        @Override
+        protected BooleanExpression deepClone() {
+            return new BooleanOppositionConstraint(getName(), otherInputParameter);
         }
 
         @Override

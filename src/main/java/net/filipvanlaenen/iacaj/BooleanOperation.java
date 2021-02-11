@@ -742,6 +742,12 @@ public final class BooleanOperation extends BooleanExpression {
     }
 
     @Override
+    protected BooleanOperation deepClone() {
+        // TODO: Propagate deepClone to BooleanRightHandSide
+        return new BooleanOperation(name, rightHandSide.toString());
+    }
+
+    @Override
     public List<InputParameter> getInputParameters() {
         return rightHandSide.getInputParameters();
     }

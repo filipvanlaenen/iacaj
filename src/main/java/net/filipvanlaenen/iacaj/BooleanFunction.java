@@ -104,9 +104,7 @@ public class BooleanFunction {
     public BooleanFunction(final BooleanFunction prototype) {
         this();
         for (BooleanExpression expression : prototype.getExpressions()) {
-            // TODO: Should copy in a more elegant way than to export to a String and parse
-            // it again.
-            addExpression(BooleanExpression.parse(expression.toString()));
+            addExpression(expression.deepClone());
         }
     }
 

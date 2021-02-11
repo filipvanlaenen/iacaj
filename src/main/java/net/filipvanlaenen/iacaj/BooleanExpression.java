@@ -28,6 +28,13 @@ public abstract class BooleanExpression {
     }
 
     /**
+     * Returns a deep clone of the Boolean expression.
+     *
+     * @return A deep clone of the Boolean expression.
+     */
+    protected abstract BooleanExpression deepClone();
+
+    /**
      * Returns the input parameters of the Boolean expression.
      *
      * @return The input parameters of the Boolean expression.
@@ -76,4 +83,5 @@ public abstract class BooleanExpression {
      * @return Java code representing the Boolean expression.
      */
     public abstract String toJavaString();
+
 }
