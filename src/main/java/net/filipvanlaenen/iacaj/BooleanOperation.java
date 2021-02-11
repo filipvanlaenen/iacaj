@@ -49,6 +49,23 @@ public final class BooleanOperation extends BooleanExpression {
                 }
             }
 
+            /**
+             * Constructor taking the operand and whether it should be negated as
+             * parameters.
+             *
+             * @param operand The name of the operand.
+             * @param negated Whether the operand should be negated or not.
+             */
+            public BooleanEquation(final String operand, final boolean negated) {
+                this.operand = operand;
+                this.negated = negated;
+            }
+
+            @Override
+            protected BooleanEquation deepClone() {
+                return new BooleanEquation(operand, negated);
+            }
+
             @Override
             public List<InputParameter> getInputParameters() {
                 if (InputParameter.isInputParameter(operand)) {
@@ -132,6 +149,20 @@ public final class BooleanOperation extends BooleanExpression {
                     super(rightHandSideString);
                 }
 
+                /**
+                 * Constructor taking a list of operands as the parameter.
+                 *
+                 * @param operands The list of operands.
+                 */
+                public BooleanAndCalculation(final List<BooleanOperand> operands) {
+                    super(operands);
+                }
+
+                @Override
+                protected BooleanAndCalculation deepClone() {
+                    return new BooleanAndCalculation(getOperands());
+                }
+
                 @Override
                 protected Operator getOperator() {
                     return Operator.And;
@@ -174,6 +205,20 @@ public final class BooleanOperation extends BooleanExpression {
                     super(rightHandSideString);
                 }
 
+                /**
+                 * Constructor taking a list of operands as the parameter.
+                 *
+                 * @param operands The list of operands.
+                 */
+                public BooleanOrCalculation(final List<BooleanOperand> operands) {
+                    super(operands);
+                }
+
+                @Override
+                protected BooleanOrCalculation deepClone() {
+                    return new BooleanOrCalculation(getOperands());
+                }
+
                 @Override
                 protected Operator getOperator() {
                     return Operator.Or;
@@ -214,6 +259,20 @@ public final class BooleanOperation extends BooleanExpression {
                  */
                 public BooleanXorCalculation(final String rightHandSideString) {
                     super(rightHandSideString);
+                }
+
+                /**
+                 * Constructor taking a list of operands as the parameter.
+                 *
+                 * @param operands The list of operands.
+                 */
+                public BooleanXorCalculation(final List<BooleanOperand> operands) {
+                    super(operands);
+                }
+
+                @Override
+                protected BooleanXorCalculation deepClone() {
+                    return new BooleanXorCalculation(getOperands());
                 }
 
                 @Override
@@ -376,6 +435,15 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             /**
+             * Constructor taking a list of operands as the parameter.
+             *
+             * @param operands The list of operands.
+             */
+            public BooleanCalculation(final List<BooleanOperand> operands) {
+                this.operands = new ArrayList<BooleanOperand>(operands);
+            }
+
+            /**
              * Add an operand to the Boolean calculation.
              *
              * @param operandToBeAdded The operand to be added to the Boolean calculation.
@@ -513,6 +581,11 @@ public final class BooleanOperation extends BooleanExpression {
             }
 
             @Override
+            protected BooleanConstant deepClone() {
+                return new BooleanConstant(value);
+            }
+
+            @Override
             public List<InputParameter> getInputParameters() {
                 return Collections.emptyList();
             }
@@ -582,6 +655,13 @@ public final class BooleanOperation extends BooleanExpression {
                 return new BooleanEquation(rightHandSide);
             }
         }
+
+        /**
+         * Returns a deep clone of the Boolean right hand side.
+         *
+         * @return A deep clone of the Boolean right hand side.
+         */
+        protected abstract BooleanRightHandSide deepClone();
 
         /**
          * Returns a list with the input parameters used in the right hand side.
@@ -730,21 +810,31 @@ public final class BooleanOperation extends BooleanExpression {
 
     /**
      * Constructor, creating a Boolean expression based on the left hand side and
+     * the right hand side of the expression as strings.
+     *
+     * @param leftHandSide        The left hand side of the operation.
+     * @param rightHandSideString The right hand side of the operation as a string.
+     */
+    public BooleanOperation(final String leftHandSide, final String rightHandSideString) {
+        this(leftHandSide, BooleanRightHandSide.parse(rightHandSideString));
+    }
+
+    /**
+     * Constructor, creating a Boolean expression based on the left hand side and
      * the right hand side of the expression.
      *
      * @param leftHandSide  The left hand side of the operation.
      * @param rightHandSide The right hand side of the operation.
      */
-    public BooleanOperation(final String leftHandSide, final String rightHandSide) {
+    public BooleanOperation(final String leftHandSide, final BooleanRightHandSide rightHandSide) {
         this.name = leftHandSide;
         this.number = Integer.parseInt(leftHandSide.substring(1));
-        this.rightHandSide = BooleanRightHandSide.parse(rightHandSide);
+        this.rightHandSide = rightHandSide;
     }
 
     @Override
     protected BooleanOperation deepClone() {
-        // TODO: Propagate deepClone to BooleanRightHandSide
-        return new BooleanOperation(name, rightHandSide.toString());
+        return new BooleanOperation(name, rightHandSide.deepClone());
     }
 
     @Override
