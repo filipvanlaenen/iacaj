@@ -2,6 +2,9 @@ package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 
 /**
@@ -27,9 +30,26 @@ public class AttackRecordsTest {
         String[] content = new String[] {"o1 = i1 ∧ i2"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         AttackRecords attackRecords = new AttackRecords(booleanFunction);
-        String[] attackContent = new String[] {"i1 = True", "o1 = i1 ∧ i2"};
+        String[] attackContent = new String[] {"i1 = True", "o1 = i2"};
         BooleanFunction attack = BooleanFunction.parse(attackContent);
         attackRecords.add(attack);
         assertEquals(1, attackRecords.size());
+    }
+
+    /**
+     * Verifies that it selects the input parameter occurring twice as the input
+     * parameter to constrain to False.
+     */
+    @Test
+    public void constrainsInputParameterOccurringTwiceToFalse() {
+        String[] content = new String[] {"o1 = i1 ∧ i2", "o2 = i1 ∧ i3"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        AttackRecords attackRecords = new AttackRecords(booleanFunction);
+        BooleanConstraints actualNextCollisionCandidate = attackRecords.findNextCollisionCandidate();
+        BooleanConstraint i1False = BooleanConstraint.parse("i1", "False");
+        Set<BooleanConstraint> constraintsSet = new HashSet<BooleanConstraint>();
+        constraintsSet.add(i1False);
+        BooleanConstraints expectedNextCollissionCandidate = new BooleanConstraints(constraintsSet);
+        assertEquals(expectedNextCollissionCandidate, actualNextCollisionCandidate);
     }
 }

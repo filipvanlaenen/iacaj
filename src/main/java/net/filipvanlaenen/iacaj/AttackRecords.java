@@ -5,13 +5,32 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class keeping track of all performed attacks on a Boolean function.
  */
 public class AttackRecords {
+    public class AttackRecord {
+        private final Set<InputParameter> inputParameters;
+        private final BooleanConstraints constraints;
+
+        public AttackRecord(Set<InputParameter> inputParameters, Set<BooleanConstraint> constraints) {
+            this.inputParameters = inputParameters;
+            this.constraints = new BooleanConstraints(constraints);
+        }
+
+        public Set<InputParameter> getInputParameters() {
+            return inputParameters;
+        }
+
+        public BooleanConstraints getConstraints() {
+            return constraints;
+        }
+    }
+
     public class AttackLine {
-        private final Map<BooleanConstraints, BooleanFunction> booleanFunctions = new HashMap<BooleanConstraints, BooleanFunction>();
+        private final Map<BooleanConstraints, AttackRecord> attacks = new HashMap<BooleanConstraints, AttackRecord>();
         private final AttackLine predecessor;
 
         public AttackLine() {
@@ -22,10 +41,10 @@ public class AttackRecords {
             this.predecessor = predecessor;
         }
 
-        public BooleanFunction findNextCollisionCandidate() {
-            List<BooleanFunction> parents = predecessor.getSortedExtensionPoints();
-            for (BooleanFunction parent : parents) {
-                BooleanFunction candidate = extendParent(parent);
+        public BooleanConstraints findNextCollisionCandidate() {
+            List<AttackRecord> parents = predecessor.getSortedExtensionPoints();
+            for (AttackRecord parent : parents) {
+                BooleanConstraints candidate = extendParent(parent);
                 if (candidate != null) {
                     return candidate;
                 }
@@ -33,41 +52,43 @@ public class AttackRecords {
             return null;
         }
 
-        private BooleanFunction extendParent(BooleanFunction parent) {
+        private BooleanConstraints extendParent(AttackRecord parent) {
             List<InputParameter> inputParameters = new ArrayList<InputParameter>(parent.getInputParameters());
             // TODO sort
-            BooleanConstraints parentConstraints = new BooleanConstraints(parent.getConstraints());
+            BooleanConstraints parentConstraints = parent.getConstraints();
             for (InputParameter inputParameter : inputParameters) {
                 BooleanConstraints extensionWithFalse = parentConstraints.extend(inputParameter, "False");
-                if (!booleanFunctions.containsKey(extensionWithFalse)) {
-                    return createExtension(parent, inputParameter, "False");
+                if (!attacks.containsKey(extensionWithFalse)) {
+                    return createExtension(parentConstraints, inputParameter, "False");
                 }
                 BooleanConstraints extensionWithTrue = parentConstraints.extend(inputParameter, "True");
-                if (!booleanFunctions.containsKey(extensionWithTrue)) {
-                    return createExtension(parent, inputParameter, "True");
+                if (!attacks.containsKey(extensionWithTrue)) {
+                    return createExtension(parentConstraints, inputParameter, "True");
                 }
             }
             return null;
         }
 
-        private BooleanFunction createExtension(BooleanFunction parent, InputParameter inputParameter, String string) {
-            BooleanFunction result = new BooleanFunction(parent);
-            result.addExpression(BooleanExpression.parse(inputParameter.getName() + " = " + string));
-            return result;
+        private BooleanConstraints createExtension(BooleanConstraints parent, InputParameter inputParameter,
+                String string) {
+            return parent.extend(inputParameter, string);
         }
 
-        private List<BooleanFunction> getSortedExtensionPoints() {
-            List<BooleanFunction> extensionPoints = new ArrayList<BooleanFunction>(booleanFunctions.values());
+        private List<AttackRecord> getSortedExtensionPoints() {
+            List<AttackRecord> extensionPoints = new ArrayList<AttackRecord>(attacks.values());
             // TODO sort
             return extensionPoints;
         }
 
         public void add(BooleanFunction booleanFunction) {
-            booleanFunctions.put(new BooleanConstraints(booleanFunction.getConstraints()), booleanFunction);
+            BooleanConstraints constraints = new BooleanConstraints(booleanFunction.getConstraints());
+            AttackRecord record = new AttackRecord(booleanFunction.getInputParameters(),
+                    booleanFunction.getConstraints());
+            attacks.put(constraints, record);
         }
 
         public int size() {
-            return booleanFunctions.size();
+            return attacks.size();
         }
     }
 
@@ -103,10 +124,10 @@ public class AttackRecords {
         attackLines[booleanFunction.getNumberOfConstraints()].add(booleanFunction);
     }
 
-    BooleanFunction findNextCollisionCandidate() {
+    BooleanConstraints findNextCollisionCandidate() {
         List<AttackLine> sortedLines = sortAttackLines();
         for (AttackLine line : sortedLines) {
-            BooleanFunction candidate = line.findNextCollisionCandidate();
+            BooleanConstraints candidate = line.findNextCollisionCandidate();
             if (candidate != null) {
                 return candidate;
             }

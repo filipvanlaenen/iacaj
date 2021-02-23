@@ -73,4 +73,9 @@ public class BooleanConstraints {
     public int size() {
         return constraints.size();
     }
+
+    // TODO: Should be removed.
+    Set<BooleanConstraint> iterator() {
+        return constraints;
+    }
 }

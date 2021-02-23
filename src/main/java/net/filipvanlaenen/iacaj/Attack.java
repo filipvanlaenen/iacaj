@@ -41,9 +41,15 @@ public class Attack {
         boolean collisionFound = false;
         BooleanFunction collisionCandidate = booleanFunction;
         for (int i = 0; i < MAXIMUM_NUMBER_OF_ITERATIONS && !collisionFound; i++) {
-            collisionCandidate = records.findNextCollisionCandidate();
-            if (collisionCandidate == null) {
+            BooleanConstraints constraints = records.findNextCollisionCandidate();
+            if (constraints == null) {
                 return new NoCollisionFound();
+            }
+            // TODO: BooleanFunction should have a constructor taking a Boolean function
+            // with a new set of constraints
+            collisionCandidate = new BooleanFunction(booleanFunction);
+            for (BooleanConstraint constraint : constraints.iterator()) {
+                collisionCandidate.addExpression(constraint);
             }
             collisionCandidate.resolve();
             records.add(collisionCandidate);
