@@ -3,73 +3,13 @@ package net.filipvanlaenen.iacaj;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Class keeping track of all performed attacks on a Boolean function.
  */
 public class AttackRecords {
-    public class BooleanConstraints {
-        private Set<BooleanConstraint> constraints;
-
-        public BooleanConstraints(Set<BooleanConstraint> constraints) {
-            this.constraints = new HashSet<BooleanConstraint>(constraints);
-        }
-
-        public int size() {
-            return constraints.size();
-        }
-
-        public BooleanConstraints extend(InputParameter inputParameter, String string) {
-            BooleanConstraints result = new BooleanConstraints(constraints);
-            result.add((BooleanConstraint) BooleanConstraint.parse(inputParameter.getName(), string));
-            return result;
-        }
-
-        private void add(BooleanConstraint parse) {
-            constraints.add(parse);
-        }
-
-        @Override
-        public boolean equals(Object object) {
-            if (object instanceof BooleanConstraints) {
-                BooleanConstraints other = (BooleanConstraints) object;
-                if (constraints.size() != other.constraints.size()) {
-                    return false;
-                }
-                for (BooleanConstraint constraint : constraints) {
-                    if (!other.constraints.contains(constraint)) {
-                        return false;
-                    }
-                }
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-        @Override
-        public int hashCode() {
-            int result = 0;
-            for (BooleanConstraint constraint : constraints) {
-                result += constraint.hashCode();
-            }
-            return result;
-        }
-
-        @Override
-        public String toString() {
-            String result = "<";
-            for (BooleanConstraint constraint : constraints) {
-                result += constraint.toString();
-            }
-            return result + ">";
-        }
-    }
-
     public class AttackLine {
         private final Map<BooleanConstraints, BooleanFunction> booleanFunctions = new HashMap<BooleanConstraints, BooleanFunction>();
         private final AttackLine predecessor;

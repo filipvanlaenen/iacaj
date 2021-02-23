@@ -99,7 +99,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
 
         @Override
         public int hashCode() {
-            return getName().hashCode();
+            return -getName().hashCode();
         }
 
         @Override
