@@ -398,6 +398,17 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a binary xor expression with not true is resolved to equality.
+     */
+    @Test
+    public void shouldResolveBinaryXorWithNotTrueToEquality() {
+        String[] content = new String[] {"v1 = True", "o1 = ¬v1 ⊻ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = v2", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a binary xor expression with two trues is resolved to false.
      */
     @Test
