@@ -78,12 +78,26 @@ public class BooleanFunctionTest {
 
     /**
      * Verifies that parsing a rich Boolean function recognizes the input parameters
-     * correctly.
+     * correctly, i.e. input parameters occurring in the constraints should not be
+     * included.
      */
     @Test
     public void parsingRichFunctionShouldRecognizeTheInputParameters() {
         BooleanFunction booleanFunction = createRichBooleanFunction();
         Set<InputParameter> expected = createInputParameterSet("i3", "i5", "i7");
+        assertEquals(expected, booleanFunction.getInputParameters());
+    }
+
+    /**
+     * Verifies that the input parameters are cleared and recalculated after
+     * resolving.
+     */
+    @Test
+    public void resolvingShouldRecalculateTheInputParameters() {
+        String[] content = new String[] {"i1 = True", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        Set<InputParameter> expected = createInputParameterSet("i2", "i3");
         assertEquals(expected, booleanFunction.getInputParameters());
     }
 
