@@ -285,14 +285,12 @@ public final class BooleanOperation extends BooleanExpression {
                     List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
                     List<BooleanOperand> trueOperands = new ArrayList<BooleanOperand>();
                     for (BooleanOperand operand : getOperands()) {
-                        if (!operand.isNegated()) {
-                            BooleanExpression be = booleanFunction.getExpression(operand.getName());
-                            if (be != null) {
-                                if (be.isTrue()) {
-                                    trueOperands.add(operand);
-                                } else if (be.isFalse()) {
-                                    falseOperands.add(operand);
-                                }
+                        BooleanExpression be = booleanFunction.getExpression(operand.getName());
+                        if (be != null) {
+                            if (be.isTrue() && !operand.isNegated() || be.isFalse() && operand.isNegated()) {
+                                trueOperands.add(operand);
+                            } else if (be.isFalse() && !operand.isNegated() || be.isTrue() && operand.isNegated()) {
+                                falseOperands.add(operand);
                             }
                         }
                     }

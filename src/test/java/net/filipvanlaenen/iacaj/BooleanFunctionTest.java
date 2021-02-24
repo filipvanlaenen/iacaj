@@ -420,6 +420,17 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a binary xor expression with not false is resolved to negation.
+     */
+    @Test
+    public void shouldResolveBinaryXorWithNotFalseToNegation() {
+        String[] content = new String[] {"v1 = False", "o1 = ¬v1 ⊻ v2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        assertEquals("o1 = ¬v2", booleanFunction.toString());
+    }
+
+    /**
      * Verifies that a binary xor expression with two falses is resolved to false.
      */
     @Test

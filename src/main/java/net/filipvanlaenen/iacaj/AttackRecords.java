@@ -59,19 +59,14 @@ public class AttackRecords {
             for (InputParameter inputParameter : inputParameters) {
                 BooleanConstraints extensionWithFalse = parentConstraints.extend(inputParameter, "False");
                 if (!attacks.containsKey(extensionWithFalse)) {
-                    return createExtension(parentConstraints, inputParameter, "False");
+                    return extensionWithFalse;
                 }
                 BooleanConstraints extensionWithTrue = parentConstraints.extend(inputParameter, "True");
                 if (!attacks.containsKey(extensionWithTrue)) {
-                    return createExtension(parentConstraints, inputParameter, "True");
+                    return extensionWithTrue;
                 }
             }
             return null;
-        }
-
-        private BooleanConstraints createExtension(BooleanConstraints parent, InputParameter inputParameter,
-                String string) {
-            return parent.extend(inputParameter, string);
         }
 
         private List<AttackRecord> getSortedExtensionPoints() {
