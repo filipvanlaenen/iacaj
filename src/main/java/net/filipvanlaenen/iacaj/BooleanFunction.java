@@ -187,7 +187,7 @@ public class BooleanFunction {
      *
      * @return A new set with all the expressions of the Boolean function.
      */
-    private Set<BooleanExpression> getExpressions() {
+    Set<BooleanExpression> getExpressions() {
         return Set.copyOf(expressions);
     }
 

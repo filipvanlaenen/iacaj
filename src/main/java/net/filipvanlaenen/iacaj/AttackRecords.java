@@ -2,10 +2,13 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import net.filipvanlaenen.iacaj.ComplexityReport.Metric;
 
 /**
  * Class keeping track of all performed attacks on a Boolean function.
@@ -14,18 +17,25 @@ public class AttackRecords {
     public class AttackRecord {
         private final Set<InputParameter> inputParameters;
         private final BooleanConstraints constraints;
+        private final ComplexityReport complexityReport;
 
-        public AttackRecord(Set<InputParameter> inputParameters, Set<BooleanConstraint> constraints) {
+        AttackRecord(Set<InputParameter> inputParameters, Set<BooleanConstraint> constraints,
+                ComplexityReport complexityReport) {
             this.inputParameters = inputParameters;
             this.constraints = new BooleanConstraints(constraints);
+            this.complexityReport = complexityReport;
         }
 
-        public Set<InputParameter> getInputParameters() {
+        Set<InputParameter> getInputParameters() {
             return inputParameters;
         }
 
-        public BooleanConstraints getConstraints() {
+        BooleanConstraints getConstraints() {
             return constraints;
+        }
+
+        ComplexityReport getComplexityReport() {
+            return complexityReport;
         }
     }
 
@@ -33,15 +43,15 @@ public class AttackRecords {
         private final Map<BooleanConstraints, AttackRecord> attacks = new HashMap<BooleanConstraints, AttackRecord>();
         private final AttackLine predecessor;
 
-        public AttackLine() {
+        AttackLine() {
             this.predecessor = null;
         }
 
-        public AttackLine(AttackLine predecessor) {
+        AttackLine(AttackLine predecessor) {
             this.predecessor = predecessor;
         }
 
-        public BooleanConstraints findNextCollisionCandidate() {
+        BooleanConstraints findNextCollisionCandidate() {
             List<AttackRecord> parents = predecessor.getSortedExtensionPoints();
             for (AttackRecord parent : parents) {
                 BooleanConstraints candidate = extendParent(parent);
@@ -54,7 +64,14 @@ public class AttackRecords {
 
         private BooleanConstraints extendParent(AttackRecord parent) {
             List<InputParameter> inputParameters = new ArrayList<InputParameter>(parent.getInputParameters());
-            // TODO sort
+            inputParameters.sort(new Comparator<InputParameter>() {
+                @Override
+                public int compare(InputParameter ip0, InputParameter ip1) {
+                    Long m0 = parent.getComplexityReport().getInputParameterValue(Metric.NumberOfExpressions, ip0);
+                    Long m1 = parent.getComplexityReport().getInputParameterValue(Metric.NumberOfExpressions, ip1);
+                    return m1.intValue() - m0.intValue();
+                }
+            });
             BooleanConstraints parentConstraints = parent.getConstraints();
             for (InputParameter inputParameter : inputParameters) {
                 BooleanConstraints extensionWithFalse = parentConstraints.extend(inputParameter, "False");
@@ -75,15 +92,19 @@ public class AttackRecords {
             return extensionPoints;
         }
 
-        public void add(BooleanFunction booleanFunction) {
+        void add(BooleanFunction booleanFunction) {
             BooleanConstraints constraints = new BooleanConstraints(booleanFunction.getConstraints());
             AttackRecord record = new AttackRecord(booleanFunction.getInputParameters(),
-                    booleanFunction.getConstraints());
+                    booleanFunction.getConstraints(), new ComplexityReport(booleanFunction));
             attacks.put(constraints, record);
         }
 
-        public int size() {
+        int size() {
             return attacks.size();
+        }
+
+        AttackLine getPredessor() {
+            return predecessor;
         }
     }
 
@@ -146,7 +167,43 @@ public class AttackRecords {
     private List<AttackLine> sortAttackLines() {
         List<AttackLine> sortedLines = new ArrayList<AttackLine>(Arrays.asList(attackLines));
         sortedLines.remove(attackLines[0]);
-        // TODO Sort
+        sortedLines.sort((Comparator<AttackLine>) new Comparator<AttackLine>() {
+            private int compareEdges(AttackLine line0, AttackLine line1) {
+                return 0; // TODO
+            }
+
+            private int compareOuts(AttackLine line0, AttackLine line1) {
+                return 0; // TODO
+            }
+
+            private int compareMiddle(AttackLine line0, AttackLine line1) {
+                return 0; // TODO
+            }
+
+            @Override
+            public int compare(AttackLine line0, AttackLine line1) {
+                boolean edge0 = line0.size() == 0 && line0.getPredessor().size() > 0;
+                boolean edge1 = line1.size() == 0 && line1.getPredessor().size() > 0;
+                boolean out0 = line0.getPredessor().size() == 0;
+                boolean out1 = line1.getPredessor().size() == 0;
+                if (edge0 && edge1) {
+                    return compareEdges(line0, line1);
+                } else if (edge0) {
+                    return -1;
+                } else if (edge1) {
+                    return 1;
+                } else if (out0 && out1) {
+                    return compareOuts(line0, line1);
+                } else if (out0) {
+                    return 1;
+                } else if (out1) {
+                    return -1;
+                } else {
+                    return compareMiddle(line0, line1);
+                }
+            }
+        });
         return sortedLines;
     }
+
 }
