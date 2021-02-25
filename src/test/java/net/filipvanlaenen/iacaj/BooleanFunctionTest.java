@@ -27,6 +27,30 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Creates the representation of the rich Boolean function as a string.
+     *
+     * @return A string representing the rich Boolean function.
+     */
+    private String createRichBooleanFunctionString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("i1 = True\n");
+        sb.append("i2 = False\n");
+        sb.append("i4 = i3\n");
+        sb.append("i6 = ¬i5\n");
+        sb.append("v1 = i3 ∧ i5 ∧ ¬i7\n");
+        sb.append("v2 = i3 ∨ i5 ∨ ¬i7\n");
+        sb.append("v3 = i3 ⊻ i5\n");
+        sb.append("v4 = ¬i3 ⊻ i5\n");
+        sb.append("v5 = i3 ∧ v2\n");
+        sb.append("v6 = i3 ∨ v1\n");
+        sb.append("v7 = i3 ⊻ v1\n");
+        sb.append("o1 = i3 ⊻ v6\n");
+        sb.append("o2 = i3 ⊻ v7");
+        String expected = sb.toString();
+        return expected;
+    }
+
+    /**
      * Creates a set with input parameters with the names provided.
      *
      * @param names The names of the input parameters to be added to the set.
@@ -107,22 +131,37 @@ public class BooleanFunctionTest {
     @Test
     public void shouldExportARichBooleanFunctionCorrectly() {
         BooleanFunction booleanFunction = createRichBooleanFunction();
+        String expected = createRichBooleanFunctionString();
+        assertEquals(expected, booleanFunction.toString());
+    }
+
+    /**
+     * Verifies export of a Boolean function to a string after cloning it.
+     */
+    @Test
+    public void shouldExportARichBooleanFunctionCorrectlyAfterCloning() {
+        BooleanFunction booleanFunction = new BooleanFunction(createRichBooleanFunction());
+        String expected = createRichBooleanFunctionString();
+        assertEquals(expected, booleanFunction.toString());
+    }
+
+    /**
+     * Verifies export of a Boolean function to a string after cloning it from
+     * another Boolean function together with constraints.
+     */
+    @Test
+    public void shoudlExportARichBooleanFunctionCorrectlyAfterCloningFromAnotherBooleanFunctionAndConstraints() {
+        String[] content = new String[] {"o1 = i1 ∧ i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        Set<BooleanConstraint> constraintsSet = new HashSet<BooleanConstraint>();
+        constraintsSet.add(BooleanConstraint.parse("i1", "True"));
+        BooleanConstraints constraints = new BooleanConstraints(constraintsSet);
+        BooleanFunction constrainedBooleanFunction = new BooleanFunction(booleanFunction, constraints);
         StringBuilder sb = new StringBuilder();
         sb.append("i1 = True\n");
-        sb.append("i2 = False\n");
-        sb.append("i4 = i3\n");
-        sb.append("i6 = ¬i5\n");
-        sb.append("v1 = i3 ∧ i5 ∧ ¬i7\n");
-        sb.append("v2 = i3 ∨ i5 ∨ ¬i7\n");
-        sb.append("v3 = i3 ⊻ i5\n");
-        sb.append("v4 = ¬i3 ⊻ i5\n");
-        sb.append("v5 = i3 ∧ v2\n");
-        sb.append("v6 = i3 ∨ v1\n");
-        sb.append("v7 = i3 ⊻ v1\n");
-        sb.append("o1 = i3 ⊻ v6\n");
-        sb.append("o2 = i3 ⊻ v7");
+        sb.append("o1 = i1 ∧ i2");
         String expected = sb.toString();
-        assertEquals(expected, booleanFunction.toString());
+        assertEquals(expected, constrainedBooleanFunction.toString());
     }
 
     /**
