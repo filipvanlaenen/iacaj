@@ -1,6 +1,9 @@
 package net.filipvanlaenen.iacaj;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -150,9 +153,21 @@ public final class ComplexityReport {
         }
         for (Metric metric : Metric.values()) {
             Map<InputParameter, Long> inputParameterValuesMap = inputParameterValues.get(metric);
-            for (InputParameter inputParameter : inputParameterValuesMap.keySet()) {
-                sb.append(metric.getHumanReadableName() + ": " + inputParameter.getName() + ": "
-                        + inputParameterValuesMap.get(inputParameter) + "\n");
+            List<InputParameter> sortedInputParameters = new ArrayList<InputParameter>(
+                    inputParameterValuesMap.keySet());
+            sortedInputParameters.sort(new Comparator<InputParameter>() {
+                @Override
+                public int compare(final InputParameter ip0, final InputParameter ip1) {
+                    return ip0.getNumber() - ip1.getNumber();
+                }
+            });
+            for (int i = 0; i < sortedInputParameters.size(); i++) {
+                InputParameter sortedInputParameter = sortedInputParameters.get(i);
+                sb.append("  " + sortedInputParameter.getName() + ": "
+                        + inputParameterValuesMap.get(sortedInputParameter));
+                if (i < sortedInputParameters.size() - 1) {
+                    sb.append("\n");
+                }
             }
         }
         return sb.toString();
