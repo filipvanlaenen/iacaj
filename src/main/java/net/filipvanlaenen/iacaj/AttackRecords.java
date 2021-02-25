@@ -14,7 +14,7 @@ import net.filipvanlaenen.iacaj.ComplexityReport.Metric;
  * Class keeping track of all performed attacks on a Boolean function.
  */
 public class AttackRecords {
-    public class AttackRecord {
+    class AttackRecord {
         private final Set<InputParameter> inputParameters;
         private final BooleanConstraints constraints;
         private final ComplexityReport complexityReport;
@@ -37,22 +37,97 @@ public class AttackRecords {
         ComplexityReport getComplexityReport() {
             return complexityReport;
         }
+
+        private List<InputParameter> getPrioritizedInputParameters() {
+            List<InputParameter> prioritizedInputParameters = new ArrayList<InputParameter>(inputParameters);
+            prioritizedInputParameters.sort(new Comparator<InputParameter>() {
+                @Override
+                public int compare(final InputParameter ip0, final InputParameter ip1) {
+                    Long m0 = complexityReport.getInputParameterValue(Metric.NumberOfExpressions, ip0);
+                    Long m1 = complexityReport.getInputParameterValue(Metric.NumberOfExpressions, ip1);
+                    return m1.intValue() - m0.intValue();
+                }
+            });
+            return prioritizedInputParameters;
+        }
     }
 
+    /**
+     * Class representing an attack line, i.e. a set of attack records with the same
+     * number of Boolean constraints.
+     */
     public class AttackLine {
-        private final Map<BooleanConstraints, AttackRecord> attacks = new HashMap<BooleanConstraints, AttackRecord>();
+        /**
+         * The attacks records, mapped by their constraints.
+         */
+        private final Map<BooleanConstraints, AttackRecord> attackRecords = new HashMap<BooleanConstraints, AttackRecord>();
+        /**
+         * The predecessor of the attack line.
+         */
         private final AttackLine predecessor;
 
+        /**
+         * Creates an attack line without a predecessor.
+         */
         AttackLine() {
             this.predecessor = null;
         }
 
-        AttackLine(AttackLine predecessor) {
+        /**
+         * Creates a new attack line with a predecessor.
+         *
+         * @param predecessor The predecessor of the new attack line.
+         */
+        AttackLine(final AttackLine predecessor) {
             this.predecessor = predecessor;
         }
 
+        /**
+         * Adds a Boolean function to the attack line. Note that the Boolean function is
+         * not added, but an attack record created from it.
+         *
+         * @param booleanFunction The Boolean function to be added.
+         */
+        void add(final BooleanFunction booleanFunction) {
+            BooleanConstraints constraints = new BooleanConstraints(booleanFunction.getConstraints());
+            AttackRecord record = new AttackRecord(booleanFunction.getInputParameters(),
+                    booleanFunction.getConstraints(), new ComplexityReport(booleanFunction));
+            attackRecords.put(constraints, record);
+        }
+
+        /**
+         * Extends the Boolean constraints of a parent attack record with a new
+         * constraint, such that the result can be used as the next collision candidate.
+         * Returns <code>null</code> if none can be found.
+         *
+         * @param parent The parent attack record to extend.
+         * @return A Boolean constraints instance that is the next collision candidate
+         *         extended fro the parent attack record.
+         */
+        private BooleanConstraints extendParent(final AttackRecord parent) {
+            BooleanConstraints parentConstraints = parent.getConstraints();
+            for (InputParameter inputParameter : parent.getPrioritizedInputParameters()) {
+                BooleanConstraints extensionWithFalse = parentConstraints.extend(inputParameter, "False");
+                if (!attackRecords.containsKey(extensionWithFalse)) {
+                    return extensionWithFalse;
+                }
+                BooleanConstraints extensionWithTrue = parentConstraints.extend(inputParameter, "True");
+                if (!attackRecords.containsKey(extensionWithTrue)) {
+                    return extensionWithTrue;
+                }
+            }
+            return null;
+        }
+
+        /**
+         * Returns the next collision candidate for this attack line. Returns
+         * <code>null</code> if no collision candidates for this attack line can be
+         * found.
+         *
+         * @return The next collision candidate for this attack line, or null.
+         */
         BooleanConstraints findNextCollisionCandidate() {
-            List<AttackRecord> parents = predecessor.getSortedExtensionPoints();
+            List<AttackRecord> parents = predecessor.getPrioritizedAttackRecords();
             for (AttackRecord parent : parents) {
                 BooleanConstraints candidate = extendParent(parent);
                 if (candidate != null) {
@@ -62,49 +137,39 @@ public class AttackRecords {
             return null;
         }
 
-        private BooleanConstraints extendParent(AttackRecord parent) {
-            List<InputParameter> inputParameters = new ArrayList<InputParameter>(parent.getInputParameters());
-            inputParameters.sort(new Comparator<InputParameter>() {
-                @Override
-                public int compare(InputParameter ip0, InputParameter ip1) {
-                    Long m0 = parent.getComplexityReport().getInputParameterValue(Metric.NumberOfExpressions, ip0);
-                    Long m1 = parent.getComplexityReport().getInputParameterValue(Metric.NumberOfExpressions, ip1);
-                    return m1.intValue() - m0.intValue();
-                }
-            });
-            BooleanConstraints parentConstraints = parent.getConstraints();
-            for (InputParameter inputParameter : inputParameters) {
-                BooleanConstraints extensionWithFalse = parentConstraints.extend(inputParameter, "False");
-                if (!attacks.containsKey(extensionWithFalse)) {
-                    return extensionWithFalse;
-                }
-                BooleanConstraints extensionWithTrue = parentConstraints.extend(inputParameter, "True");
-                if (!attacks.containsKey(extensionWithTrue)) {
-                    return extensionWithTrue;
-                }
-            }
-            return null;
-        }
-
-        private List<AttackRecord> getSortedExtensionPoints() {
-            List<AttackRecord> extensionPoints = new ArrayList<AttackRecord>(attacks.values());
-            // TODO sort
-            return extensionPoints;
-        }
-
-        void add(BooleanFunction booleanFunction) {
-            BooleanConstraints constraints = new BooleanConstraints(booleanFunction.getConstraints());
-            AttackRecord record = new AttackRecord(booleanFunction.getInputParameters(),
-                    booleanFunction.getConstraints(), new ComplexityReport(booleanFunction));
-            attacks.put(constraints, record);
-        }
-
-        int size() {
-            return attacks.size();
-        }
-
+        /**
+         * Returns the predecessor for this attack line.
+         *
+         * @return The predecessor for this attack line.
+         */
         AttackLine getPredessor() {
             return predecessor;
+        }
+
+        /**
+         * Returns a prioritized list of attack records.
+         *
+         * @return A prioritized list of attack records.
+         */
+        private List<AttackRecord> getPrioritizedAttackRecords() {
+            List<AttackRecord> prioritizedAttackRecords = new ArrayList<AttackRecord>(attackRecords.values());
+            prioritizedAttackRecords.sort(new Comparator<AttackRecord>() {
+                @Override
+                public int compare(final AttackRecord attackRecord0, final AttackRecord attackRecord1) {
+                    return 0;
+                }
+            });
+            return prioritizedAttackRecords;
+        }
+
+        /**
+         * Returns the size of the attack line, i.e. the number of attack records stored
+         * in this attack line.
+         *
+         * @return The size of the attack line.
+         */
+        int size() {
+            return attackRecords.size();
         }
     }
 
@@ -120,7 +185,7 @@ public class AttackRecords {
      *
      * @param booleanFunction The Boolean function to attack.
      */
-    public AttackRecords(final BooleanFunction booleanFunction) {
+    AttackRecords(final BooleanFunction booleanFunction) {
         attackLines = new AttackLine[booleanFunction.getNumberOfInputParameters()];
         attackLines[0] = new AttackLine();
         for (int i = 1; i < attackLines.length; i++) {
@@ -136,19 +201,75 @@ public class AttackRecords {
      * @param booleanFunction The Boolean function to be added to the attack
      *                        records.
      */
-    public void add(final BooleanFunction booleanFunction) {
+    void add(final BooleanFunction booleanFunction) {
         attackLines[booleanFunction.getNumberOfConstraints()].add(booleanFunction);
     }
 
+    /**
+     * Finds a set of Boolean constraints that is the next collision candidate.
+     * Returns <code>null</code> if none can be found.
+     *
+     * @return A BooleanConstraints instance representing the next collision
+     *         candidate.
+     */
     BooleanConstraints findNextCollisionCandidate() {
-        List<AttackLine> sortedLines = sortAttackLines();
-        for (AttackLine line : sortedLines) {
+        List<AttackLine> prioritizedAttackLines = getPrioritizedAttackLines();
+        for (AttackLine line : prioritizedAttackLines) {
             BooleanConstraints candidate = line.findNextCollisionCandidate();
             if (candidate != null) {
                 return candidate;
             }
         }
         return null;
+    }
+
+    /**
+     * Sorts the attack lines according to priority: edges first, then regular
+     * lines, and lines with empty predecessors at the end. Edges are lines that are
+     * empty, but with a predecessor that is not empty.
+     *
+     * @return A prioritized list of the attack lines.
+     */
+    private List<AttackLine> getPrioritizedAttackLines() {
+        List<AttackLine> prioritizedAttackLines = new ArrayList<AttackLine>(Arrays.asList(attackLines));
+        prioritizedAttackLines.remove(attackLines[0]);
+        prioritizedAttackLines.sort((Comparator<AttackLine>) new Comparator<AttackLine>() {
+            @Override
+            public int compare(final AttackLine line0, final AttackLine line1) {
+                boolean isEdge0 = isEdge(line0);
+                boolean isEdge1 = isEdge(line1);
+                boolean isPredecessorEmpty0 = isPredecessorEmpty(line0);
+                boolean isPredecessorEmpty1 = isPredecessorEmpty(line1);
+                if (isEdge0 && isEdge1) {
+                    return 0;
+                } else if (isEdge0) {
+                    return -1;
+                } else if (isEdge1) {
+                    return 1;
+                } else if (isPredecessorEmpty0 && isPredecessorEmpty1) {
+                    return 0;
+                } else if (isPredecessorEmpty0) {
+                    return 1;
+                } else if (isPredecessorEmpty1) {
+                    return -1;
+                } else {
+                    return compareRegularLines(line0, line1);
+                }
+            }
+
+            private int compareRegularLines(final AttackLine line0, final AttackLine line1) {
+                return 0;
+            }
+
+            private boolean isEdge(final AttackLine line) {
+                return line.size() == 0 && line.getPredessor().size() > 0;
+            }
+
+            private boolean isPredecessorEmpty(final AttackLine line0) {
+                return line0.getPredessor().size() == 0;
+            }
+        });
+        return prioritizedAttackLines;
     }
 
     /**
@@ -163,47 +284,4 @@ public class AttackRecords {
         }
         return result - 1;
     }
-
-    private List<AttackLine> sortAttackLines() {
-        List<AttackLine> sortedLines = new ArrayList<AttackLine>(Arrays.asList(attackLines));
-        sortedLines.remove(attackLines[0]);
-        sortedLines.sort((Comparator<AttackLine>) new Comparator<AttackLine>() {
-            private int compareEdges(AttackLine line0, AttackLine line1) {
-                return 0; // TODO
-            }
-
-            private int compareOuts(AttackLine line0, AttackLine line1) {
-                return 0; // TODO
-            }
-
-            private int compareMiddle(AttackLine line0, AttackLine line1) {
-                return 0; // TODO
-            }
-
-            @Override
-            public int compare(AttackLine line0, AttackLine line1) {
-                boolean edge0 = line0.size() == 0 && line0.getPredessor().size() > 0;
-                boolean edge1 = line1.size() == 0 && line1.getPredessor().size() > 0;
-                boolean out0 = line0.getPredessor().size() == 0;
-                boolean out1 = line1.getPredessor().size() == 0;
-                if (edge0 && edge1) {
-                    return compareEdges(line0, line1);
-                } else if (edge0) {
-                    return -1;
-                } else if (edge1) {
-                    return 1;
-                } else if (out0 && out1) {
-                    return compareOuts(line0, line1);
-                } else if (out0) {
-                    return 1;
-                } else if (out1) {
-                    return -1;
-                } else {
-                    return compareMiddle(line0, line1);
-                }
-            }
-        });
-        return sortedLines;
-    }
-
 }
