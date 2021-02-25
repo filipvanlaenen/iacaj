@@ -56,6 +56,16 @@ public class BooleanConstraintsTest {
     }
 
     /**
+     * Verifies that getConstraints returns a set with the constraints.
+     */
+    @Test
+    public void getConstraintsReturnsASetWithTheConstraints() {
+        Set<BooleanConstraint> expected = new HashSet<BooleanConstraint>();
+        expected.add(I1_TRUE);
+        assertEquals(expected, I1_TRUE_BOOLEAN_CONSTRAINTS.getConstraints());
+    }
+
+    /**
      * Verifies that an empty BooleanConstraints instance extended with a Boolean
      * constraint is equal to a BooleanConstraints instance created with that
      * Boolean constraint.
