@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * Class holding a set of Boolean constraints.
  */
-public class BooleanConstraints {
+public final class BooleanConstraints {
     /**
      * The set of constraints.
      */
@@ -17,12 +17,12 @@ public class BooleanConstraints {
      *
      * @param constraints The set with the constraints.
      */
-    public BooleanConstraints(Set<BooleanConstraint> constraints) {
+    BooleanConstraints(final Set<BooleanConstraint> constraints) {
         this.constraints = new HashSet<BooleanConstraint>(constraints);
     }
 
     @Override
-    public boolean equals(Object object) {
+    public boolean equals(final Object object) {
         if (object instanceof BooleanConstraints) {
             BooleanConstraints other = (BooleanConstraints) object;
             if (constraints.size() != other.constraints.size()) {
@@ -48,10 +48,19 @@ public class BooleanConstraints {
      * @return A new BooleanConstraints instance based on the set of constraints of
      *         this instance, extended with a new Boolean constraint.
      */
-    public BooleanConstraints extend(InputParameter inputParameter, String rightHandSide) {
+    BooleanConstraints extend(final InputParameter inputParameter, final String rightHandSide) {
         Set<BooleanConstraint> extendedConstraints = new HashSet<BooleanConstraint>(constraints);
         extendedConstraints.add((BooleanConstraint) BooleanConstraint.parse(inputParameter.getName(), rightHandSide));
         return new BooleanConstraints(extendedConstraints);
+    }
+
+    /**
+     * Returns the constraints.
+     *
+     * @return The constraints.
+     */
+    Set<BooleanConstraint> getConstraints() {
+        return Set.copyOf(constraints);
     }
 
     @Override
@@ -59,7 +68,7 @@ public class BooleanConstraints {
         int result = 0;
         for (BooleanConstraint constraint : constraints) {
             // Note for mutation testing:
-            // replacing integer addition with subtraction produces an equivalent mutant.
+            // Replacing integer addition with subtraction produces an equivalent mutant.
             result += constraint.hashCode();
         }
         return result;
@@ -70,12 +79,7 @@ public class BooleanConstraints {
      *
      * @return The number of Boolean constraints.
      */
-    public int size() {
+    int size() {
         return constraints.size();
-    }
-
-    // TODO: Should be removed.
-    Set<BooleanConstraint> iterator() {
-        return constraints;
     }
 }

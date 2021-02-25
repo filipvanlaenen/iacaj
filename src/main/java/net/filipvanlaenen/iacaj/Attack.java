@@ -45,12 +45,7 @@ public class Attack {
             if (constraints == null) {
                 return new NoCollisionFound();
             }
-            // TODO: BooleanFunction should have a constructor taking a Boolean function
-            // with a new set of constraints
-            collisionCandidate = new BooleanFunction(booleanFunction);
-            for (BooleanConstraint constraint : constraints.iterator()) {
-                collisionCandidate.addExpression(constraint);
-            }
+            collisionCandidate = new BooleanFunction(booleanFunction, constraints);
             collisionCandidate.resolve();
             records.add(collisionCandidate);
             collisionFound = collisionCandidate.getNumberOfConstraints()

@@ -109,6 +109,20 @@ public class BooleanFunction {
     }
 
     /**
+     * Constructor copying the expression from another Boolean function and adding
+     * the constraints to it.
+     *
+     * @param prototype   The Boolean function to copy the expressions from.
+     * @param constraints The constraints to be added to the Boolean function.
+     */
+    public BooleanFunction(final BooleanFunction prototype, final BooleanConstraints constraints) {
+        this(prototype);
+        for (BooleanConstraint constraint : constraints.getConstraints()) {
+            addExpression(constraint.deepClone());
+        }
+    }
+
+    /**
      * Factory method creating a BooleanFunction instance based on an array of
      * strings.
      *
