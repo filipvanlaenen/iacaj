@@ -17,21 +17,13 @@ public final class ComplexityReport {
          */
         NumberOfExpressions("Number of expressions") {
             @Override
-            long measure(BooleanExpression booleanExpression) {
-                if (booleanExpression instanceof BooleanConstraint) {
-                    return 0L;
-                } else {
-                    return 1L;
-                }
+            long measureIncrement(final BooleanExpression booleanExpression) {
+                return booleanExpression instanceof BooleanConstraint ? 0L : 1L;
             }
 
             @Override
-            long measure(BooleanExpression booleanExpression, InputParameter inputParameter) {
-                if (booleanExpression instanceof BooleanConstraint) {
-                    return 0L;
-                } else {
-                    return 1L;
-                }
+            long measureIncrement(final BooleanExpression booleanExpression, final InputParameter inputParameter) {
+                return booleanExpression instanceof BooleanConstraint ? 0L : 1L;
             }
         };
 
@@ -58,20 +50,35 @@ public final class ComplexityReport {
             return humandReadableName;
         }
 
-        abstract long measure(BooleanExpression booleanExpression);
+        /**
+         * Measures the increment in the metric for the Boolean expression provided.
+         *
+         * @param booleanExpression The Boolean expression to measure the increment.
+         * @return The increment in the metric for the Boolean expression.
+         */
+        abstract long measureIncrement(BooleanExpression booleanExpression);
 
-        abstract long measure(BooleanExpression booleanExpression, InputParameter inputParameter);
+        /**
+         * Measures the increment in the metric for an input parameter in a Boolean
+         * expression.
+         *
+         * @param booleanExpression The Boolean expression to measure the increment.
+         * @param inputParameter    The input parameter for which to measure the
+         *                          increment.
+         * @return The increment in the metric for the input parameter in the Boolean
+         *         expression.
+         */
+        abstract long measureIncrement(BooleanExpression booleanExpression, InputParameter inputParameter);
     }
 
     /**
      * Map holding the aggregated values per metric.
      */
-    private final Map<Metric, Long> aggregatedValues = new HashMap<Metric, Long>();
-    private final Map<Metric, Map<InputParameter, Long>> inputParameterValues = new HashMap<Metric, Map<InputParameter, Long>>();
+    private final Map<Metric, Long> aggregatedValues;
     /**
-     * The Boolean function.
+     * Map holding the input parameter values per metric.
      */
-    private final BooleanFunction booleanFunction;
+    private final Map<Metric, Map<InputParameter, Long>> inputParameterValues;
 
     /**
      * Constructor with the Boolean function for which to produce a complexity
@@ -81,7 +88,9 @@ public final class ComplexityReport {
      *                        report.
      */
     public ComplexityReport(final BooleanFunction booleanFunction) {
-        this.booleanFunction = booleanFunction;
+        aggregatedValues = new HashMap<Metric, Long>();
+        inputParameterValues = new HashMap<Metric, Map<InputParameter, Long>>();
+        measure(booleanFunction);
     }
 
     /**
@@ -90,11 +99,47 @@ public final class ComplexityReport {
      * @param metric The metric for which to return the aggregated value.
      * @return The aggregated value for the metric.
      */
-    public Long getAggregatedValue(final Metric metric) {
-        if (!aggregatedValues.containsKey(metric)) {
-            measure();
-        }
+    Long getAggregatedValue(final Metric metric) {
         return aggregatedValues.get(metric);
+    }
+
+    /**
+     * Returns the value for a metric for an input parameter.
+     *
+     * @param metric         The metric for which to return the input parameter's
+     *                       value.
+     * @param inputParameter The input parameter for which to return the metric's
+     *                       value.
+     * @return The value for a metric for an input parameter.
+     */
+    Long getInputParameterValue(final Metric metric, final InputParameter inputParameter) {
+        return inputParameterValues.get(metric).get(inputParameter);
+    }
+
+    /**
+     * Measures all the metrics for a Boolean function.
+     *
+     * @param booleanFunction The Boolean function for which to produce a complexity
+     *                        report.
+     */
+    private void measure(final BooleanFunction booleanFunction) {
+        for (Metric metric : Metric.values()) {
+            aggregatedValues.put(metric, 0L);
+            inputParameterValues.put(metric, new HashMap<InputParameter, Long>());
+        }
+        for (BooleanExpression booleanExpression : booleanFunction.getExpressions()) {
+            for (Metric metric : Metric.values()) {
+                aggregatedValues.put(metric, aggregatedValues.get(metric) + metric.measureIncrement(booleanExpression));
+                for (InputParameter inputParameter : booleanExpression.getInputParameters()) {
+                    Map<InputParameter, Long> inputParameterValue = inputParameterValues.get(metric);
+                    if (!inputParameterValue.containsKey(inputParameter)) {
+                        inputParameterValue.put(inputParameter, 0L);
+                    }
+                    inputParameterValue.put(inputParameter, inputParameterValue.get(inputParameter)
+                            + metric.measureIncrement(booleanExpression, inputParameter));
+                }
+            }
+        }
     }
 
     @Override
@@ -120,32 +165,5 @@ public final class ComplexityReport {
      */
     public String toYaml() {
         return null;
-    }
-
-    public Long getInputParameterValue(Metric metric, InputParameter inputParameter) {
-        if (!inputParameterValues.containsKey(metric)) {
-            measure();
-        }
-        return inputParameterValues.get(metric).get(inputParameter);
-    }
-
-    private void measure() {
-        for (Metric metric : Metric.values()) {
-            aggregatedValues.put(metric, 0L);
-            inputParameterValues.put(metric, new HashMap<InputParameter, Long>());
-        }
-        for (BooleanExpression booleanExpression : booleanFunction.getExpressions()) {
-            for (Metric metric : Metric.values()) {
-                aggregatedValues.put(metric, aggregatedValues.get(metric) + metric.measure(booleanExpression));
-                for (InputParameter inputParameter : booleanExpression.getInputParameters()) {
-                    if (!inputParameterValues.get(metric).containsKey(inputParameter)) {
-                        inputParameterValues.get(metric).put(inputParameter, 0L);
-                    }
-                    inputParameterValues.get(metric).put(inputParameter,
-                            inputParameterValues.get(metric).get(inputParameter)
-                                    + metric.measure(booleanExpression, inputParameter));
-                }
-            }
-        }
     }
 }
