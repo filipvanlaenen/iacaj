@@ -182,8 +182,8 @@ public class BooleanFunction {
      *
      * @return The constraints of the Boolean function.
      */
-    public Set<BooleanConstraint> getConstraints() {
-        return Set.copyOf(constraints);
+    public BooleanConstraints getConstraints() {
+        return new BooleanConstraints(constraints);
     }
 
     /**

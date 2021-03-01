@@ -14,30 +14,68 @@ import net.filipvanlaenen.iacaj.ComplexityReport.Metric;
  * Class keeping track of all performed attacks on a Boolean function.
  */
 public class AttackRecords {
+    /**
+     * Class representing all the archive information needed from an attack.
+     */
     class AttackRecord {
+        /**
+         * The input parameters.
+         */
         private final Set<InputParameter> inputParameters;
+        /**
+         * The Boolean constraints.
+         */
         private final BooleanConstraints constraints;
+        /**
+         * The complexity report.
+         */
         private final ComplexityReport complexityReport;
 
-        AttackRecord(Set<InputParameter> inputParameters, Set<BooleanConstraint> constraints,
-                ComplexityReport complexityReport) {
-            this.inputParameters = inputParameters;
-            this.constraints = new BooleanConstraints(constraints);
-            this.complexityReport = complexityReport;
+        /**
+         * Creates a new attack record for a Boolean function. The Boolean function is
+         * assumed to have been resolved.
+         *
+         * @param booleanFunction The Boolean function for which to make an attack
+         *                        record.
+         */
+        AttackRecord(final BooleanFunction booleanFunction) {
+            this.inputParameters = booleanFunction.getInputParameters();
+            this.constraints = booleanFunction.getConstraints();
+            this.complexityReport = new ComplexityReport(booleanFunction);
         }
 
-        Set<InputParameter> getInputParameters() {
-            return inputParameters;
-        }
-
-        BooleanConstraints getConstraints() {
-            return constraints;
-        }
-
+        /**
+         * Returns the complexity report.
+         *
+         * @return The complexity report.
+         */
         ComplexityReport getComplexityReport() {
             return complexityReport;
         }
 
+        /**
+         * Returns the Boolean constraints.
+         *
+         * @return The Boolean constraints.
+         */
+        BooleanConstraints getConstraints() {
+            return constraints;
+        }
+
+        /**
+         * Returns a set with the input parameters.
+         *
+         * @return A set with the input parameters.
+         */
+        Set<InputParameter> getInputParameters() {
+            return inputParameters;
+        }
+
+        /**
+         * Returns a prioritized list of the input parameters.
+         *
+         * @return A prioritized list of the input parameters.
+         */
         private List<InputParameter> getPrioritizedInputParameters() {
             List<InputParameter> prioritizedInputParameters = new ArrayList<InputParameter>(inputParameters);
             prioritizedInputParameters.sort(new Comparator<InputParameter>() {
@@ -60,7 +98,7 @@ public class AttackRecords {
         /**
          * The attacks records, mapped by their constraints.
          */
-        private final Map<BooleanConstraints, AttackRecord> attackRecords = new HashMap<BooleanConstraints, AttackRecord>();
+        private final Map<BooleanConstraints, AttackRecord> attackRecords;
         /**
          * The predecessor of the attack line.
          */
@@ -70,7 +108,7 @@ public class AttackRecords {
          * Creates an attack line without a predecessor.
          */
         AttackLine() {
-            this.predecessor = null;
+            this(null);
         }
 
         /**
@@ -80,6 +118,7 @@ public class AttackRecords {
          */
         AttackLine(final AttackLine predecessor) {
             this.predecessor = predecessor;
+            attackRecords = new HashMap<BooleanConstraints, AttackRecord>();
         }
 
         /**
@@ -89,10 +128,8 @@ public class AttackRecords {
          * @param booleanFunction The Boolean function to be added.
          */
         void add(final BooleanFunction booleanFunction) {
-            BooleanConstraints constraints = new BooleanConstraints(booleanFunction.getConstraints());
-            AttackRecord record = new AttackRecord(booleanFunction.getInputParameters(),
-                    booleanFunction.getConstraints(), new ComplexityReport(booleanFunction));
-            attackRecords.put(constraints, record);
+            AttackRecord attackRecord = new AttackRecord(booleanFunction);
+            attackRecords.put(attackRecord.getConstraints(), attackRecord);
         }
 
         /**
