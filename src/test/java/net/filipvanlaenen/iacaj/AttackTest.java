@@ -1,5 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,8 @@ public class AttackTest {
         String[] content = new String[] {"o1 = i1", "o2 = i2", "o3 = i3", "o4 = i4", "o5 = i5", "o6 = i6"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         Attack attack = new Attack(booleanFunction);
-        assertTrue(attack.perform() instanceof NoCollisionFoundYet);
+        AttackResult attackResult = attack.perform();
+        assertTrue(attackResult instanceof NoCollisionFoundYet);
+        assertEquals(Attack.MAXIMUM_NUMBER_OF_ITERATIONS, ((NoCollisionFoundYet) attackResult).getNumberOfIterations());
     }
 }

@@ -15,8 +15,17 @@ public final class NoCollisionFoundYet implements AttackResult {
      *
      * @param numberOfIterations The number of iterations done.
      */
-    public NoCollisionFoundYet(final int numberOfIterations) {
+    NoCollisionFoundYet(final int numberOfIterations) {
         this.numberOfIterations = numberOfIterations;
+    }
+
+    /**
+     * Returns the number of iterations done.
+     *
+     * @return The number of iterations done.
+     */
+    int getNumberOfIterations() {
+        return numberOfIterations;
     }
 
     @Override

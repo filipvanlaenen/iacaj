@@ -10,7 +10,7 @@ public class Attack {
      * The maximal number of iterations before the <code>perform</code> method will
      * return and report progress.
      */
-    private static final int MAXIMUM_NUMBER_OF_ITERATIONS = 128;
+    static final int MAXIMUM_NUMBER_OF_ITERATIONS = 128;
 
     /**
      * The Boolean function under attack.
