@@ -2,17 +2,50 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.Set;
 
+/**
+ * Class performing the attack on a Boolean function.
+ */
 public class Attack {
+    /**
+     * The maximal number of iterations before the <code>perform</code> method will
+     * return and report progress.
+     */
     private static final int MAXIMUM_NUMBER_OF_ITERATIONS = 128;
+
+    /**
+     * The Boolean function under attack.
+     */
     private final BooleanFunction booleanFunction;
+    /**
+     * The records for the attack.
+     */
     private AttackRecords records;
+    /**
+     * The number of input parameters of the Boolean function.
+     */
     private int numberOfInputParameters;
+    /**
+     * The input parameters of the Boolean function.
+     */
     private Set<InputParameter> inputParameters;
 
-    public Attack(BooleanFunction booleanFunction) {
+    /**
+     * Constructor taking the Boolean function to attack as its parameter.
+     *
+     * @param booleanFunction The Boolean function to attack.
+     */
+    public Attack(final BooleanFunction booleanFunction) {
         this.booleanFunction = booleanFunction;
     }
 
+    /**
+     * Initialized the attack. This includes verifying that the Boolean function has
+     * input parameters, and that none of the input parameters are eliminated after
+     * resolving the Boolean function without constraints
+     *
+     * @return <code>null</code> if the attack can start, or a final attack result
+     *         if the attack shouldn't start.
+     */
     private AttackResult initialize() {
         Set<InputParameter> initialInputParameters = booleanFunction.getInputParameters();
         if (initialInputParameters.isEmpty()) {
@@ -31,6 +64,12 @@ public class Attack {
         return null;
     }
 
+    /**
+     * Performs the attack. Can be called again to continue if a progress report was
+     * returned by the previous call.
+     *
+     * @return A final attack result or a progress report.
+     */
     public AttackResult perform() {
         if (records == null) {
             AttackResult result = initialize();
