@@ -27,4 +27,12 @@ public class NoCollisionFoundYetTest {
         assertEquals("No collision found in the Boolean function after 2 iterations.",
                 new NoCollisionFoundYet(2).toString());
     }
+
+    /**
+     * Verifies that the getter for the number of iterations is wired correctly.
+     */
+    @Test
+    public void getterForNumberOfIterationsIsWiredCorrectlyFromConstructor() {
+        assertEquals(2, new NoCollisionFoundYet(2).getNumberOfIterations());
+    }
 }
