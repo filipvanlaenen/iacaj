@@ -52,4 +52,27 @@ public class AttackRecordsTest {
         BooleanConstraints expectedNextCollissionCandidate = new BooleanConstraints(constraintsSet);
         assertEquals(expectedNextCollissionCandidate, actualNextCollisionCandidate);
     }
+
+    /**
+     * Verifies that it selects the input parameter occurring twice as the input
+     * parameter to constrain to True if a constraint to False is already present.
+     */
+    @Test
+    public void constrainsInputParameterOccurringTwiceToTrueWhenFalseAlreadyPresent() {
+        String[] content = new String[] {"o1 = i1 ∧ i2", "o2 = i1 ∧ i3"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        AttackRecords attackRecords = new AttackRecords(booleanFunction);
+        String[] contentI1False = new String[] {"i1 = False", "o1 = i1 ∧ i2", "o2 = i1 ∧ i3"};
+        BooleanFunction booleanFunctionI1False = BooleanFunction.parse(contentI1False);
+        attackRecords.add(booleanFunctionI1False);
+        String[] contentI1I2False = new String[] {"i1 = False", "i2 = False", "o1 = i1 ∧ i2", "o2 = i1 ∧ i3"};
+        BooleanFunction booleanFunctionI1I2False = BooleanFunction.parse(contentI1I2False);
+        attackRecords.add(booleanFunctionI1I2False);
+        BooleanConstraints actualNextCollisionCandidate = attackRecords.findNextCollisionCandidate();
+        BooleanConstraint i1True = BooleanConstraint.parse("i1", "True");
+        Set<BooleanConstraint> constraintsSet = new HashSet<BooleanConstraint>();
+        constraintsSet.add(i1True);
+        BooleanConstraints expectedNextCollissionCandidate = new BooleanConstraints(constraintsSet);
+        assertEquals(expectedNextCollissionCandidate, actualNextCollisionCandidate);
+    }
 }
