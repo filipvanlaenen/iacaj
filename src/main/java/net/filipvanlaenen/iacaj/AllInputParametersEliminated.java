@@ -5,4 +5,8 @@ package net.filipvanlaenen.iacaj;
  * resolution of the Boolean function.
  */
 public class AllInputParametersEliminated implements AttackResult {
+    @Override
+    public String toString() {
+        return "All input parameters were eliminated while resolving the Boolean function.";
+    }
 }
