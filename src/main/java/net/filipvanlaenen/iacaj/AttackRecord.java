@@ -81,4 +81,17 @@ class AttackRecord {
         });
         return prioritizedInputParameters;
     }
+
+     List<InputParameter[]> getPrioritizedInputParameterPairs() {
+         List<InputParameter[]> prioritizedInputParameterPairs = new ArrayList<InputParameter[]>(complexityReport.getInputParameterPairs());
+         prioritizedInputParameterPairs.sort(new Comparator<InputParameter[]>() {
+             @Override
+             public int compare(final InputParameter[] ipp0, final InputParameter[] ipp1) {
+                 Long m0 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp0);
+                 Long m1 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp1);
+                 return m1.intValue() - m0.intValue();
+             }
+         });
+         return prioritizedInputParameterPairs;
+    }
 }

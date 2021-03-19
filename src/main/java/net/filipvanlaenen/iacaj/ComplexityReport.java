@@ -3,8 +3,10 @@ package net.filipvanlaenen.iacaj;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class representing a complexity report for a Boolean function.
@@ -26,6 +28,11 @@ public final class ComplexityReport {
 
             @Override
             long measureIncrement(final BooleanExpression booleanExpression, final InputParameter inputParameter) {
+                return booleanExpression instanceof BooleanConstraint ? 0L : 1L;
+            }
+
+            @Override
+            long measureIncrement(BooleanExpression booleanExpression, InputParameter[] inputParameterPair) {
                 return booleanExpression instanceof BooleanConstraint ? 0L : 1L;
             }
         };
@@ -72,6 +79,8 @@ public final class ComplexityReport {
          *         expression.
          */
         abstract long measureIncrement(BooleanExpression booleanExpression, InputParameter inputParameter);
+
+        abstract long measureIncrement(BooleanExpression booleanExpression, InputParameter[] inputParameterPair);
     }
 
     /**
@@ -82,6 +91,11 @@ public final class ComplexityReport {
      * Map holding the input parameter values per metric.
      */
     private final Map<Metric, Map<InputParameter, Long>> inputParameterValues;
+    /**
+     * Map holding the input parameter pair values per metric.
+     */
+    private final Map<Metric, Map<InputParameter[], Long>> inputParameterPairValues;
+    private final Set<InputParameter[]> inputParameterPairs;
 
     /**
      * Constructor with the Boolean function for which to produce a complexity
@@ -93,6 +107,8 @@ public final class ComplexityReport {
     public ComplexityReport(final BooleanFunction booleanFunction) {
         aggregatedValues = new HashMap<Metric, Long>();
         inputParameterValues = new HashMap<Metric, Map<InputParameter, Long>>();
+        inputParameterPairs = new HashSet<InputParameter[]>();
+        inputParameterPairValues = new HashMap<Metric, Map<InputParameter[], Long>>();
         measure(booleanFunction);
     }
 
@@ -104,6 +120,14 @@ public final class ComplexityReport {
      */
     Long getAggregatedValue(final Metric metric) {
         return aggregatedValues.get(metric);
+    }
+
+    Set<InputParameter[]> getInputParameterPairs() {
+        return inputParameterPairs;
+    }
+
+    Long getInputParameterPairValue(Metric metric, InputParameter[] inputParameterPair) {
+        return inputParameterPairValues.get(metric).get(inputParameterPair);
     }
 
     /**
@@ -129,6 +153,7 @@ public final class ComplexityReport {
         for (Metric metric : Metric.values()) {
             aggregatedValues.put(metric, 0L);
             inputParameterValues.put(metric, new HashMap<InputParameter, Long>());
+            inputParameterPairValues.put(metric, new HashMap<InputParameter[], Long>());
         }
         for (BooleanExpression booleanExpression : booleanFunction.getExpressions()) {
             for (Metric metric : Metric.values()) {
@@ -141,8 +166,30 @@ public final class ComplexityReport {
                     inputParameterValue.put(inputParameter, inputParameterValue.get(inputParameter)
                             + metric.measureIncrement(booleanExpression, inputParameter));
                 }
+                for (InputParameter[] inputParameterPair : calculateInputParameterPairs(
+                        booleanExpression.getInputParameters())) {
+                    if (!inputParameterPairs.contains(inputParameterPair)) {
+                        inputParameterPairs.add(inputParameterPair);
+                    }
+                    Map<InputParameter[], Long> inputParameterPairValue = inputParameterPairValues.get(metric);
+                    if (!inputParameterPairValue.containsKey(inputParameterPair)) {
+                        inputParameterPairValue.put(inputParameterPair, 0L);
+                    }
+                    inputParameterPairValue.put(inputParameterPair, inputParameterPairValue.get(inputParameterPair)
+                            + metric.measureIncrement(booleanExpression, inputParameterPair));
+                }
             }
         }
+    }
+
+    private Set<InputParameter[]> calculateInputParameterPairs(List<InputParameter> inputParameters) {
+        Set<InputParameter[]> result = new HashSet<InputParameter[]>();
+        for (int i = 0; i < inputParameters.size(); i++) {
+            for (int j = i + 1; j < inputParameters.size(); j++) {
+                result.add(new InputParameter[] {inputParameters.get(i), inputParameters.get(j)});
+            }
+        }
+        return result;
     }
 
     @Override

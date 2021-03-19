@@ -74,6 +74,18 @@ public class AttackRecords {
                     return extensionWithTrue;
                 }
             }
+            for (InputParameter[] inputParameterPair : parent.getPrioritizedInputParameterPairs()) {
+                BooleanConstraints extensionWithEquality = parentConstraints.extend(inputParameterPair[0],
+                        inputParameterPair[1].getName());
+                if (!attackRecords.containsKey(extensionWithEquality)) {
+                    return extensionWithEquality;
+                }
+                BooleanConstraints extensionWithOpposition = parentConstraints.extend(inputParameterPair[0],
+                        "¬" + inputParameterPair[1].getName());
+                if (!attackRecords.containsKey(extensionWithOpposition)) {
+                    return extensionWithOpposition;
+                }
+            }
             return null;
         }
 
