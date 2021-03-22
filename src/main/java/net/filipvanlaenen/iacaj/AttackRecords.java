@@ -74,14 +74,14 @@ public class AttackRecords {
                     return extensionWithTrue;
                 }
             }
-            for (InputParameter[] inputParameterPair : parent.getPrioritizedInputParameterPairs()) {
-                BooleanConstraints extensionWithEquality = parentConstraints.extend(inputParameterPair[0],
-                        inputParameterPair[1].getName());
+            for (InputParameterPair inputParameterPair : parent.getPrioritizedInputParameterPairs()) {
+                BooleanConstraints extensionWithEquality = parentConstraints.extend(inputParameterPair.getFirst(),
+                        inputParameterPair.getLast().getName());
                 if (!attackRecords.containsKey(extensionWithEquality)) {
                     return extensionWithEquality;
                 }
-                BooleanConstraints extensionWithOpposition = parentConstraints.extend(inputParameterPair[0],
-                        "¬" + inputParameterPair[1].getName());
+                BooleanConstraints extensionWithOpposition = parentConstraints.extend(inputParameterPair.getFirst(),
+                        "¬" + inputParameterPair.getLast().getName());
                 if (!attackRecords.containsKey(extensionWithOpposition)) {
                     return extensionWithOpposition;
                 }
