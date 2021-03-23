@@ -62,6 +62,7 @@ public final class InputParameterPair {
 
     @Override
     public int hashCode() {
+        // Replacing addition with subtraction produces an equivalent mutant.
         return firstInputParameter.hashCode() + lastInputParameter.hashCode();
     }
 }
