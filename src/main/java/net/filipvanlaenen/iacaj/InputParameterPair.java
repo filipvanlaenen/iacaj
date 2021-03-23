@@ -3,7 +3,7 @@ package net.filipvanlaenen.iacaj;
 /**
  * Class representing a pair of input parameters.
  */
-public class InputParameterPair {
+public final class InputParameterPair {
     /**
      * The input parameter with the lowest number.
      */
@@ -31,6 +31,17 @@ public class InputParameterPair {
         }
     }
 
+    @Override
+    public boolean equals(final Object object) {
+        if (object instanceof InputParameterPair) {
+            InputParameterPair other = (InputParameterPair) object;
+            return firstInputParameter.equals(other.firstInputParameter)
+                    && lastInputParameter.equals(other.lastInputParameter);
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Returns the input parameter with the lowest number.
      *
@@ -47,5 +58,10 @@ public class InputParameterPair {
      */
     InputParameter getLast() {
         return lastInputParameter;
+    }
+
+    @Override
+    public int hashCode() {
+        return firstInputParameter.hashCode() + lastInputParameter.hashCode();
     }
 }
