@@ -161,8 +161,23 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        public boolean equals(final Object object) {
+            if (object instanceof BooleanEqualityConstraint) {
+                BooleanEqualityConstraint other = (BooleanEqualityConstraint) object;
+                return other.getName().equals(getName()) && other.otherInputParameter.equals(otherInputParameter);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
         public List<InputParameter> getInputParameters() {
             return inputParameterList;
+        }
+
+        @Override
+        public int hashCode() {
+            return getName().hashCode() + otherInputParameter.hashCode();
         }
 
         @Override
@@ -219,8 +234,23 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
+        public boolean equals(final Object object) {
+            if (object instanceof BooleanOppositionConstraint) {
+                BooleanOppositionConstraint other = (BooleanOppositionConstraint) object;
+                return other.getName().equals(getName()) && other.otherInputParameter.equals(otherInputParameter);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
         public List<InputParameter> getInputParameters() {
             return inputParameterList;
+        }
+
+        @Override
+        public int hashCode() {
+            return getName().hashCode() + otherInputParameter.hashCode();
         }
 
         @Override

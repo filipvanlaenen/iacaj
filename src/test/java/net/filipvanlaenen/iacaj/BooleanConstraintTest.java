@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -12,6 +13,15 @@ import org.junit.jupiter.api.Test;
  * Unit tests on the <code>BooleanConstraint</code> class.
  */
 public class BooleanConstraintTest {
+    /**
+     * Boolean equality constraint <code>i2 = i1</code>.
+     */
+    private static final BooleanConstraint IP2_EQUAL_TO_IP1 = BooleanConstraint.parse("i2", "i1");
+    /**
+     * Boolean opposition constraint <code>i2 = ¬i1</code>.
+     */
+    private static final BooleanConstraint IP2_NOT_EQUAL_TO_IP1 = BooleanConstraint.parse("i2", "¬i1");
+
     /**
      * Creates a set with input parameters with the names provided.
      *
@@ -50,8 +60,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void equalityReturnsAnInputParameter() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i2", "i1");
-        assertEquals(createInputParameterSet("i1"), constraint.getInputParameters());
+        assertEquals(createInputParameterSet("i1"), IP2_EQUAL_TO_IP1.getInputParameters());
     }
 
     /**
@@ -60,8 +69,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void negationReturnsAnInputParameter() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i2", "¬i1");
-        assertEquals(createInputParameterSet("i1"), constraint.getInputParameters());
+        assertEquals(createInputParameterSet("i1"), IP2_NOT_EQUAL_TO_IP1.getInputParameters());
     }
 
     /**
@@ -105,8 +113,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void equalityIsExportedCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i2", "i1");
-        assertEquals("i2 = i1", constraint.toString());
+        assertEquals("i2 = i1", IP2_EQUAL_TO_IP1.toString());
     }
 
     /**
@@ -114,8 +121,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void equalityIsExportedToJavaCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i2", "i1");
-        assertEquals("assert i2 == i1;", constraint.toJavaString());
+        assertEquals("assert i2 == i1;", IP2_EQUAL_TO_IP1.toJavaString());
     }
 
     /**
@@ -123,8 +129,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void negationIsExportedCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i2", "¬i1");
-        assertEquals("i2 = ¬i1", constraint.toString());
+        assertEquals("i2 = ¬i1", IP2_NOT_EQUAL_TO_IP1.toString());
     }
 
     /**
@@ -132,7 +137,156 @@ public class BooleanConstraintTest {
      */
     @Test
     public void negationIsExportedToJavaCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i2", "¬i1");
-        assertEquals("assert i2 == !i1;", constraint.toJavaString());
+        assertEquals("assert i2 == !i1;", IP2_NOT_EQUAL_TO_IP1.toJavaString());
+    }
+
+    /**
+     * An Equality is not equal to <code>null</code>.
+     */
+    @Test
+    public void equalityShouldNotBeEqualToNull() {
+        assertFalse(IP2_EQUAL_TO_IP1.equals(null));
+    }
+
+    /**
+     * A Negation is not equal to <code>null</code>.
+     */
+    @Test
+    public void negationShouldNotBeEqualToNull() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.equals(null));
+    }
+
+    /**
+     * An Equality is not equal to an empty string.
+     */
+    @Test
+    public void equalityShouldNotBeEqualToEmptyString() {
+        assertFalse(IP2_EQUAL_TO_IP1.equals(""));
+    }
+
+    /**
+     * A Negation is not equal to an empty string.
+     */
+    @Test
+    public void negationShouldNotBeEqualToEmptyString() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.equals(""));
+    }
+
+    /**
+     * An Equality is equal to itself.
+     */
+    @Test
+    public void equalityShouldBeEqualToItself() {
+        assertEquals(IP2_EQUAL_TO_IP1, IP2_EQUAL_TO_IP1);
+    }
+
+    /**
+     * A Negation is equal to itself.
+     */
+    @Test
+    public void negationShouldBeEqualToItself() {
+        assertEquals(IP2_NOT_EQUAL_TO_IP1, IP2_NOT_EQUAL_TO_IP1);
+    }
+
+    /**
+     * An Equality is equal to another equality with the same input parameters.
+     */
+    @Test
+    public void equalityShouldBeEqualToIdenticalEquality() {
+        assertEquals(IP2_EQUAL_TO_IP1, BooleanConstraint.parse("i2", "i1"));
+    }
+
+    /**
+     * An Equality has the same hashcode as another equality with the same input
+     * parameters.
+     */
+    @Test
+    public void equalityShouldHaveSameHashcodeAsIdenticalEquality() {
+        assertEquals(IP2_EQUAL_TO_IP1.hashCode(), BooleanConstraint.parse("i2", "i1").hashCode());
+    }
+
+    /**
+     * A Negation is equal to another negation with the same input parameters.
+     */
+    @Test
+    public void negationShouldBeEqualToIdenticalNegation() {
+        assertEquals(IP2_NOT_EQUAL_TO_IP1, BooleanConstraint.parse("i2", "¬i1"));
+    }
+
+    /**
+     * An Negation has the same hashcode as another Negation with the same input
+     * parameters.
+     */
+    @Test
+    public void negationShouldHaveSameHashcodeAsIdenticalNegation() {
+        assertEquals(IP2_NOT_EQUAL_TO_IP1.hashCode(), BooleanConstraint.parse("i2", "¬i1").hashCode());
+    }
+
+    /**
+     * An Equality is not equal to another equality with another name.
+     */
+    @Test
+    public void equalityShouldNotBeEqualToEqualityWithOtherName() {
+        assertFalse(IP2_EQUAL_TO_IP1.equals(BooleanConstraint.parse("i3", "i1")));
+    }
+
+    /**
+     * An Equality should not have the same hashcode as another equality with
+     * another name.
+     */
+    @Test
+    public void equalityShouldNotHaveSameHashcodeAsEqualityWithOtherName() {
+        assertFalse(IP2_EQUAL_TO_IP1.hashCode() == BooleanConstraint.parse("i3", "i1").hashCode());
+    }
+
+    /**
+     * A Negation is not equal to another negation with another name.
+     */
+    @Test
+    public void negationShouldNotBeEqualToNegationWithOtherName() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.equals(BooleanConstraint.parse("i3", "¬i1")));
+    }
+
+    /**
+     * An Negation should not have the same hashcode as another Negation with
+     * another name.
+     */
+    @Test
+    public void negationShouldNotHaveSameHashcodeAsNegationWithOtherName() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.hashCode() == BooleanConstraint.parse("i3", "¬i1").hashCode());
+    }
+
+    /**
+     * An Equality is not equal to another equality with another input parameter.
+     */
+    @Test
+    public void equalityShouldNotBeEqualToEqualityWithOtherInputParameter() {
+        assertFalse(IP2_EQUAL_TO_IP1.equals(BooleanConstraint.parse("i2", "i3")));
+    }
+
+    /**
+     * An Equality should not have the same hashcode as another equality with
+     * another input parameter.
+     */
+    @Test
+    public void equalityShouldNotHaveSameHashcodeAsEqualityWithOtherInputParameter() {
+        assertFalse(IP2_EQUAL_TO_IP1.hashCode() == BooleanConstraint.parse("i2", "i3").hashCode());
+    }
+
+    /**
+     * A Negation is not equal to another negation with another input parameter.
+     */
+    @Test
+    public void negationShouldNotBeEqualToNegationWithOtherInputParameter() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.equals(BooleanConstraint.parse("i2", "¬i3")));
+    }
+
+    /**
+     * An Negation should not have the same hashcode as another Negation with
+     * another input parameter.
+     */
+    @Test
+    public void negationShouldNotHaveSameHashcodeAsNegationWithOtherInputParameter() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.hashCode() == BooleanConstraint.parse("i2", "¬i3").hashCode());
     }
 }
