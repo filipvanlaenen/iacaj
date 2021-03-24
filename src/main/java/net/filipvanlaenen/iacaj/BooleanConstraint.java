@@ -177,6 +177,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
 
         @Override
         public int hashCode() {
+            // Replacing addition with subtraction produces an equivalent mutant.
             return getName().hashCode() + otherInputParameter.hashCode();
         }
 
@@ -250,6 +251,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
 
         @Override
         public int hashCode() {
+            // Replacing addition with subtraction produces an equivalent mutant.
             return getName().hashCode() + otherInputParameter.hashCode();
         }
 

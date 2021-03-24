@@ -141,6 +141,38 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * Equality is not true.
+     */
+    @Test
+    public void equalityShouldNotBeTrue() {
+        assertFalse(IP2_EQUAL_TO_IP1.isTrue());
+    }
+
+    /**
+     * Opposition is not true.
+     */
+    @Test
+    public void oppositionShouldNotBeTrue() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.isTrue());
+    }
+
+    /**
+     * Equality is not false.
+     */
+    @Test
+    public void equalityShouldNotBeFalse() {
+        assertFalse(IP2_EQUAL_TO_IP1.isFalse());
+    }
+
+    /**
+     * Opposition is not false.
+     */
+    @Test
+    public void oppositionShouldNotBeFalse() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1.isFalse());
+    }
+
+    /**
      * An Equality is not equal to <code>null</code>.
      */
     @Test
@@ -288,5 +320,37 @@ public class BooleanConstraintTest {
     @Test
     public void negationShouldNotHaveSameHashcodeAsNegationWithOtherInputParameter() {
         assertFalse(IP2_NOT_EQUAL_TO_IP1.hashCode() == BooleanConstraint.parse("i2", "¬i3").hashCode());
+    }
+
+    /**
+     * Verifies that a deep clone of equality is equal to the prototype.
+     */
+    @Test
+    public void equalityShouldBeEqualToDeepClone() {
+        assertEquals(IP2_EQUAL_TO_IP1, IP2_EQUAL_TO_IP1.deepClone());
+    }
+
+    /**
+     * Verifies that a deep clone of equality is not identical to the prototype.
+     */
+    @Test
+    public void equalityShouldNotBeIdenticalToDeepClone() {
+        assertFalse(IP2_EQUAL_TO_IP1 == IP2_EQUAL_TO_IP1.deepClone());
+    }
+
+    /**
+     * Verifies that a deep clone of opposition is equal to the prototype.
+     */
+    @Test
+    public void oppositionShouldBeEqualToDeepClone() {
+        assertEquals(IP2_NOT_EQUAL_TO_IP1, IP2_NOT_EQUAL_TO_IP1.deepClone());
+    }
+
+    /**
+     * Verifies that a deep clone of opposition is not identical to the prototype.
+     */
+    @Test
+    public void oppositionShouldNotBeIdenticalToDeepClone() {
+        assertFalse(IP2_NOT_EQUAL_TO_IP1 == IP2_NOT_EQUAL_TO_IP1.deepClone());
     }
 }
