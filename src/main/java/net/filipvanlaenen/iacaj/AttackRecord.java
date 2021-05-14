@@ -82,16 +82,22 @@ class AttackRecord {
         return prioritizedInputParameters;
     }
 
-     List<InputParameterPair> getPrioritizedInputParameterPairs() {
-         List<InputParameterPair> prioritizedInputParameterPairs = new ArrayList<InputParameterPair>(complexityReport.getInputParameterPairs());
-         prioritizedInputParameterPairs.sort(new Comparator<InputParameterPair>() {
-             @Override
-             public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {
-                 Long m0 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp0);
-                 Long m1 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp1);
-                 return m1.intValue() - m0.intValue();
-             }
-         });
-         return prioritizedInputParameterPairs;
+    /**
+     * Returns a prioritized list of the input parameter pairs.
+     *
+     * @return A prioritized list of the input parameter pairs.
+     */
+    List<InputParameterPair> getPrioritizedInputParameterPairs() {
+        List<InputParameterPair> prioritizedInputParameterPairs = new ArrayList<InputParameterPair>(
+                complexityReport.getInputParameterPairs());
+        prioritizedInputParameterPairs.sort(new Comparator<InputParameterPair>() {
+            @Override
+            public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {
+                Long m0 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp0);
+                Long m1 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp1);
+                return m1.intValue() - m0.intValue();
+            }
+        });
+        return prioritizedInputParameterPairs;
     }
 }
