@@ -32,7 +32,8 @@ public final class ComplexityReport {
             }
 
             @Override
-            long measureIncrement(BooleanExpression booleanExpression, InputParameterPair inputParameterPair) {
+            long measureIncrement(final BooleanExpression booleanExpression,
+                    final InputParameterPair inputParameterPair) {
                 return booleanExpression instanceof BooleanConstraint ? 0L : 1L;
             }
         };
@@ -80,6 +81,16 @@ public final class ComplexityReport {
          */
         abstract long measureIncrement(BooleanExpression booleanExpression, InputParameter inputParameter);
 
+        /**
+         * Measures the increment in the metric for an input parameter pair in a Boolean
+         * expression.
+         *
+         * @param booleanExpression  The Boolean expression to measure the increment.
+         * @param inputParameterPair The input parameter pair for which to measure the
+         *                           increment.
+         * @return The increment in the metric for the input parameter pair in the
+         *         Boolean expression.
+         */
         abstract long measureIncrement(BooleanExpression booleanExpression, InputParameterPair inputParameterPair);
     }
 
@@ -95,6 +106,9 @@ public final class ComplexityReport {
      * Map holding the input parameter pair values per metric.
      */
     private final Map<Metric, Map<InputParameterPair, Long>> inputParameterPairValues;
+    /**
+     * Set holding all registered input parameter pairs.
+     */
     private final Set<InputParameterPair> inputParameterPairs;
 
     /**
@@ -122,11 +136,24 @@ public final class ComplexityReport {
         return aggregatedValues.get(metric);
     }
 
+    /**
+     * Returns all the registered input parameter pairs.
+     *
+     * @return A set with all the registered input parameter pairs.
+     */
     Set<InputParameterPair> getInputParameterPairs() {
         return inputParameterPairs;
     }
 
-    Long getInputParameterPairValue(Metric metric, InputParameterPair inputParameterPair) {
+    /**
+     * Returns the value for a metric for an input parameter pair.
+     *
+     * @param metric             The metric for which to return the value.
+     * @param inputParameterPair The input parameter pair for which to return the
+     *                           value.
+     * @return The value for a metric for an input parameter pair.
+     */
+    Long getInputParameterPairValue(final Metric metric, final InputParameterPair inputParameterPair) {
         return inputParameterPairValues.get(metric).get(inputParameterPair);
     }
 
@@ -182,7 +209,14 @@ public final class ComplexityReport {
         }
     }
 
-    private Set<InputParameterPair> calculateInputParameterPairs(List<InputParameter> inputParameters) {
+    /**
+     * Calculates all the input parameter pairs from a list of input parameters.
+     *
+     * @param inputParameters A list of input parameters.
+     * @return A set of input parameter pairs calculated from the list of input
+     *         parameters.
+     */
+    private Set<InputParameterPair> calculateInputParameterPairs(final List<InputParameter> inputParameters) {
         Set<InputParameterPair> result = new HashSet<InputParameterPair>();
         for (int i = 0; i < inputParameters.size(); i++) {
             for (int j = i + 1; j < inputParameters.size(); j++) {
