@@ -231,8 +231,6 @@ public final class ComplexityReport {
         StringBuffer sb = new StringBuffer();
         for (Metric metric : Metric.values()) {
             sb.append(metric.getHumanReadableName() + ": " + getAggregatedValue(metric) + "\n");
-        }
-        for (Metric metric : Metric.values()) {
             Map<InputParameter, Long> inputParameterValuesMap = inputParameterValues.get(metric);
             List<InputParameter> sortedInputParameters = new ArrayList<InputParameter>(
                     inputParameterValuesMap.keySet());
@@ -242,11 +240,35 @@ public final class ComplexityReport {
                     return ip0.getNumber() - ip1.getNumber();
                 }
             });
+            Map<InputParameterPair, Long> inputParameterPairValuesMap = inputParameterPairValues.get(metric);
+            List<InputParameterPair> sortedInputParameterPairs = new ArrayList<InputParameterPair>(
+                    getInputParameterPairs());
+            sortedInputParameterPairs.sort(new Comparator<InputParameterPair>() {
+                @Override
+                public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {
+                    int c = ipp0.getFirst().getNumber() - ipp1.getFirst().getNumber();
+                    if (c == 0) {
+                        return ipp0.getLast().getNumber() - ipp1.getLast().getNumber();
+                    } else {
+                        return c;
+                    }
+                }
+            });
             for (int i = 0; i < sortedInputParameters.size(); i++) {
                 InputParameter sortedInputParameter = sortedInputParameters.get(i);
                 sb.append("  " + sortedInputParameter.getName() + ": "
                         + inputParameterValuesMap.get(sortedInputParameter));
-                if (i < sortedInputParameters.size() - 1) {
+                if (sortedInputParameterPairs.size() > 0 || i < sortedInputParameters.size() - 1) {
+                    sb.append("\n");
+                }
+            }
+
+            for (int i = 0; i < sortedInputParameterPairs.size(); i++) {
+                InputParameterPair sortedInputParameterPair = sortedInputParameterPairs.get(i);
+                sb.append("  " + sortedInputParameterPair.getFirst().getName() + "×"
+                        + sortedInputParameterPair.getLast().getName() + ": "
+                        + inputParameterPairValuesMap.get(sortedInputParameterPair));
+                if (i < sortedInputParameterPairs.size() - 1) {
                     sb.append("\n");
                 }
             }

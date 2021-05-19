@@ -9,6 +9,15 @@ import org.junit.jupiter.api.Test;
  */
 public class ComplexityReportTest {
     /**
+     * The input parameter <code>i1</code>.
+     */
+    private static final InputParameter INPUT_PARAMETER_1 = InputParameter.get("i1");
+    /**
+     * The input parameter <code>i2</code>.
+     */
+    private static final InputParameter INPUT_PARAMETER_2 = InputParameter.get("i2");
+
+    /**
      * Verifies that it reports one Boolean expression correctly.
      */
     @Test
@@ -29,7 +38,20 @@ public class ComplexityReportTest {
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         ComplexityReport complexityReport = new ComplexityReport(booleanFunction);
         assertEquals(1, complexityReport.getInputParameterValue(ComplexityReport.Metric.NumberOfExpressions,
-                InputParameter.get("i1")));
+                INPUT_PARAMETER_1));
+    }
+
+    /**
+     * Verifies that it reports one Boolean expression for an input parameter pair
+     * correctly.
+     */
+    @Test
+    public void shouldReportOnOneBooleanExpressionForAnInputParameterPair() {
+        String[] content = new String[] {"o1 = i1 ∧ i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        ComplexityReport complexityReport = new ComplexityReport(booleanFunction);
+        assertEquals(1, complexityReport.getInputParameterPairValue(ComplexityReport.Metric.NumberOfExpressions,
+                new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_2)));
     }
 
     /**
@@ -54,7 +76,7 @@ public class ComplexityReportTest {
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         ComplexityReport complexityReport = new ComplexityReport(booleanFunction);
         assertEquals(1, complexityReport.getInputParameterValue(ComplexityReport.Metric.NumberOfExpressions,
-                InputParameter.get("i1")));
+                INPUT_PARAMETER_1));
     }
 
     /**
@@ -71,7 +93,27 @@ public class ComplexityReportTest {
         sb.append("  i1: 1\n");
         sb.append("  i2: 2\n");
         sb.append("  i3: 1\n");
-        sb.append("  i4: 1");
+        sb.append("  i4: 1\n");
+        sb.append("  i1×i2: 1\n");
+        sb.append("  i2×i3: 1\n");
+        sb.append("  i2×i4: 1\n");
+        sb.append("  i3×i4: 1");
+        assertEquals(sb.toString(), complexityReport.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> produces a correct human readable string
+     * representation when there are no input parameter pairs.
+     */
+    @Test
+    public void toStringProducesCorrectHumanReadableRepresentationWhenNoInputParameterPairs() {
+        String[] content = new String[] {"o1 = i1", "o2 = i2"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        ComplexityReport complexityReport = new ComplexityReport(booleanFunction);
+        StringBuffer sb = new StringBuffer();
+        sb.append("Number of expressions: 2\n");
+        sb.append("  i1: 1\n");
+        sb.append("  i2: 1");
         assertEquals(sb.toString(), complexityReport.toString());
     }
 }
