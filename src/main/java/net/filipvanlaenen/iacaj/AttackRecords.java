@@ -232,11 +232,11 @@ public class AttackRecords {
             }
 
             private boolean isEdge(final AttackLine line) {
-                return line.size() == 0 && line.getPredessor().size() > 0;
+                return line.size() == 0 && !isPredecessorEmpty(line);
             }
 
-            private boolean isPredecessorEmpty(final AttackLine line0) {
-                return line0.getPredessor().size() == 0;
+            private boolean isPredecessorEmpty(final AttackLine line) {
+                return line.getPredessor().size() == 0;
             }
         });
         return prioritizedAttackLines;
