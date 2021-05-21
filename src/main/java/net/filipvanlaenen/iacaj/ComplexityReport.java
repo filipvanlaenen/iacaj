@@ -218,6 +218,8 @@ public final class ComplexityReport {
      */
     private Set<InputParameterPair> calculateInputParameterPairs(final List<InputParameter> inputParameters) {
         Set<InputParameterPair> result = new HashSet<InputParameterPair>();
+        // Replacing less-than with less-than-or-equal-to produces an equivalent mutant
+        // because the inner loop won't run.
         for (int i = 0; i < inputParameters.size(); i++) {
             for (int j = i + 1; j < inputParameters.size(); j++) {
                 result.add(new InputParameterPair(inputParameters.get(i), inputParameters.get(j)));
