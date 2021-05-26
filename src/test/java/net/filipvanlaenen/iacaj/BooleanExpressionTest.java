@@ -31,7 +31,7 @@ public class BooleanExpressionTest {
     @Test
     public void parsingDetectsAndOperator() {
         BooleanOperation operation = (BooleanOperation) BooleanExpression.parse("o1 = i1 ∧ i2");
-        assertEquals(BooleanOperation.Operator.And, operation.getOperator());
+        assertEquals(BooleanOperator.And, operation.getOperator());
     }
 
     /**
@@ -40,7 +40,7 @@ public class BooleanExpressionTest {
     @Test
     public void parsingDetectsOrOperator() {
         BooleanOperation operation = (BooleanOperation) BooleanExpression.parse("o1 = i1 ∨ i2");
-        assertEquals(BooleanOperation.Operator.Or, operation.getOperator());
+        assertEquals(BooleanOperator.Or, operation.getOperator());
     }
 
     /**
@@ -49,6 +49,6 @@ public class BooleanExpressionTest {
     @Test
     public void parsingDetectsXorOperator() {
         BooleanOperation operation = (BooleanOperation) BooleanExpression.parse("o1 = i1 ⊻ i2");
-        assertEquals(BooleanOperation.Operator.Xor, operation.getOperator());
+        assertEquals(BooleanOperator.Xor, operation.getOperator());
     }
 }

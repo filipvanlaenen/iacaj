@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
-import net.filipvanlaenen.iacaj.BooleanOperation.Operator;
+import net.filipvanlaenen.iacaj.BooleanOperator;
 
 /**
  * Abstract superclass for producers of Boolean functions.
@@ -89,7 +89,7 @@ public abstract class Producer {
      * @return A word holding the result.
      */
     protected Word andWords(final BooleanFunction bf, final Word... words) {
-        return atomicOperationOnWords(bf, Operator.And, words);
+        return atomicOperationOnWords(bf, BooleanOperator.And, words);
     }
 
     /**
@@ -114,7 +114,8 @@ public abstract class Producer {
      * @param words    The words on which to perform the operation.
      * @return A word holding the result.
      */
-    protected Word atomicOperationOnWords(final BooleanFunction bf, final Operator operator, final Word... words) {
+    protected Word atomicOperationOnWords(final BooleanFunction bf, final BooleanOperator operator,
+            final Word... words) {
         int numberOfWords = words.length;
         Word result = new Word(wordLength);
         for (int i = 0; i < wordLength; i++) {
@@ -177,7 +178,7 @@ public abstract class Producer {
      * @return A word holding the result.
      */
     protected Word orWords(final BooleanFunction bf, final Word... words) {
-        return atomicOperationOnWords(bf, Operator.Or, words);
+        return atomicOperationOnWords(bf, BooleanOperator.Or, words);
     }
 
     /**
@@ -224,6 +225,6 @@ public abstract class Producer {
      * @return A word holding the result.
      */
     protected Word xorWords(final BooleanFunction bf, final Word... words) {
-        return atomicOperationOnWords(bf, Operator.Xor, words);
+        return atomicOperationOnWords(bf, BooleanOperator.Xor, words);
     }
 }
