@@ -129,7 +129,7 @@ public class BooleanFunction {
      * @param content An array of strings representing a Boolean function.
      * @return A Boolean function.
      */
-    public static BooleanFunction parse(final String[] content) {
+    public static BooleanFunction parse(final String... content) {
         BooleanFunction result = new BooleanFunction();
         for (String line : content) {
             BooleanExpression expression = BooleanExpression.parse(line);
