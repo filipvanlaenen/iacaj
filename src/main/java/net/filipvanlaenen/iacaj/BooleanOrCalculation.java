@@ -46,14 +46,14 @@ public final class BooleanOrCalculation extends BooleanCalculation {
                     if (be.isFalse()) {
                         falseOperands.add(operand);
                     } else if (be.isTrue()) {
-                        return TRUE;
+                        return BooleanConstant.TRUE;
                     }
                 }
             }
         }
         removeOperands(falseOperands);
         if (getNumberOfOperands() == 0) {
-            return FALSE;
+            return BooleanConstant.FALSE;
         }
         return this;
     }

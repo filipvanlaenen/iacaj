@@ -1,0 +1,87 @@
+package net.filipvanlaenen.iacaj;
+
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Class representing a right hand side of a Boolean operation with a constant,
+ * i.e. either True or False.
+ */
+public final class BooleanConstant extends BooleanRightHandSide {
+    /**
+     * The constant value.
+     */
+    private final boolean value;
+    /**
+     * The Boolean constant representing false.
+     */
+    public static final BooleanConstant FALSE = new BooleanConstant(false);
+    /**
+     * The Boolean constant representing true.
+     */
+    public static final BooleanConstant TRUE = new BooleanConstant(true);
+
+    /**
+     * Returns the Boolean constant for the provided Boolean value.
+     *
+     * @param value The value for which to return the Boolean constant.
+     * @return The Boolean constant representing the provided Boolean value.
+     */
+    static BooleanConstant get(final boolean value) {
+        return value ? TRUE : FALSE;
+    }
+
+    /**
+     * Constructor taking the constant value as its parameter.
+     *
+     * @param value The constant value.
+     */
+    private BooleanConstant(final boolean value) {
+        this.value = value;
+    }
+
+    @Override
+    protected BooleanConstant deepClone() {
+        return this;
+    }
+
+    @Override
+    public List<InputParameter> getInputParameters() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<InternalVariable> getInternalVariables() {
+        return Collections.emptyList();
+    }
+
+    @Override
+    protected BooleanOperator getOperator() {
+        return null;
+    }
+
+    @Override
+    protected boolean isFalse() {
+        return !value;
+    }
+
+    @Override
+    protected boolean isTrue() {
+        return value;
+    }
+
+    @Override
+    protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+        return this;
+    }
+
+    @Override
+    public String toJavaString() {
+        return value ? "true" : "false";
+    }
+
+    @Override
+    public String toString() {
+        return value ? "True" : "False";
+    }
+}

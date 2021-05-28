@@ -54,7 +54,7 @@ public final class BooleanXorCalculation extends BooleanCalculation {
         removeOperands(trueOperands);
         boolean numberOfTrueOperandsIsEven = trueOperands.size() % 2 == 0;
         if (getNumberOfOperands() == 0) {
-            return new BooleanConstant(!numberOfTrueOperandsIsEven);
+            return BooleanConstant.get(!numberOfTrueOperandsIsEven);
         } else if (!numberOfTrueOperandsIsEven) {
             BooleanOperand firstOperand = getOperands().get(0);
             removeOperand(firstOperand);

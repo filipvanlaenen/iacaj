@@ -16,7 +16,7 @@ public class BooleanXorCalculationTest {
         BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
         BooleanFunction booleanFunction = BooleanFunction.parse("v1 = True", "v2 = True");
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
-        assertEquals("False", resolved.toString()); // TODO: Should compare resolved with BooleanConstant.FALSE
+        assertEquals(BooleanConstant.FALSE, resolved);
     }
 
     /**
@@ -27,7 +27,7 @@ public class BooleanXorCalculationTest {
         BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
         BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False", "v2 = False");
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
-        assertEquals("False", resolved.toString()); // TODO: Should compare resolved with BooleanConstant.FALSE
+        assertEquals(BooleanConstant.FALSE, resolved);
     }
 
     /**
@@ -38,6 +38,6 @@ public class BooleanXorCalculationTest {
         BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
         BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False", "v2 = True");
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
-        assertEquals("True", resolved.toString()); // TODO: Should compare resolved with BooleanConstant.TRUE
+        assertEquals(BooleanConstant.TRUE, resolved);
     }
 }

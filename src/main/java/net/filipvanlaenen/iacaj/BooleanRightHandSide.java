@@ -92,15 +92,15 @@ public abstract class BooleanRightHandSide {
             if (be != null) {
                 if (negated) {
                     if (be.isTrue()) {
-                        return FALSE;
+                        return BooleanConstant.FALSE;
                     } else if (be.isFalse()) {
-                        return TRUE;
+                        return BooleanConstant.TRUE;
                     }
                 } else {
                     if (be.isTrue()) {
-                        return TRUE;
+                        return BooleanConstant.TRUE;
                     } else if (be.isFalse()) {
-                        return FALSE;
+                        return BooleanConstant.FALSE;
                     }
                 }
             }
@@ -119,80 +119,6 @@ public abstract class BooleanRightHandSide {
     }
 
     /**
-     * Class representing a right hand side of a Boolean operation with a constant,
-     * i.e. either True or False.
-     */
-    public static final class BooleanConstant extends BooleanRightHandSide {
-        /**
-         * The constant value.
-         */
-        private final boolean value;
-
-        /**
-         * Constructor taking the constant value as its parameter.
-         *
-         * @param value The constant value.
-         */
-        public BooleanConstant(final boolean value) {
-            this.value = value;
-        }
-
-        @Override
-        protected BooleanRightHandSide.BooleanConstant deepClone() {
-            return new BooleanConstant(value);
-        }
-
-        @Override
-        public List<InputParameter> getInputParameters() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        public List<InternalVariable> getInternalVariables() {
-            return Collections.emptyList();
-        }
-
-        @Override
-        protected BooleanOperator getOperator() {
-            return null;
-        }
-
-        @Override
-        protected boolean isFalse() {
-            return !value;
-        }
-
-        @Override
-        protected boolean isTrue() {
-            return value;
-        }
-
-        @Override
-        protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
-            return this;
-        }
-
-        @Override
-        public String toJavaString() {
-            return value ? "true" : "false";
-        }
-
-        @Override
-        public String toString() {
-            return value ? "True" : "False";
-        }
-    }
-
-    /**
-     * The Boolean constant for True.
-     */
-    static final BooleanRightHandSide TRUE = new BooleanConstant(true);
-    /**
-     * The Boolean constant for False.
-     */
-    static final BooleanRightHandSide FALSE = new BooleanConstant(false);
-
-    /**
      * Constructor taking the right hand side string as its parameter.
      *
      * @param rightHandSide String representing the right hand side.
@@ -200,9 +126,9 @@ public abstract class BooleanRightHandSide {
      */
     public static BooleanRightHandSide parse(final String rightHandSide) {
         if (rightHandSide.equals("True")) {
-            return TRUE;
+            return BooleanConstant.TRUE;
         } else if (rightHandSide.equals("False")) {
-            return FALSE;
+            return BooleanConstant.FALSE;
         } else {
             for (BooleanOperator o : BooleanOperator.values()) {
                 if (rightHandSide.contains(o.getSymbol())) {
