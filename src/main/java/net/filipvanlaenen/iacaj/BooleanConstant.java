@@ -42,6 +42,8 @@ public final class BooleanConstant extends BooleanRightHandSide {
 
     @Override
     protected BooleanConstant deepClone() {
+        // Returns the same object, contrary to the definition of deep clone, because in
+        // reality there are only two different objects for this class.
         return this;
     }
 
