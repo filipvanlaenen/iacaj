@@ -60,6 +60,10 @@ public final class BooleanXorCalculation extends BooleanCalculation {
             removeOperand(firstOperand);
             addOperand(firstOperand.negated());
         }
+        if (getNumberOfOperands() == 1) {
+            BooleanOperand firstOperand = getOperands().get(0);
+            return new BooleanEquation(firstOperand.getName(), firstOperand.isNegated());
+        }
         return this;
     }
 }

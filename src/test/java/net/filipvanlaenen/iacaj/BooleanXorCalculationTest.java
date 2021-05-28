@@ -40,4 +40,48 @@ public class BooleanXorCalculationTest {
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
         assertEquals(BooleanConstant.TRUE, resolved);
     }
+
+    /**
+     * Verifies that xor with false is resolved to equality.
+     */
+    @Test
+    public void shouldResolveXorWithFalseToEquality() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v2"), resolved);
+    }
+
+    /**
+     * Verifies that xor with true is resolved to negation.
+     */
+    @Test
+    public void shouldResolveXorWithTrueToNegation() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = True");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v2", true), resolved);
+    }
+
+    /**
+     * Verifies that xor with not false is resolved to equality.
+     */
+    @Test
+    public void shouldResolveXorWithNotFalseToNegation() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("¬v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v2", true), resolved);
+    }
+
+    /**
+     * Verifies that xor with not true is resolved to equality.
+     */
+    @Test
+    public void shouldResolveXorWithNotTrueToEquality() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("¬v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = True");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v2"), resolved);
+    }
 }
