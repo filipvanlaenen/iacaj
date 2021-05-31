@@ -84,4 +84,24 @@ public class BooleanXorCalculationTest {
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
         assertEquals(new BooleanEquation("v2"), resolved);
     }
+
+    /**
+     * Verifies that xor with two open operands are not resolved.
+     */
+    @Test
+    public void shouldNotResolveXorWithTwoOpenOperands() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("v1 ⊻ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that deepClone returns an object with the same content.
+     */
+    @Test
+    public void deepCloneShouldReturnCalculationWithTheSameContent() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        assertEquals("v1 ⊻ v2", calculation.deepClone().toString());
+    }
 }
