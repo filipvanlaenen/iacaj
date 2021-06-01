@@ -147,12 +147,21 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
     }
 
     /**
-     * Add an operand to the Boolean calculation.
+     * Adds an operand to the Boolean calculation.
      *
      * @param operandToBeAdded The operand to be added to the Boolean calculation.
      */
     protected void addOperand(final BooleanOperand operandToBeAdded) {
         operands.add(operandToBeAdded);
+    }
+
+    /**
+     * Adds a list of operands to the Boolean calculation.
+     *
+     * @param operandsToBeAdded The operands to be added to the Boolean calculation.
+     */
+    protected void addOperands(final List<BooleanOperand> operandsToBeAdded) {
+        operands.addAll(operandsToBeAdded);
     }
 
     /**

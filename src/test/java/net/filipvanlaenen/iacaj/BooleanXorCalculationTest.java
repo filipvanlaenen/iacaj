@@ -97,6 +97,54 @@ public class BooleanXorCalculationTest {
     }
 
     /**
+     * Verifies that xor replaces an operand which is an input parameter constrained
+     * to be equal to another one.
+     */
+    @Test
+    public void shouldResolveAnInputParameterConstrainedToEquality() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("i2 ⊻ v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse("i2 = i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ⊻ v1", resolved.toString());
+    }
+
+    /**
+     * Verifies that xor replaces an operand which is a negated input parameter
+     * constrained to be equal to another one.
+     */
+    @Test
+    public void shouldResolveANegatedInputParameterConstrainedToEquality() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("¬i2 ⊻ v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse("i2 = i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("¬i1 ⊻ v1", resolved.toString());
+    }
+
+    /**
+     * Verifies that xor replaces an operand which is an input parameter constrained
+     * to be opposite to another one.
+     */
+    @Test
+    public void shouldResolveAnInputParameterConstrainedToOpposition() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("i2 ⊻ v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse("i2 = ¬i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("¬i1 ⊻ v1", resolved.toString());
+    }
+
+    /**
+     * Verifies that xor replaces an operand which is a negated input parameter
+     * constrained to be opposite to another one.
+     */
+    @Test
+    public void shouldResolveANegatedInputParameterConstrainedToOpposition() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("¬i2 ⊻ v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse("i2 = ¬i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ⊻ v1", resolved.toString());
+    }
+
+    /**
      * Verifies that deepClone returns an object with the same content.
      */
     @Test

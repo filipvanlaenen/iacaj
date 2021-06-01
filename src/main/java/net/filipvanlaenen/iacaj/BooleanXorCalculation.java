@@ -3,6 +3,9 @@ package net.filipvanlaenen.iacaj;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
+
 /**
  * Class representing an Xor calculation.
  */
@@ -38,6 +41,22 @@ public final class BooleanXorCalculation extends BooleanCalculation {
 
     @Override
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+        List<BooleanOperand> expandedOperands = new ArrayList<BooleanOperand>();
+        List<BooleanOperand> expansions = new ArrayList<BooleanOperand>();
+        for (BooleanOperand operand : getOperands()) {
+            BooleanExpression be = booleanFunction.getExpression(operand.getName());
+            if (be != null) {
+                if (be instanceof BooleanEqualityConstraint) {
+                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), operand.isNegated()));
+                    expandedOperands.add(operand);
+                } else if (be instanceof BooleanOppositionConstraint) {
+                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), !operand.isNegated()));
+                    expandedOperands.add(operand);
+                }
+            }
+        }
+        removeOperands(expandedOperands);
+        addOperands(expansions);
         List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
         List<BooleanOperand> trueOperands = new ArrayList<BooleanOperand>();
         for (BooleanOperand operand : getOperands()) {

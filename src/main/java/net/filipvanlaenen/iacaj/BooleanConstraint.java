@@ -132,7 +132,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
      * Class representing a Boolean constraint requiring that two input parameters
      * are equal to each other.
      */
-    private static class BooleanEqualityConstraint extends BooleanConstraint {
+    static class BooleanEqualityConstraint extends BooleanConstraint {
         /**
          * The name of the other input parameter.
          */
@@ -206,7 +206,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
      * Class representing a Boolean constraint requiring that two input parameters
      * are opposite to each other.
      */
-    private static class BooleanOppositionConstraint extends BooleanConstraint {
+    static class BooleanOppositionConstraint extends BooleanConstraint {
         /**
          * The name of the other input parameter.
          */
