@@ -130,7 +130,7 @@ public class BooleanXorCalculationTest {
     }
 
     /**
-     * Verifies that xor with two open operands are not resolved.
+     * Verifies that xor with two open operands is not resolved.
      */
     @Test
     public void shouldNotResolveXorWithTwoOpenOperands() {
