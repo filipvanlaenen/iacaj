@@ -57,6 +57,33 @@ public final class BooleanXorCalculation extends BooleanCalculation {
         }
         removeOperands(expandedOperands);
         addOperands(expansions);
+        boolean eliminated = true;
+        while (eliminated) {
+            BooleanOperand operandA = null;
+            BooleanOperand operandB = null;
+            for (BooleanOperand a : getOperands()) {
+                for (BooleanOperand b : getOperands()) {
+                    if (a != b && a.getName().equals(b.getName())) {
+                        operandA = a;
+                        operandB = b;
+                    }
+                }
+            }
+            eliminated = operandA != null;
+            if (eliminated) {
+                removeOperand(operandA);
+                removeOperand(operandB);
+                boolean localResolution = operandA.isNegated() ^ operandB.isNegated();
+                if (getNumberOfOperands() == 0) {
+                    return BooleanConstant.get(localResolution);
+                }
+                if (!localResolution) {
+                    BooleanOperand firstOperand = getOperands().get(0);
+                    removeOperand(firstOperand);
+                    addOperand(firstOperand.negated());
+                }
+            }
+        }
         List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
         List<BooleanOperand> trueOperands = new ArrayList<BooleanOperand>();
         for (BooleanOperand operand : getOperands()) {

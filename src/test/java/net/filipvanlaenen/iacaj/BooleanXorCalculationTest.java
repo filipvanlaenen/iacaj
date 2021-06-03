@@ -86,6 +86,50 @@ public class BooleanXorCalculationTest {
     }
 
     /**
+     * Verifies that xor with two identical operands is resolved to negation.
+     */
+    @Test
+    public void shouldResolveXorWithTwoIdenticalOperandsToNegation() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("¬v2"), resolved);
+    }
+
+    /**
+     * Verifies that xor with two opposed operands is resolved to equality.
+     */
+    @Test
+    public void shouldResolveXorWithTwoOpposedOperandsToNegation() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ ¬v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v2"), resolved);
+    }
+
+    /**
+     * Verifies that xor between two opposed operands is resolved to true.
+     */
+    @Test
+    public void shouldResolveXorBetweenTwoOpposedOperandsToTrue() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ ¬v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(BooleanConstant.TRUE, resolved);
+    }
+
+    /**
+     * Verifies that xor between two identical operands is resolved to false.
+     */
+    @Test
+    public void shouldResolveXorBetweenTwoIdenticalOperandsToFalse() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(BooleanConstant.FALSE, resolved);
+    }
+
+    /**
      * Verifies that xor with two open operands are not resolved.
      */
     @Test
