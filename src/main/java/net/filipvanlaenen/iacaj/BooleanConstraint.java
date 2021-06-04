@@ -12,7 +12,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
      * Class representing a Boolean constraint requiring an input parameter to be
      * true.
      */
-    private static class BooleanTrueConstraint extends BooleanConstraint {
+    static class BooleanTrueConstraint extends BooleanConstraint {
         /**
          * Constructor using the name of the input parameter as its parameter.
          *
@@ -72,7 +72,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
      * Class representing a Boolean constraint requiring an input parameter to be
      * false.
      */
-    private static class BooleanFalseConstraint extends BooleanConstraint {
+    static class BooleanFalseConstraint extends BooleanConstraint {
         /**
          * Constructor using the name of the input parameter as its parameter.
          *

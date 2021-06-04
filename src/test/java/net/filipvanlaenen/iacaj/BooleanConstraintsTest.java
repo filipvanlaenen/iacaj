@@ -142,4 +142,140 @@ public class BooleanConstraintsTest {
                 "False");
         assertNotEquals(I1_TRUE_BOOLEAN_CONSTRAINTS.hashCode(), i1FalseBooleanConstraints.hashCode());
     }
+
+    /**
+     * Verifies that two transitive equalities are resolved into equality with the
+     * lowest input parameter.
+     */
+    @Test
+    public void twoTransitiveEqualitiesShouldResolveToTwoEqualities() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "i1"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "i1"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "i1"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that equality to opposition constraint is resolved into two
+     * oppositions to the lowest input parameter.
+     */
+    @Test
+    public void equalityToOppositionShouldResolveToTwoOppositionConstraints() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "¬i1"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "¬i1"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "¬i1"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that two transitive oppositions are resolved into equality and
+     * opposition to the lowest input parameter.
+     */
+    @Test
+    public void twoTransitiveOppositionsShouldResolveToEqualityAndOppisition() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "¬i1"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "¬i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "¬i1"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "i1"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that opposition to equality constraint is resolved into opposition
+     * and equality to the lowest input parameter.
+     */
+    @Test
+    public void oppositionToEqualityShouldResolveToOppositionAndEqualityConstraint() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "i1"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "¬i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "i1"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "¬i1"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that equality to a true constraint is resolved into two true
+     * constraints.
+     */
+    @Test
+    public void equalityToTrueConstraintShouldResolveToTwoTrueConstraints() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "True"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "True"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "True"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that equality to a false constraint is resolved into two true
+     * constraints.
+     */
+    @Test
+    public void equalityToFalseConstraintShouldResolveToTwoFalseConstraints() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "False"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "False"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "False"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that opposition to a true constraint is resolved into a false and a
+     * true constraint.
+     */
+    @Test
+    public void oppositionToTrueConstraintShouldResolveFalseAndTrueConstraint() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "True"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "¬i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "True"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "False"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
+
+    /**
+     * Verifies that opposition to a false constraint is resolved into true and
+     * false constraint.
+     */
+    @Test
+    public void oppositionToFalseConstraintShouldResolveToFalseAndTrueConstraint() {
+        Set<BooleanConstraint> actualConstraintsSet = new HashSet<BooleanConstraint>();
+        actualConstraintsSet.add(BooleanConstraint.parse("i2", "False"));
+        actualConstraintsSet.add(BooleanConstraint.parse("i3", "¬i2"));
+        BooleanConstraints actual = new BooleanConstraints(actualConstraintsSet);
+        Set<BooleanConstraint> expectedConstraintsSet = new HashSet<BooleanConstraint>();
+        expectedConstraintsSet.add(BooleanConstraint.parse("i2", "False"));
+        expectedConstraintsSet.add(BooleanConstraint.parse("i3", "True"));
+        BooleanConstraints expected = new BooleanConstraints(expectedConstraintsSet);
+        assertEquals(expected, actual);
+    }
 }

@@ -3,6 +3,11 @@ package net.filipvanlaenen.iacaj;
 import java.util.HashSet;
 import java.util.Set;
 
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanFalseConstraint;
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanTrueConstraint;
+
 /**
  * Class holding a set of Boolean constraints.
  */
@@ -19,6 +24,7 @@ public final class BooleanConstraints {
      */
     BooleanConstraints(final Set<BooleanConstraint> constraints) {
         this.constraints = new HashSet<BooleanConstraint>(constraints);
+        normalize();
     }
 
     @Override
@@ -72,6 +78,88 @@ public final class BooleanConstraints {
             result += constraint.hashCode();
         }
         return result;
+    }
+
+    /**
+     * Normalizes the constraint, such that chains of equality and opposition are
+     * resolved to equality and opposition to the lowest input parameter.
+     */
+    private void normalize() {
+        BooleanConstraint constraintA = null;
+        BooleanConstraint constraintB = null;
+        do {
+            constraintA = null;
+            for (BooleanConstraint constraint : constraints) {
+                if (constraint instanceof BooleanEqualityConstraint) {
+                    BooleanEqualityConstraint bec = (BooleanEqualityConstraint) constraint;
+                    InputParameter ip = bec.getInputParameters().get(0);
+                    for (BooleanConstraint other : constraints) {
+                        if (other != constraint && other.getName().equals(ip.getName())) {
+                            constraintA = constraint;
+                            constraintB = other;
+                        }
+                    }
+                } else if (constraint instanceof BooleanOppositionConstraint) {
+                    BooleanOppositionConstraint boc = (BooleanOppositionConstraint) constraint;
+                    InputParameter ip = boc.getInputParameters().get(0);
+                    for (BooleanConstraint other : constraints) {
+                        if (other != constraint && other.getName().equals(ip.getName())) {
+                            constraintA = constraint;
+                            constraintB = other;
+                        }
+                    }
+                }
+            }
+            if (constraintA != null) {
+                if (constraintA instanceof BooleanEqualityConstraint) {
+                    BooleanEqualityConstraint a = (BooleanEqualityConstraint) constraintA;
+                    if (constraintB instanceof BooleanEqualityConstraint) {
+                        BooleanEqualityConstraint b = (BooleanEqualityConstraint) constraintB;
+                        BooleanEqualityConstraint r = new BooleanEqualityConstraint(a.getName(),
+                                b.getInputParameters().get(0).getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    } else if (constraintB instanceof BooleanOppositionConstraint) {
+                        BooleanOppositionConstraint b = (BooleanOppositionConstraint) constraintB;
+                        BooleanOppositionConstraint r = new BooleanOppositionConstraint(a.getName(),
+                                b.getInputParameters().get(0).getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    } else if (constraintB instanceof BooleanTrueConstraint) {
+                        BooleanTrueConstraint r = new BooleanTrueConstraint(a.getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    } else if (constraintB instanceof BooleanFalseConstraint) {
+                        BooleanFalseConstraint r = new BooleanFalseConstraint(a.getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    }
+                } else if (constraintA instanceof BooleanOppositionConstraint) {
+                    BooleanOppositionConstraint a = (BooleanOppositionConstraint) constraintA;
+                    if (constraintB instanceof BooleanEqualityConstraint) {
+                        BooleanEqualityConstraint b = (BooleanEqualityConstraint) constraintB;
+                        BooleanOppositionConstraint r = new BooleanOppositionConstraint(a.getName(),
+                                b.getInputParameters().get(0).getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    } else if (constraintB instanceof BooleanOppositionConstraint) {
+                        BooleanOppositionConstraint b = (BooleanOppositionConstraint) constraintB;
+                        BooleanEqualityConstraint r = new BooleanEqualityConstraint(a.getName(),
+                                b.getInputParameters().get(0).getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    } else if (constraintB instanceof BooleanTrueConstraint) {
+                        BooleanFalseConstraint r = new BooleanFalseConstraint(a.getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    } else if (constraintB instanceof BooleanFalseConstraint) {
+                        BooleanTrueConstraint r = new BooleanTrueConstraint(a.getName());
+                        constraints.remove(constraintA);
+                        constraints.add(r);
+                    }
+                }
+            }
+        } while (constraintA != null);
     }
 
     /**
