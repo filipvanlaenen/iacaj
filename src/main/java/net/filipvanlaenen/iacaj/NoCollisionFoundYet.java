@@ -16,15 +16,20 @@ public final class NoCollisionFoundYet implements AttackResult {
      * The Boolean constraints with the best result so far.
      */
     private final BooleanConstraints bestBooleanConstraints;
+    /**
+     * The number of expression for the best result so far.
+     */
     private final long bestNumberOfExpressions;
 
     /**
      * Constructor taking the number of iterations as a parameter and the set of
      * constraints with the best result so far.
      *
-     * @param numberOfIterations     The number of iterations done.
-     * @param bestBooleanConstraints The Boolean constraints with the best result so
-     *                               far.
+     * @param numberOfIterations      The number of iterations done.
+     * @param bestBooleanConstraints  The Boolean constraints with the best result
+     *                                so far.
+     * @param bestNumberOfExpressions The number of expression for the best result
+     *                                so far.
      */
     NoCollisionFoundYet(final int numberOfIterations, final BooleanConstraints bestBooleanConstraints,
             final long bestNumberOfExpressions) {
