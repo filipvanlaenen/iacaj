@@ -89,6 +89,7 @@ public class BooleanFunction {
      * The input parameters of the Boolean function.
      */
     private Set<InputParameter> inputParameters = new HashSet<InputParameter>();
+    private Set<InputParameter> inputParametersInCalculation = new HashSet<InputParameter>();
 
     /**
      * Constructor to create an empty Boolean function.
@@ -151,6 +152,8 @@ public class BooleanFunction {
         inputParameters.addAll(booleanExpression.getInputParameters());
         if (booleanExpression instanceof BooleanConstraint) {
             constraints.add((BooleanConstraint) booleanExpression);
+        } else {
+            inputParametersInCalculation.addAll(booleanExpression.getInputParameters());
         }
     }
 
@@ -215,6 +218,15 @@ public class BooleanFunction {
     }
 
     /**
+     * Returns the input parameters of the Boolean function used in the calculation.
+     *
+     * @return The input parameters of the Boolean function used in the calculation.
+     */
+    public Set<InputParameter> getInputParametersInCalculation() {
+        return Set.copyOf(inputParametersInCalculation);
+    }
+
+    /**
      * Returns the number of Boolean expressions in the Boolean function.
      *
      * @return The number of Boolean expressions in the Boolean function.
@@ -239,6 +251,10 @@ public class BooleanFunction {
      */
     public int getNumberOfInputParameters() {
         return inputParameters.size();
+    }
+
+    public int getNumberOfInputParametersInCalculation() {
+        return inputParametersInCalculation.size();
     }
 
     /**
@@ -292,8 +308,12 @@ public class BooleanFunction {
             }
         } while (expressions.size() != before);
         inputParameters.clear();
+        inputParametersInCalculation.clear();
         for (BooleanExpression expression : expressions) {
             inputParameters.addAll(expression.getInputParameters());
+            if (expression instanceof BooleanOperation) {
+                inputParametersInCalculation.addAll(expression.getInputParameters());
+            }
         }
     }
 

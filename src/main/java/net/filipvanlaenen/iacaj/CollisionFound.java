@@ -72,7 +72,7 @@ public final class CollisionFound implements AttackResult {
         Set<InputParameter> constrainedInputParameterNames = constraints.stream()
                 .map(c -> InputParameter.get(c.getName())).collect(Collectors.toSet());
         eliminatedInputParameters.removeAll(constrainedInputParameterNames);
-        Set<InputParameter> freeInputParameters = collision.getInputParameters();
+        Set<InputParameter> freeInputParameters = collision.getInputParametersInCalculation();
         eliminatedInputParameters.removeAll(freeInputParameters);
         if (eliminatedInputParameters.size() == 1) {
             sb.append("  Eliminated input parameter: ");

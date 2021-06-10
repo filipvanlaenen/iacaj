@@ -1,12 +1,15 @@
 package net.filipvanlaenen.iacaj;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanFalseConstraint;
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanTrueConstraint;
+import net.filipvanlaenen.iacaj.BooleanFunction.BooleanExpressionComparator;
 
 /**
  * Class holding a set of Boolean constraints.
@@ -67,6 +70,17 @@ public final class BooleanConstraints {
      */
     Set<BooleanConstraint> getConstraints() {
         return Set.copyOf(constraints);
+    }
+
+    /**
+     * Returns the constraints in sorted order.
+     *
+     * @return A sorted list with the constraints.
+     */
+    List<BooleanConstraint> getSortedConstraints() {
+        List<BooleanConstraint> sortedConstraints = new ArrayList<BooleanConstraint>(constraints);
+        sortedConstraints.sort(new BooleanExpressionComparator());
+        return sortedConstraints;
     }
 
     @Override

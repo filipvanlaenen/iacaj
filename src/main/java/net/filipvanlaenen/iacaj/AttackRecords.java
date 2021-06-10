@@ -7,10 +7,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.filipvanlaenen.iacaj.ComplexityReport.Metric;
+
 /**
  * Class keeping track of all performed attacks on a Boolean function.
  */
 public class AttackRecords {
+    /**
+     * The Boolean constraints with the best result so far.
+     */
+    private BooleanConstraints bestBooleanConstraints;
+    private long bestNumberOfExpressions = Long.MAX_VALUE;
+
     /**
      * Class representing an attack line, i.e. a set of attack records with the same
      * number of Boolean constraints.
@@ -173,6 +181,11 @@ public class AttackRecords {
      */
     void add(final BooleanFunction booleanFunction) {
         attackLines[booleanFunction.getNumberOfConstraints()].add(booleanFunction);
+        long noe = new ComplexityReport(booleanFunction).getAggregatedValue(Metric.NumberOfExpressions);
+        if (noe < bestNumberOfExpressions) {
+            bestBooleanConstraints = booleanFunction.getConstraints();
+            bestNumberOfExpressions = noe;
+        }
     }
 
     /**
@@ -193,6 +206,13 @@ public class AttackRecords {
         return null;
     }
 
+    BooleanConstraints getBestBooleanConstraints() {
+        return bestBooleanConstraints;
+    }
+
+    long getBestNumberOfExpressions() {
+       return bestNumberOfExpressions;
+   }
     /**
      * Sorts the attack lines according to priority: edges first, then regular
      * lines, and lines with empty predecessors at the end. Edges are lines that are

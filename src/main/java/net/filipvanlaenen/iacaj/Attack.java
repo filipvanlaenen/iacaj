@@ -88,12 +88,12 @@ public class Attack {
             collisionCandidate.resolve();
             records.add(collisionCandidate);
             collisionFound = collisionCandidate.getNumberOfConstraints()
-                    + collisionCandidate.getNumberOfInputParameters() < numberOfInputParameters;
+                    + collisionCandidate.getNumberOfInputParametersInCalculation() < numberOfInputParameters;
         }
         if (collisionFound) {
             return new CollisionFound(collisionCandidate, inputParameters);
         } else {
-            return new NoCollisionFoundYet(records.size());
+            return new NoCollisionFoundYet(records.size(), records.getBestBooleanConstraints(), records.getBestNumberOfExpressions());
         }
     }
 }
