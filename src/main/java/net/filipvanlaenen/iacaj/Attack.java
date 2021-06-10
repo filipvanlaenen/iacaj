@@ -93,7 +93,8 @@ public class Attack {
         if (collisionFound) {
             return new CollisionFound(collisionCandidate, inputParameters);
         } else {
-            return new NoCollisionFoundYet(records.size(), records.getBestBooleanConstraints(), records.getBestNumberOfExpressions());
+            return new NoCollisionFoundYet(records.size(), records.getBestBooleanConstraints(),
+                    records.getBestNumberOfExpressions());
         }
     }
 }
