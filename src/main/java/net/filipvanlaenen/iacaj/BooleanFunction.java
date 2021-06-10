@@ -89,6 +89,9 @@ public class BooleanFunction {
      * The input parameters of the Boolean function.
      */
     private Set<InputParameter> inputParameters = new HashSet<InputParameter>();
+    /**
+     * The input parameters of the Boolean function being used in the calculation.
+     */
     private Set<InputParameter> inputParametersInCalculation = new HashSet<InputParameter>();
 
     /**
@@ -249,11 +252,18 @@ public class BooleanFunction {
      *
      * @return The number of input parameters of the Boolean function.
      */
-    public int getNumberOfInputParameters() {
+    int getNumberOfInputParameters() {
         return inputParameters.size();
     }
 
-    public int getNumberOfInputParametersInCalculation() {
+    /**
+     * Returns the number of input parameters of the Boolean function used in the
+     * calculation.
+     *
+     * @return The number of input parameters of the Boolean function used in the
+     *         calculation.
+     */
+    int getNumberOfInputParametersInCalculation() {
         return inputParametersInCalculation.size();
     }
 
