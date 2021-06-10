@@ -4,8 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -63,6 +65,29 @@ public class BooleanConstraintsTest {
         Set<BooleanConstraint> expected = new HashSet<BooleanConstraint>();
         expected.add(I1_TRUE);
         assertEquals(expected, I1_TRUE_BOOLEAN_CONSTRAINTS.getConstraints());
+    }
+
+    /**
+     * Verifies that getSortedConstraints returns a sorted list with the
+     * constraints.
+     */
+    @Test
+    public void getSortedConstraintsReturnsASortedListWithTheConstraints() {
+        Set<BooleanConstraint> constraintsSet = new HashSet<BooleanConstraint>();
+        List<BooleanConstraint> expected = new ArrayList<BooleanConstraint>();
+        expected.add(I1_TRUE);
+        BooleanConstraint i2False = BooleanConstraint.parse("i2", "False");
+        expected.add(i2False);
+        BooleanConstraint i3True = BooleanConstraint.parse("i3", "True");
+        expected.add(i3True);
+        BooleanConstraint i4False = BooleanConstraint.parse("i4", "False");
+        expected.add(i4False);
+        constraintsSet.add(i4False);
+        constraintsSet.add(i3True);
+        constraintsSet.add(i2False);
+        constraintsSet.add(I1_TRUE);
+        BooleanConstraints constraints = new BooleanConstraints(constraintsSet);
+        assertEquals(expected, constraints.getSortedConstraints());
     }
 
     /**
