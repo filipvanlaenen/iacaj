@@ -17,6 +17,9 @@ public class AttackRecords {
      * The Boolean constraints with the best result so far.
      */
     private BooleanConstraints bestBooleanConstraints;
+    /**
+     * The number of expressions for the best result so far.
+     */
     private long bestNumberOfExpressions = Long.MAX_VALUE;
 
     /**
@@ -206,13 +209,24 @@ public class AttackRecords {
         return null;
     }
 
+    /**
+     * Returns the Boolean constraints with the best result so far.
+     *
+     * @return The Boolean constraints with the best result so far.
+     */
     BooleanConstraints getBestBooleanConstraints() {
         return bestBooleanConstraints;
     }
 
+    /**
+     * Returns the number of expressions for the best result so far.
+     *
+     * @return The number of expressions for the best result so far.
+     */
     long getBestNumberOfExpressions() {
-       return bestNumberOfExpressions;
-   }
+        return bestNumberOfExpressions;
+    }
+
     /**
      * Sorts the attack lines according to priority: edges first, then regular
      * lines, and lines with empty predecessors at the end. Edges are lines that are
