@@ -259,48 +259,4 @@ public class BooleanFunctionTest {
         assertTrue(comparator.compare(expression0, expression1) < 0);
         assertTrue(comparator.compare(expression1, expression0) > 0);
     }
-
-    /**
-     * Verifies that equality to True is resolved to True.
-     */
-    @Test
-    public void shouldResolveEqualityToTrueToTrue() {
-        String[] content = new String[] {"v1 = True", "o1 = v1"};
-        BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        booleanFunction.resolve();
-        assertEquals("o1 = True", booleanFunction.toString());
-    }
-
-    /**
-     * Verifies that equality to False is resolved to False.
-     */
-    @Test
-    public void shouldResolveEqualityToFalseToFalse() {
-        String[] content = new String[] {"v1 = False", "o1 = v1"};
-        BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        booleanFunction.resolve();
-        assertEquals("o1 = False", booleanFunction.toString());
-    }
-
-    /**
-     * Verifies that a negation of True is resolved to False.
-     */
-    @Test
-    public void shouldResolveNegatedTrueToFalse() {
-        String[] content = new String[] {"v1 = True", "o1 = ¬v1"};
-        BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        booleanFunction.resolve();
-        assertEquals("o1 = False", booleanFunction.toString());
-    }
-
-    /**
-     * Verifies that a negation of False is resolved to True.
-     */
-    @Test
-    public void shouldResolveNegatedFalseToTrue() {
-        String[] content = new String[] {"v1 = False", "o1 = ¬v1"};
-        BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        booleanFunction.resolve();
-        assertEquals("o1 = True", booleanFunction.toString());
-    }
 }
