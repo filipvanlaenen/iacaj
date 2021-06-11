@@ -150,7 +150,7 @@ public class BooleanFunctionTest {
      * another Boolean function together with constraints.
      */
     @Test
-    public void shoudlExportARichBooleanFunctionCorrectlyAfterCloningFromAnotherBooleanFunctionAndConstraints() {
+    public void shouldExportARichBooleanFunctionCorrectlyAfterCloningFromAnotherBooleanFunctionAndConstraints() {
         String[] content = new String[] {"o1 = i1 ∧ i2"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         Set<BooleanConstraint> constraintsSet = new HashSet<BooleanConstraint>();
