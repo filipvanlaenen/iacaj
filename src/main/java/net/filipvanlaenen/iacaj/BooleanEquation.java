@@ -70,7 +70,7 @@ public final class BooleanEquation extends BooleanRightHandSide {
 
     @Override
     public List<InternalVariable> getInternalVariables() {
-        if (!InputParameter.isInputParameter(operand)) {
+        if (InternalVariable.isInternalVariable(operand)) {
             return Arrays.asList(InternalVariable.get(operand));
         } else {
             return Collections.emptyList();
