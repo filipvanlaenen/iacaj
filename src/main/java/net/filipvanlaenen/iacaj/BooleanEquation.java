@@ -77,6 +77,15 @@ public final class BooleanEquation extends BooleanRightHandSide {
         }
     }
 
+    /**
+     * Returns the operand of the Boolean equation.
+     *
+     * @return The operand of the Boolean equation.
+     */
+    private String getOperand() {
+        return operand;
+    }
+
     @Override
     protected BooleanOperator getOperator() {
         return null;
@@ -93,6 +102,15 @@ public final class BooleanEquation extends BooleanRightHandSide {
         return false;
     }
 
+    /**
+     * Returns whether the Boolean equation is negated.
+     *
+     * @return True if the Boolean equation is negated.
+     */
+    private boolean isNegated() {
+        return negated;
+    }
+
     @Override
     protected boolean isTrue() {
         return false;
@@ -102,17 +120,16 @@ public final class BooleanEquation extends BooleanRightHandSide {
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
         BooleanExpression be = booleanFunction.getExpression(operand);
         if (be != null) {
-            if (negated) {
-                if (be.isTrue()) {
-                    return BooleanConstant.FALSE;
-                } else if (be.isFalse()) {
-                    return BooleanConstant.TRUE;
-                }
-            } else {
-                if (be.isTrue()) {
-                    return BooleanConstant.TRUE;
-                } else if (be.isFalse()) {
-                    return BooleanConstant.FALSE;
+            if (be.isTrue()) {
+                return BooleanConstant.get(!negated);
+            } else if (be.isFalse()) {
+                return BooleanConstant.get(negated);
+            } else if (be instanceof BooleanOperation) {
+                BooleanOperation bo = (BooleanOperation) be;
+                BooleanRightHandSide rhs = bo.getRightHandSide();
+                if (rhs instanceof BooleanEquation) {
+                    BooleanEquation bq = (BooleanEquation) rhs;
+                    return new BooleanEquation(bq.getOperand(), negated ^ bq.isNegated());
                 }
             }
         }

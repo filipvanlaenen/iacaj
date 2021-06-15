@@ -85,6 +85,15 @@ public final class BooleanOperation extends BooleanExpression {
         return rightHandSide.getOperator();
     }
 
+    /**
+     * Returns the right hand side of the Boolean expression.
+     *
+     * @return The right hand side of the Boolean expression.
+     */
+    BooleanRightHandSide getRightHandSide() {
+        return rightHandSide;
+    }
+
     @Override
     protected boolean isFalse() {
         return rightHandSide.isFalse();
@@ -118,4 +127,5 @@ public final class BooleanOperation extends BooleanExpression {
     public String toString() {
         return name + " = " + rightHandSide.toString();
     }
+
 }

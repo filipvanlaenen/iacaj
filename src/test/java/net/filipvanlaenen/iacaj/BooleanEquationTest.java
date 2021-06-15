@@ -79,6 +79,46 @@ public class BooleanEquationTest {
     }
 
     /**
+     * Verifies that equation to another equation propagates the operand.
+     */
+    @Test
+    public void equationToEquationShouldPropagateOperand() {
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1");
+        BooleanRightHandSide resolved = BOOLEAN_EQUATION_V1.resolve(booleanFunction);
+        assertEquals("i1", resolved.toString());
+    }
+
+    /**
+     * Verifies that equation to opposition propagates the operand with negation.
+     */
+    @Test
+    public void equationToOppositionShouldPropagateOperandNegated() {
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = ¬i1");
+        BooleanRightHandSide resolved = BOOLEAN_EQUATION_V1.resolve(booleanFunction);
+        assertEquals("¬i1", resolved.toString());
+    }
+
+    /**
+     * Verifies that opposition to equation propagates the operand with negation.
+     */
+    @Test
+    public void oppositionToEquationShouldPropagateOperandNegated() {
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1");
+        BooleanRightHandSide resolved = BOOLEAN_EQUATION_NOT_V1.resolve(booleanFunction);
+        assertEquals("¬i1", resolved.toString());
+    }
+
+    /**
+     * Verifies that opposition to another opposition propagates the operand.
+     */
+    @Test
+    public void oppositionToOppositionShouldPropagateOperand() {
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = ¬i1");
+        BooleanRightHandSide resolved = BOOLEAN_EQUATION_NOT_V1.resolve(booleanFunction);
+        assertEquals("i1", resolved.toString());
+    }
+
+    /**
      * Verifies that deepClone returns an equation with the same content.
      */
     @Test
