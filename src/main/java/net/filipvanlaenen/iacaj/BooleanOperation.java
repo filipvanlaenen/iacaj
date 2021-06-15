@@ -37,7 +37,7 @@ public final class BooleanOperation extends BooleanExpression {
      * @param leftHandSide  The left hand side of the operation.
      * @param rightHandSide The right hand side of the operation.
      */
-    public BooleanOperation(final String leftHandSide, final BooleanRightHandSide rightHandSide) {
+    BooleanOperation(final String leftHandSide, final BooleanRightHandSide rightHandSide) {
         this.name = leftHandSide;
         this.number = Integer.parseInt(leftHandSide.substring(1));
         this.rightHandSide = rightHandSide;
@@ -72,7 +72,7 @@ public final class BooleanOperation extends BooleanExpression {
      *
      * @return The number of the operation.s
      */
-    public int getNumber() {
+    int getNumber() {
         return number;
     }
 
@@ -81,7 +81,7 @@ public final class BooleanOperation extends BooleanExpression {
      *
      * @return The operator of the Boolean expression.
      */
-    public BooleanOperator getOperator() {
+    BooleanOperator getOperator() {
         return rightHandSide.getOperator();
     }
 
@@ -104,7 +104,7 @@ public final class BooleanOperation extends BooleanExpression {
      *
      * @return True if the Boolean operation calculates an output parameter.
      */
-    public boolean isOutputParameter() {
+    boolean isOutputParameter() {
         return OutputParameter.isOutputParameter(name);
     }
 
@@ -127,5 +127,4 @@ public final class BooleanOperation extends BooleanExpression {
     public String toString() {
         return name + " = " + rightHandSide.toString();
     }
-
 }
