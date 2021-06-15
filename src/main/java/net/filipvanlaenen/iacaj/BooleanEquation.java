@@ -84,7 +84,8 @@ public final class BooleanEquation extends BooleanRightHandSide {
 
     @Override
     public int hashCode() {
-        return operand.hashCode() * (negated ? -1 : 1);
+        // Negating the conditional produces an equivalent mutant.
+        return negated ? -operand.hashCode() : operand.hashCode();
     }
 
     @Override

@@ -109,7 +109,7 @@
 
         <!-- Checks for imports                              -->
         <!-- See http://checkstyle.sourceforge.net/config_import.html -->
-        <module name="AvoidStarImport"/>
+        <!-- module name="AvoidStarImport"/ --> <!-- Allow star imports -->
         <module name="IllegalImport"/> <!-- defaults to sun.* packages -->
         <module name="RedundantImport"/>
         <module name="UnusedImports">

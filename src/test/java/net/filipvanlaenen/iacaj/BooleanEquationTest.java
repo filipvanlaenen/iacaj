@@ -1,9 +1,9 @@
 package net.filipvanlaenen.iacaj;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +11,22 @@ import org.junit.jupiter.api.Test;
  * Unit tests on the <code>BooleanEquation</code> class.
  */
 public class BooleanEquationTest {
+    /**
+     * Boolean equation with the input parameter i1.
+     */
+    private static final BooleanEquation BOOLEAN_EQUATION_I1 = new BooleanEquation("i1");
+    /**
+     * Boolean equation with the internal variable v1.
+     */
     private static final BooleanEquation BOOLEAN_EQUATION_V1 = new BooleanEquation("v1");
+    /**
+     * Boolean equation with the negation of the internal variable v1.
+     */
+    private static final BooleanEquation BOOLEAN_EQUATION_NOT_V1 = new BooleanEquation("¬v1");
+    /**
+     * Boolean equation with the internal variable v2.
+     */
+    private static final BooleanEquation BOOLEAN_EQUATION_V2 = new BooleanEquation("v2");
 
     /**
      * Verifies that equation to False is resolved to False.
@@ -38,9 +53,8 @@ public class BooleanEquationTest {
      */
     @Test
     public void shouldResolveOppositionToFalseToTrue() {
-        BooleanEquation equation = new BooleanEquation("¬v1");
         BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False");
-        BooleanRightHandSide resolved = equation.resolve(booleanFunction);
+        BooleanRightHandSide resolved = BOOLEAN_EQUATION_NOT_V1.resolve(booleanFunction);
         assertEquals(BooleanConstant.TRUE, resolved);
     }
 
@@ -49,9 +63,8 @@ public class BooleanEquationTest {
      */
     @Test
     public void shouldResolveOppositionToTrueToFalse() {
-        BooleanEquation equation = new BooleanEquation("¬v1");
         BooleanFunction booleanFunction = BooleanFunction.parse("v1 = True");
-        BooleanRightHandSide resolved = equation.resolve(booleanFunction);
+        BooleanRightHandSide resolved = BOOLEAN_EQUATION_NOT_V1.resolve(booleanFunction);
         assertEquals(BooleanConstant.FALSE, resolved);
     }
 
@@ -120,7 +133,7 @@ public class BooleanEquationTest {
      */
     @Test
     public void booleanEquationShouldNotBeEqualToNegatedBooleanEquation() {
-        assertFalse(BOOLEAN_EQUATION_V1.equals(new BooleanEquation("¬v1")));
+        assertFalse(BOOLEAN_EQUATION_V1.equals(BOOLEAN_EQUATION_NOT_V1));
     }
 
     /**
@@ -129,6 +142,128 @@ public class BooleanEquationTest {
      */
     @Test
     public void booleanEquationShouldNotBeEqualToBooleanEquationWithOtherName() {
-        assertFalse(BOOLEAN_EQUATION_V1.equals(new BooleanEquation("v2")));
+        assertFalse(BOOLEAN_EQUATION_V1.equals(BOOLEAN_EQUATION_V2));
+    }
+
+    /**
+     * Verifies that two Boolean equations that are equal have the same hash code.
+     */
+    @Test
+    public void booleanEquationShouldHaveSameHashcodeAsBooleanEquationWithSameParameters() {
+        assertEquals(BOOLEAN_EQUATION_V1.hashCode(), new BooleanEquation("v1").hashCode());
+    }
+
+    /**
+     * Verifies that a Boolean equation doesn't have the same hash code as its
+     * negation.
+     */
+    @Test
+    public void booleanEquationShouldNotHaveSameHashCodeAsNegatedBooleanEquation() {
+        assertNotEquals(BOOLEAN_EQUATION_V1.hashCode(), BOOLEAN_EQUATION_NOT_V1.hashCode());
+    }
+
+    /**
+     * Verifies that a Boolean equation doesn't have the same hash code as a Boolean
+     * equation with another name.
+     */
+    @Test
+    public void booleanEquationShouldNotHaveSameHashCodeAsBooleanEquationWithOtherName() {
+        assertNotEquals(BOOLEAN_EQUATION_V1.hashCode(), BOOLEAN_EQUATION_V2.hashCode());
+    }
+
+    /**
+     * Verifies that a Boolean equation referring to an internal variable returns an
+     * empty list for the input parameters.
+     */
+    @Test
+    public void inputParametersListIsEmptyWhenReferringToInternalVariable() {
+        assertTrue(BOOLEAN_EQUATION_V1.getInputParameters().isEmpty());
+    }
+
+    /**
+     * Verifies that getInputParameters on a Boolean equation referring to an input
+     * parameter returns a list with that input parameter.
+     */
+    @Test
+    public void inputParametersListContainsTheInputParameterWhenReferringToInputParameter() {
+        List<InputParameter> expected = new ArrayList<InputParameter>();
+        expected.add(InputParameter.get("i1"));
+        assertEquals(expected, BOOLEAN_EQUATION_I1.getInputParameters());
+    }
+
+    /**
+     * Verifies that a Boolean equation referring to an input parameter returns an
+     * empty list for the internal variables.
+     */
+    @Test
+    public void internalVariablesEmptyWhenReferringToInputParameter() {
+        assertTrue(BOOLEAN_EQUATION_I1.getInternalVariables().isEmpty());
+    }
+
+    /**
+     * Verifies that getInternalVariables on a Boolean equation referring to an
+     * internal variable returns a list with that internal variable.
+     */
+    @Test
+    public void internalVariablesListContainsTheInternalVariableWhenReferringToInternalVariable() {
+        List<InternalVariable> expected = new ArrayList<InternalVariable>();
+        expected.add(InternalVariable.get("v1"));
+        assertEquals(expected, BOOLEAN_EQUATION_V1.getInternalVariables());
+    }
+
+    /**
+     * Verifies that the operator for a Boolean equation is <code>null</code>.
+     */
+    @Test
+    public void operatorShouldBeNull() {
+        assertNull(BOOLEAN_EQUATION_V1.getOperator());
+    }
+
+    /**
+     * Verifies that a Boolean equation is not false.
+     */
+    @Test
+    public void isFalseShouldReturnFalse() {
+        assertFalse(BOOLEAN_EQUATION_V1.isFalse());
+    }
+
+    /**
+     * Verifies that a Boolean equation is not true.
+     */
+    @Test
+    public void isTrueShouldReturnFalse() {
+        assertFalse(BOOLEAN_EQUATION_V1.isTrue());
+    }
+
+    /**
+     * Verifies that a Boolean equation is exported to Java correctly.
+     */
+    @Test
+    public void shouldExportToJavaCorrectly() {
+        assertEquals("v1", BOOLEAN_EQUATION_V1.toJavaString());
+    }
+
+    /**
+     * Verifies that a negated Boolean equation is exported to Java correctly.
+     */
+    @Test
+    public void shouldExportNegationToJavaCorrectly() {
+        assertEquals("!v1", BOOLEAN_EQUATION_NOT_V1.toJavaString());
+    }
+
+    /**
+     * Verifies that a Boolean equation is exported to a string correctly.
+     */
+    @Test
+    public void shouldExportToStringCorrectly() {
+        assertEquals("v1", BOOLEAN_EQUATION_V1.toString());
+    }
+
+    /**
+     * Verifies that a negated Boolean equation is exported to a string correctly.
+     */
+    @Test
+    public void shouldExportNegationToStringCorrectly() {
+        assertEquals("¬v1", BOOLEAN_EQUATION_NOT_V1.toString());
     }
 }
