@@ -14,6 +14,15 @@ import org.junit.jupiter.api.Test;
  */
 public class BooleanOperationTest {
     /**
+     * A Boolean operation setting v1 to false.
+     */
+    private static final BooleanOperation BOOLEAN_OPERATION_V1_FALSE = new BooleanOperation("v1", "False");
+    /**
+     * A Boolean operation setting v1 to true.
+     */
+    private static final BooleanOperation BOOLEAN_OPERATION_V1_TRUE = new BooleanOperation("v1", "True");
+
+    /**
      * Creates a set with input parameters with the names provided.
      *
      * @param names The names of the input parameters to be added to the set.
@@ -61,8 +70,7 @@ public class BooleanOperationTest {
      */
     @Test
     public void shouldExportTrueExpression() {
-        BooleanOperation operation = new BooleanOperation("v1", "True");
-        assertEquals("v1 = True", operation.toString());
+        assertEquals("v1 = True", BOOLEAN_OPERATION_V1_TRUE.toString());
     }
 
     /**
@@ -70,8 +78,7 @@ public class BooleanOperationTest {
      */
     @Test
     public void shouldExportTrueExpressionToJava() {
-        BooleanOperation operation = new BooleanOperation("v1", "True");
-        assertEquals("boolean v1 = true;", operation.toJavaString());
+        assertEquals("boolean v1 = true;", BOOLEAN_OPERATION_V1_TRUE.toJavaString());
     }
 
     /**
@@ -79,8 +86,7 @@ public class BooleanOperationTest {
      */
     @Test
     public void shouldExportFalseExpression() {
-        BooleanOperation operation = new BooleanOperation("v1", "False");
-        assertEquals("v1 = False", operation.toString());
+        assertEquals("v1 = False", BOOLEAN_OPERATION_V1_FALSE.toString());
     }
 
     /**
@@ -88,8 +94,7 @@ public class BooleanOperationTest {
      */
     @Test
     public void shouldExportFalseExpressionToJava() {
-        BooleanOperation operation = new BooleanOperation("v1", "False");
-        assertEquals("boolean v1 = false;", operation.toJavaString());
+        assertEquals("boolean v1 = false;", BOOLEAN_OPERATION_V1_FALSE.toJavaString());
     }
 
     /**
@@ -190,5 +195,37 @@ public class BooleanOperationTest {
     public void shouldDetectOutputParameter() {
         BooleanOperation operation = new BooleanOperation("o1", "i1 ∧ v1");
         assertTrue(operation.isOutputParameter());
+    }
+
+    /**
+     * Verifies that isTrue returns true on a Boolean operation that is true.
+     */
+    @Test
+    public void isTrueShouldReturnTrueForAnOperationThatIsTrue() {
+        assertTrue(BOOLEAN_OPERATION_V1_TRUE.isTrue());
+    }
+
+    /**
+     * Verifies that isTrue returns false on a Boolean operation that is false.
+     */
+    @Test
+    public void isTrueShouldReturnFalseForAnOperationThatIsFalse() {
+        assertFalse(BOOLEAN_OPERATION_V1_FALSE.isTrue());
+    }
+
+    /**
+     * Verifies that isFalse returns false on a Boolean operation that is true.
+     */
+    @Test
+    public void isFalseShouldReturnFalseForAnOperationThatIsTrue() {
+        assertFalse(BOOLEAN_OPERATION_V1_TRUE.isFalse());
+    }
+
+    /**
+     * Verifies that isFalse returns true on a Boolean operation that is false.
+     */
+    @Test
+    public void isFalseShouldReturnTrueForAnOperationThatIsFalse() {
+        assertTrue(BOOLEAN_OPERATION_V1_FALSE.isFalse());
     }
 }
