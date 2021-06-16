@@ -196,4 +196,16 @@ public class BooleanXorCalculationTest {
         BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
         assertEquals("v1 ⊻ v2", calculation.deepClone().toString());
     }
+
+    /**
+     * Verifies that if the result of resolve is a BooleanEquation, the resulting
+     * BooleanEquation should be resolved too.
+     */
+    @Test
+    public void shouldResolveResultingBooleanEquationIfOnlyOneOperandRemainsAfterResolution() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False", "v2 = i29");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("i29"), resolved);
+    }
 }
