@@ -82,7 +82,7 @@ public final class BooleanEquation extends BooleanRightHandSide {
      *
      * @return The operand of the Boolean equation.
      */
-    private String getOperand() {
+    String getOperand() {
         return operand;
     }
 
@@ -107,7 +107,7 @@ public final class BooleanEquation extends BooleanRightHandSide {
      *
      * @return True if the Boolean equation is negated.
      */
-    private boolean isNegated() {
+    boolean isNegated() {
         return negated;
     }
 

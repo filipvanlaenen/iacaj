@@ -208,4 +208,52 @@ public class BooleanXorCalculationTest {
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
         assertEquals(new BooleanEquation("i1"), resolved);
     }
+
+    /**
+     * Verifies that operands that refer to Boolean equations are replaced with the
+     * right hand side of the Boolean equation.
+     */
+    @Test
+    public void shouldResolveOperandsReferringToBooleanEquations() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ⊻ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that operands that refer to negated Boolean equations are replaced
+     * with the negation of the right hand side of the Boolean equation.
+     */
+    @Test
+    public void shouldResolveOperandsReferringToNegatedBooleanEquations() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = ¬i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("¬i1 ⊻ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that negated operands that refer to Boolean equations are replaced
+     * with the negation of the right hand side of the Boolean equation.
+     */
+    @Test
+    public void shouldResolveNegatedOperandsReferringToBooleanEquations() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("¬v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("¬i1 ⊻ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that negated operands that refer to negated Boolean equations are
+     * replaced with the negation of the right hand side of the Boolean equation.
+     */
+    @Test
+    public void shouldResolveNegatedOperandsReferringToNegatedBooleanEquations() {
+        BooleanXorCalculation calculation = new BooleanXorCalculation("¬v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = ¬i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ⊻ v2", resolved.toString());
+    }
 }

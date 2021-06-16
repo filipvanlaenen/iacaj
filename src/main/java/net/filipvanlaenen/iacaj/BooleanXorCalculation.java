@@ -52,6 +52,13 @@ public final class BooleanXorCalculation extends BooleanCalculation {
                 } else if (be instanceof BooleanOppositionConstraint) {
                     expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), !operand.isNegated()));
                     expandedOperands.add(operand);
+                } else if (be instanceof BooleanOperation) {
+                    BooleanRightHandSide rhs = ((BooleanOperation) be).getRightHandSide();
+                    if (rhs instanceof BooleanEquation) {
+                        BooleanEquation bq = (BooleanEquation) rhs;
+                        expansions.add(new BooleanOperand(bq.getOperand(), operand.isNegated() ^ bq.isNegated()));
+                        expandedOperands.add(operand);
+                    }
                 }
             }
         }
