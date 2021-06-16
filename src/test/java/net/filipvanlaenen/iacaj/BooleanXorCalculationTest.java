@@ -204,8 +204,8 @@ public class BooleanXorCalculationTest {
     @Test
     public void shouldResolveResultingBooleanEquationIfOnlyOneOperandRemainsAfterResolution() {
         BooleanXorCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
-        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False", "v2 = i29");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False", "v2 = i1");
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
-        assertEquals(new BooleanEquation("i29"), resolved);
+        assertEquals(new BooleanEquation("i1"), resolved);
     }
 }

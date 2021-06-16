@@ -71,4 +71,16 @@ public class BooleanOrCalculationTest {
         BooleanOrCalculation calculation = new BooleanOrCalculation("v1 ∨ v2");
         assertEquals("v1 ∨ v2", calculation.deepClone().toString());
     }
+
+    /**
+     * Verifies that if the result of resolve is a BooleanEquation, the resulting
+     * BooleanEquation should be resolved too.
+     */
+    @Test
+    public void shouldResolveResultingBooleanEquationIfOnlyOneOperandRemainsAfterResolution() {
+        BooleanOrCalculation calculation = new BooleanOrCalculation("v1 ∨ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False", "v2 = i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("i1"), resolved);
+    }
 }
