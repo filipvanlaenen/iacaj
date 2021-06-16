@@ -2,6 +2,7 @@ package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
@@ -14,6 +15,10 @@ import org.junit.jupiter.api.Test;
  */
 public class BooleanOperationTest {
     /**
+     * A Boolean operation setting v2 to i1 and v1.
+     */
+    private static final BooleanOperation BOOLEAN_OPERATION_I1_AND_V1 = new BooleanOperation("v2", "i1 ∧ v1");
+    /**
      * A Boolean operation setting v1 to false.
      */
     private static final BooleanOperation BOOLEAN_OPERATION_V1_FALSE = new BooleanOperation("v1", "False");
@@ -23,46 +28,57 @@ public class BooleanOperationTest {
     private static final BooleanOperation BOOLEAN_OPERATION_V1_TRUE = new BooleanOperation("v1", "True");
 
     /**
-     * Creates a set with input parameters with the names provided.
-     *
-     * @param names The names of the input parameters to be added to the set.
-     * @return A set with input parameters having the provided names.
+     * Verifies that the name can be retrieved.
      */
-    private List<InputParameter> createInputParameterSet(final String... names) {
-        List<InputParameter> result = new ArrayList<InputParameter>();
-        for (String name : names) {
-            result.add(InputParameter.get(name));
-        }
-        return result;
+    @Test
+    public void shouldGetNameCorrectly() {
+        assertEquals("v1", BOOLEAN_OPERATION_V1_FALSE.getName());
     }
 
     /**
-     * Verifies that a Boolean operation with to input parameters recognizes both.
+     * Verifies that the number can be retrieved.
      */
     @Test
-    public void shouldExtractBothInputParameters() {
-        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ i2");
-        assertEquals(createInputParameterSet("i1", "i2"), operation.getInputParameters());
+    public void shouldGetNumberCorrectly() {
+        assertEquals(1, BOOLEAN_OPERATION_V1_FALSE.getNumber());
     }
 
     /**
-     * Verifies that a Boolean operation with an input parameter and a variable
-     * recognizes only one input parameter.
+     * Verifies that the operator can be retrieved.
      */
     @Test
-    public void shouldExtractOneInputParameter() {
-        BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ v1");
-        assertEquals(createInputParameterSet("i1"), operation.getInputParameters());
+    public void shouldGetOperatorCorrectly() {
+        assertEquals(BooleanOperator.And, BOOLEAN_OPERATION_I1_AND_V1.getOperator());
     }
 
     /**
-     * Verifies that a Boolean operation with a negated input parameter and a
-     * variable recognizes only one input parameter.
+     * Verifies that the right hand side is returned.
      */
     @Test
-    public void shouldExtractNegatedInputParameter() {
-        BooleanOperation operation = new BooleanOperation("v2", "¬i1 ∧ v1");
-        assertEquals(createInputParameterSet("i1"), operation.getInputParameters());
+    public void shouldReturnRightHandSide() {
+        assertEquals("i1 ∧ v1", BOOLEAN_OPERATION_I1_AND_V1.getRightHandSide().toString());
+    }
+
+    /**
+     * Verifies that getInternalVariables extracts the input parameter and not the
+     * internal variable.
+     */
+    @Test
+    public void shouldExtractInputParameter() {
+        List<InputParameter> expected = new ArrayList<InputParameter>();
+        expected.add(InputParameter.get("i1"));
+        assertEquals(expected, BOOLEAN_OPERATION_I1_AND_V1.getInputParameters());
+    }
+
+    /**
+     * Verifies that getInternalVariables extracts the internal variable and not the
+     * input parameter.
+     */
+    @Test
+    public void shouldExtractInternalVariable() {
+        List<InternalVariable> expected = new ArrayList<InternalVariable>();
+        expected.add(InternalVariable.get("v1"));
+        assertEquals(expected, BOOLEAN_OPERATION_I1_AND_V1.getInternalVariables());
     }
 
     /**
@@ -79,102 +95,6 @@ public class BooleanOperationTest {
     @Test
     public void shouldExportTrueExpressionToJava() {
         assertEquals("boolean v1 = true;", BOOLEAN_OPERATION_V1_TRUE.toJavaString());
-    }
-
-    /**
-     * Verifies that a False expression is exported correctly.
-     */
-    @Test
-    public void shouldExportFalseExpression() {
-        assertEquals("v1 = False", BOOLEAN_OPERATION_V1_FALSE.toString());
-    }
-
-    /**
-     * Verifies that a False expression is exported correctly to a Java string.
-     */
-    @Test
-    public void shouldExportFalseExpressionToJava() {
-        assertEquals("boolean v1 = false;", BOOLEAN_OPERATION_V1_FALSE.toJavaString());
-    }
-
-    /**
-     * Verifies that a simple AND expression with two input parameters is exported
-     * correctly.
-     */
-    @Test
-    public void shouldExportSimpleAndExpressionWithTwoInputParameters() {
-        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ i2");
-        assertEquals("v1 = i1 ∧ i2", operation.toString());
-    }
-
-    /**
-     * Verifies that a simple AND expression with two input parameters is exported
-     * correctly to a Java string.
-     */
-    @Test
-    public void shouldExportSimpleAndExpressionWithTwoInputParametersToJava() {
-        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ i2");
-        assertEquals("boolean v1 = i1 & i2;", operation.toJavaString());
-    }
-
-    /**
-     * Verifies the export of a simple expression to a Java string is done
-     * correctly.
-     */
-    @Test
-    public void shouldExportAnExpressionWithANegationToJava() {
-        BooleanOperation operation = new BooleanOperation("v1", "i1 ∧ ¬i2");
-        assertEquals("boolean v1 = i1 & !i2;", operation.toJavaString());
-    }
-
-    /**
-     * Verifies that a simple AND expression with two input parameters is exported
-     * correctly, with correct sorting.
-     */
-    @Test
-    public void shouldExportSortedSimpleAndExpressionWithTwoInputParameters() {
-        BooleanOperation operation = new BooleanOperation("v1", "i10 ∧ i2");
-        assertEquals("v1 = i2 ∧ i10", operation.toString());
-    }
-
-    /**
-     * Verifies that a simple AND expression with an input parameter and a variable
-     * is exported correctly.
-     */
-    @Test
-    public void shouldExportSimpleAndExpressionWithInputParameterAndVariable() {
-        BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ v1");
-        assertEquals("v2 = i1 ∧ v1", operation.toString());
-    }
-
-    /**
-     * Verifies that a simple AND expression with two internal variables is exported
-     * correctly.
-     */
-    @Test
-    public void shouldExportSimpleAndExpressionWithTwoVariables() {
-        BooleanOperation operation = new BooleanOperation("v3", "v1 ∧ v2");
-        assertEquals("v3 = v1 ∧ v2", operation.toString());
-    }
-
-    /**
-     * Verifies that a simple AND expression with an input parameter and a negated
-     * variable is exported correctly.
-     */
-    @Test
-    public void shouldExportSimpleAndExpressionWithInputParameterAndNegatedVariable() {
-        BooleanOperation operation = new BooleanOperation("v2", "i1 ∧ ¬v1");
-        assertEquals("v2 = i1 ∧ ¬v1", operation.toString());
-    }
-
-    /**
-     * Verifies that an XOR expression with the same variable twice directly and
-     * twice negated is exported correctly.
-     */
-    @Test
-    public void shouldExportMultipleOccurrencesOfVariableAndNegations() {
-        BooleanOperation operation = new BooleanOperation("v2", "v1 ⊻ v1 ⊻ ¬v1 ⊻ ¬v1");
-        assertEquals("v2 = v1 ⊻ v1 ⊻ ¬v1 ⊻ ¬v1", operation.toString());
     }
 
     /**
@@ -227,5 +147,22 @@ public class BooleanOperationTest {
     @Test
     public void isFalseShouldReturnTrueForAnOperationThatIsFalse() {
         assertTrue(BOOLEAN_OPERATION_V1_FALSE.isFalse());
+    }
+
+    /**
+     * Verifies that <code>deepClone</code> doesn't return the same object.
+     */
+    @Test
+    public void deepCloneShouldNotReturnSameObject() {
+        assertNotSame(BOOLEAN_OPERATION_V1_FALSE, BOOLEAN_OPERATION_V1_FALSE.deepClone());
+    }
+
+    /**
+     * Verifies that <code>deepClone</code> returns an object that produces the same
+     * string.
+     */
+    @Test
+    public void deepCloneShouldReturnAnObjectWithTheSameToStringResult() {
+        assertEquals(BOOLEAN_OPERATION_I1_AND_V1.toString(), BOOLEAN_OPERATION_I1_AND_V1.deepClone().toString());
     }
 }

@@ -70,7 +70,7 @@ public final class BooleanOperation extends BooleanExpression {
     /**
      * Returns the number of the operation.
      *
-     * @return The number of the operation.s
+     * @return The number of the operation.
      */
     int getNumber() {
         return number;
