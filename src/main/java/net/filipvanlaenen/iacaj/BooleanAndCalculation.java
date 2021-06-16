@@ -57,7 +57,7 @@ public final class BooleanAndCalculation extends BooleanCalculation {
         }
         if (getNumberOfOperands() == 1) {
             BooleanOperand firstOperand = getOperands().get(0);
-            return new BooleanEquation(firstOperand.getName(), firstOperand.isNegated());
+            return new BooleanEquation(firstOperand.getName(), firstOperand.isNegated()).resolve(booleanFunction);
         }
         return this;
     }
