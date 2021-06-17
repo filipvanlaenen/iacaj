@@ -38,6 +38,7 @@ public final class BooleanOrCalculation extends BooleanCalculation {
 
     @Override
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
+        expandOperands(booleanFunction);
         List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
         for (BooleanOperand operand : getOperands()) {
             if (!operand.isNegated()) {
