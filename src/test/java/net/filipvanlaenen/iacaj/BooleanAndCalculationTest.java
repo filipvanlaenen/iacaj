@@ -83,4 +83,15 @@ public class BooleanAndCalculationTest {
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
         assertEquals(new BooleanEquation("i1"), resolved);
     }
+
+    /**
+     * Verifies that operands are expanded as part of resolving the calculation.
+     */
+    @Test
+    public void resolveShouldExpandOperands() {
+        BooleanAndCalculation calculation = new BooleanAndCalculation("v1 ∧ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ∧ v2", resolved.toString());
+    }
 }

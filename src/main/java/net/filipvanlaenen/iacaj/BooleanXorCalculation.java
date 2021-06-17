@@ -3,9 +3,6 @@ package net.filipvanlaenen.iacaj;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
-import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
-
 /**
  * Class representing an Xor calculation.
  */
@@ -30,7 +27,7 @@ public final class BooleanXorCalculation extends BooleanCalculation {
     }
 
     @Override
-    protected BooleanXorCalculation deepClone() {
+    protected BooleanCalculation deepClone() {
         return new BooleanXorCalculation(getOperands());
     }
 
@@ -41,29 +38,7 @@ public final class BooleanXorCalculation extends BooleanCalculation {
 
     @Override
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
-        List<BooleanOperand> expandedOperands = new ArrayList<BooleanOperand>();
-        List<BooleanOperand> expansions = new ArrayList<BooleanOperand>();
-        for (BooleanOperand operand : getOperands()) {
-            BooleanExpression be = booleanFunction.getExpression(operand.getName());
-            if (be != null) {
-                if (be instanceof BooleanEqualityConstraint) {
-                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), operand.isNegated()));
-                    expandedOperands.add(operand);
-                } else if (be instanceof BooleanOppositionConstraint) {
-                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), !operand.isNegated()));
-                    expandedOperands.add(operand);
-                } else if (be instanceof BooleanOperation) {
-                    BooleanRightHandSide rhs = ((BooleanOperation) be).getRightHandSide();
-                    if (rhs instanceof BooleanEquation) {
-                        BooleanEquation bq = (BooleanEquation) rhs;
-                        expansions.add(new BooleanOperand(bq.getOperand(), operand.isNegated() ^ bq.isNegated()));
-                        expandedOperands.add(operand);
-                    }
-                }
-            }
-        }
-        removeOperands(expandedOperands);
-        addOperands(expansions);
+        expandOperands(booleanFunction);
         boolean eliminated = true;
         while (eliminated) {
             BooleanOperand operandA = null;

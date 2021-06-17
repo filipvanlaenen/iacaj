@@ -9,6 +9,9 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
+import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
+
 /**
  * Class representing a right hand side with a Boolean calculation.
  */
@@ -57,6 +60,38 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
      */
     protected void addOperands(final List<BooleanOperand> operandsToBeAdded) {
         operands.addAll(operandsToBeAdded);
+    }
+
+    /**
+     * Expands operands as part of resolving the Boolean calculation.
+     *
+     * @param booleanFunction The Boolean function giving the context for the
+     *                        Boolean calculation.
+     */
+    protected void expandOperands(final BooleanFunction booleanFunction) {
+        List<BooleanOperand> expandedOperands = new ArrayList<BooleanOperand>();
+        List<BooleanOperand> expansions = new ArrayList<BooleanOperand>();
+        for (BooleanOperand operand : getOperands()) {
+            BooleanExpression be = booleanFunction.getExpression(operand.getName());
+            if (be != null) {
+                if (be instanceof BooleanEqualityConstraint) {
+                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), operand.isNegated()));
+                    expandedOperands.add(operand);
+                } else if (be instanceof BooleanOppositionConstraint) {
+                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), !operand.isNegated()));
+                    expandedOperands.add(operand);
+                } else if (be instanceof BooleanOperation) {
+                    BooleanRightHandSide rhs = ((BooleanOperation) be).getRightHandSide();
+                    if (rhs instanceof BooleanEquation) {
+                        BooleanEquation bq = (BooleanEquation) rhs;
+                        expansions.add(new BooleanOperand(bq.getOperand(), operand.isNegated() ^ bq.isNegated()));
+                        expandedOperands.add(operand);
+                    }
+                }
+            }
+        }
+        removeOperands(expandedOperands);
+        addOperands(expansions);
     }
 
     /**
