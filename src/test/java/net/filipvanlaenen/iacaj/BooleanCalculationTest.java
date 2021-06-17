@@ -103,4 +103,32 @@ public class BooleanCalculationTest {
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
         assertEquals("i1 ⊻ v2", resolved.toString());
     }
+
+    /**
+     * Verifies that input parameters are sorted correctly when exporting a Boolean
+     * calculation to a string.
+     */
+    @Test
+    public void shouldSortInputParametersWhenExportingToAString() {
+        assertEquals("i1 ⊻ i2 ⊻ i3 ⊻ i4", new BooleanXorCalculation("i4 ⊻ i3 ⊻ i2 ⊻ i1").toString());
+    }
+
+    /**
+     * Verifies that internal variables are sorted correctly when exporting a
+     * Boolean calculation to a string.
+     */
+    @Test
+    public void shouldSortInternalVariablesWhenExportingToAString() {
+        assertEquals("v1 ⊻ v2 ⊻ v3 ⊻ v4", new BooleanXorCalculation("v4 ⊻ v3 ⊻ v2 ⊻ v1").toString());
+    }
+
+    /**
+     * Verifies that input parameters are sorted before internal variables when
+     * exporting a Boolean calculation to a string.
+     */
+    @Test
+    public void shouldSortInputParametersBeforeInternalVariablesWhenExportingToAString() {
+        assertEquals("i4 ⊻ i5 ⊻ i6 ⊻ v1 ⊻ v2 ⊻ v3",
+                new BooleanXorCalculation("v1 ⊻ v2 ⊻ v3 ⊻ i4 ⊻ i5 ⊻ i6").toString());
+    }
 }

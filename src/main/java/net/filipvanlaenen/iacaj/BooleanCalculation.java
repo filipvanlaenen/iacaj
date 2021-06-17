@@ -31,7 +31,7 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
         String[] operandStrings = Arrays.stream(rightHandSide.split(getOperator().getSymbol())).map(String::trim)
                 .toArray(String[]::new);
         for (String operandString : operandStrings) {
-            operands.add(new BooleanOperand(operandString));
+            addOperand(new BooleanOperand(operandString));
         }
     }
 
