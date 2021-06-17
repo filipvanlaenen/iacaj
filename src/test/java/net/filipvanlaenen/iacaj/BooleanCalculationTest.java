@@ -1,6 +1,10 @@
 package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +12,11 @@ import org.junit.jupiter.api.Test;
  * Unit tests on the <code>BooleanCalculation</code> class.
  */
 public class BooleanCalculationTest {
+    /**
+     * Boolean calculation v1 XOR i1.
+     */
+    private static final BooleanCalculation BOOLEAN_CALCULATION_I1_XOR_V1 = new BooleanXorCalculation("v1 ⊻ i1");
+
     /**
      * Verifies that xor replaces an operand which is an input parameter constrained
      * to be equal to another one.
@@ -130,5 +139,49 @@ public class BooleanCalculationTest {
     public void shouldSortInputParametersBeforeInternalVariablesWhenExportingToAString() {
         assertEquals("i4 ⊻ i5 ⊻ i6 ⊻ v1 ⊻ v2 ⊻ v3",
                 new BooleanXorCalculation("v1 ⊻ v2 ⊻ v3 ⊻ i4 ⊻ i5 ⊻ i6").toString());
+    }
+
+    /**
+     * Verifies that it can extract the internal variables from a calculation.
+     */
+    @Test
+    public void shouldExtractTheInternalVariables() {
+        List<InternalVariable> expected = new ArrayList<InternalVariable>();
+        expected.add(InternalVariable.get("v1"));
+        assertEquals(expected, BOOLEAN_CALCULATION_I1_XOR_V1.getInternalVariables());
+    }
+
+    /**
+     * Verifies that it can extract the input parameters from a calculation.
+     */
+    @Test
+    public void shouldExtractTheInputParameters() {
+        List<InputParameter> expected = new ArrayList<InputParameter>();
+        expected.add(InputParameter.get("i1"));
+        assertEquals(expected, BOOLEAN_CALCULATION_I1_XOR_V1.getInputParameters());
+    }
+
+    /**
+     * Verifies that isFalse returns false.
+     */
+    @Test
+    public void isFalseShouldReturnFalse() {
+        assertFalse(BOOLEAN_CALCULATION_I1_XOR_V1.isFalse());
+    }
+
+    /**
+     * Verifies that isTrue returns false.
+     */
+    @Test
+    public void isTrueShouldReturnFalse() {
+        assertFalse(BOOLEAN_CALCULATION_I1_XOR_V1.isTrue());
+    }
+
+    /**
+     * Verifies export to a Java string.
+     */
+    @Test
+    public void shouldExportToJavaCorrectly() {
+        assertEquals("i1 ^ v1", BOOLEAN_CALCULATION_I1_XOR_V1.toJavaString());
     }
 }
