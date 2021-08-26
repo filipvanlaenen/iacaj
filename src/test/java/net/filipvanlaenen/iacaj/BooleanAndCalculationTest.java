@@ -73,7 +73,7 @@ public class BooleanAndCalculationTest {
         BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
         assertEquals(new BooleanEquation("v2"), resolved);
     }
-    
+
     /**
      * Verifies that and with two open operands is not resolved.
      */
