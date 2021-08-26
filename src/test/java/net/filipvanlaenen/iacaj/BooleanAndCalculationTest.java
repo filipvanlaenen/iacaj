@@ -75,6 +75,50 @@ public class BooleanAndCalculationTest {
     }
 
     /**
+     * Verifies that and with two identical operands is resolved to and with single operand.
+     */
+    @Test
+    public void shouldResolveAndWithTwoIdenticalOperandsToAndWithOperandNegation() {
+        BooleanCalculation calculation = new BooleanAndCalculation("v1 ∧ v1 ∧ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("v1 ∧ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that and with two opposed operands is resolved to false.
+     */
+    @Test
+    public void shouldResolveAndWithTwoOpposedOperandsToFalse() {
+        BooleanCalculation calculation = new BooleanAndCalculation("v1 ∧ ¬v1 ∧ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(BooleanConstant.FALSE, resolved);
+    }
+
+    /**
+     * Verifies that and between two opposed operands is resolved to false.
+     */
+    @Test
+    public void shouldResolveAndBetweenTwoOpposedOperandsToFalse() {
+        BooleanCalculation calculation = new BooleanAndCalculation("v1 ∧ ¬v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(BooleanConstant.FALSE, resolved);
+    }
+
+    /**
+     * Verifies that and between two identical operands is resolved to equality.
+     */
+    @Test
+    public void shouldResolveAndBetweenTwoIdenticalOperandsToEquality() {
+        BooleanCalculation calculation = new BooleanAndCalculation("v1 ∧ v1");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v1"), resolved);
+    }
+
+    /**
      * Verifies that and with two open operands is not resolved.
      */
     @Test
