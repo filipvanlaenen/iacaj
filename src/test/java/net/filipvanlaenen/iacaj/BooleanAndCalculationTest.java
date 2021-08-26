@@ -42,6 +42,17 @@ public class BooleanAndCalculationTest {
     }
 
     /**
+     * Verifies that and with not true is resolved to false.
+     */
+    @Test
+    public void shouldResolveAndWithNotTrueToFalse() {
+        BooleanAndCalculation calculation = new BooleanAndCalculation("¬v1 ∧ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = True");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(BooleanConstant.FALSE, resolved);
+    }
+
+    /**
      * Verifies that and with true is resolved to equality.
      */
     @Test
@@ -52,6 +63,17 @@ public class BooleanAndCalculationTest {
         assertEquals(new BooleanEquation("v2"), resolved);
     }
 
+    /**
+     * Verifies that and with not false is resolved to equality.
+     */
+    @Test
+    public void shouldResolveAndWithNotFalseToEquality() {
+        BooleanAndCalculation calculation = new BooleanAndCalculation("¬v1 ∧ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = False");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(new BooleanEquation("v2"), resolved);
+    }
+    
     /**
      * Verifies that and with two open operands is not resolved.
      */
