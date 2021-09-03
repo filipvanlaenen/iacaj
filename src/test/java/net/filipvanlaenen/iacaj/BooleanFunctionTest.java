@@ -126,6 +126,68 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that an empty Boolean function returns an empty set of constraints.
+     */
+    @Test
+    public void emptyBooleanFunctionShouldReturnEmptySetOfConstraints() {
+        assertEquals(0, new BooleanFunction().getConstraints().size());
+    }
+
+    /**
+     * Verifies that a Boolean function without constraints returns an empty set of
+     * constraints.
+     */
+    @Test
+    public void booleanFunctionWithoutConstraintsShouldReturnAnEmptySetOfConstraints() {
+        assertEquals(0, BooleanFunction.parse("o1 = i1 ∧ i2").getConstraints().size());
+    }
+
+    /**
+     * Verifies that a Boolean function with a constraint returns it.
+     */
+    @Test
+    public void booleanFunctionWithAConstraintShouldReturnIt() {
+        BooleanFunction bf = BooleanFunction.parse("i1 = True", "o1 = i1 ∧ i2");
+        BooleanConstraints expected = new BooleanConstraints(Set.of(BooleanConstraint.parse("i1", "True")));
+        assertEquals(expected, bf.getConstraints());
+    }
+
+    /**
+     * Verifies the correct calculation of the number of constraints on a rich
+     * Boolean function.
+     */
+    @Test
+    public void shouldReturnTheCorrectNumberOfConstraintsOnARichBooleanFunction() {
+        assertEquals(4, createRichBooleanFunction().getNumberOfConstraints());
+    }
+
+    /**
+     * Verifies the correct calculation of the number of Boolean expressions on a
+     * rich Boolean function.
+     */
+    @Test
+    public void shouldReturnTheCorrectNumberOfExpressionsOnARichBooleanFunction() {
+        assertEquals(9, createRichBooleanFunction().getNumberOfBooleanExpressions());
+    }
+
+    /**
+     * Verifies the correct calculation of the number of input parameters on a
+     * rich Boolean function.
+     */
+    @Test
+    public void shouldReturnTheCorrectNumberOfInputParametersOnARichBooleanFunction() {
+        assertEquals(3, createRichBooleanFunction().getNumberOfInputParameters());
+    }
+    /**
+     * Verifies the correct calculation of the number of input parameters in calculation on a
+     * rich Boolean function.
+     */
+    @Test
+    public void shouldReturnTheCorrectNumberOfInputParametersInCalculationOnARichBooleanFunction() {
+        assertEquals(3, createRichBooleanFunction().getNumberOfInputParametersInCalculation());
+    }
+
+    /**
      * Verifies export of a Boolean function to a string.
      */
     @Test
@@ -162,6 +224,34 @@ public class BooleanFunctionTest {
         sb.append("o1 = i1 ∧ i2");
         String expected = sb.toString();
         assertEquals(expected, constrainedBooleanFunction.toString());
+    }
+
+    /**
+     * Verifies that exporting a BooleanFunction started as an empty function but
+     * with an expression added is exported correctly.
+     */
+    @Test
+    public void shouldExportAddedExpressionCorrectly() {
+        BooleanFunction bf = new BooleanFunction();
+        bf.addExpression(BooleanExpression.parse("o1 = i1 ∧ i2"));
+        assertEquals("o1 = i1 ∧ i2", bf.toString());
+    }
+
+    /**
+     * Verifies that exporting a BooleanFunction started as an empty function but
+     * with two expressions added is exported correctly.
+     */
+    @Test
+    public void shouldExportAddedExpressionsCorrectly() {
+        BooleanFunction bf = new BooleanFunction();
+        Set<BooleanExpression> booleanExpressions = Set.of(BooleanExpression.parse("o1 = i1 ∧ i2"),
+                BooleanExpression.parse("o2 = i2 ∧ i3"));
+        bf.addExpressions(booleanExpressions);
+        StringBuilder sb = new StringBuilder();
+        sb.append("o1 = i1 ∧ i2\n");
+        sb.append("o2 = i2 ∧ i3");
+        String expected = sb.toString();
+        assertEquals(expected, bf.toString());
     }
 
     /**
