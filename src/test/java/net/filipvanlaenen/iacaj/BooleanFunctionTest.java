@@ -131,8 +131,7 @@ public class BooleanFunctionTest {
      */
     @Test
     public void resolvingShouldRecalculateTheInputParameters() {
-        String[] content = new String[] {"i1 = True", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3"};
-        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        BooleanFunction booleanFunction = BooleanFunction.parse("i1 = True", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3");
         booleanFunction.resolve();
         Set<InputParameter> expected = createInputParameterSet("i2", "i3");
         assertEquals(expected, booleanFunction.getInputParameters());
@@ -144,11 +143,33 @@ public class BooleanFunctionTest {
      */
     @Test
     public void resolvingShouldRecalculateTheInputParametersInCalculation() {
-        String[] content = new String[] {"i1 = True", "i5 = i4", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3"};
-        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        BooleanFunction booleanFunction = BooleanFunction.parse("i1 = True", "i5 = i4", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3");
         booleanFunction.resolve();
         Set<InputParameter> expected = createInputParameterSet("i2", "i3");
         assertEquals(expected, booleanFunction.getInputParametersInCalculation());
+    }
+
+    /**
+     * Verifies that resolving removes internal variables that are not in use.
+     */
+    @Test
+    public void resolvingShouldRemoveInternalVariablesThatAreNotInUse() {
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∧ i2", "v3 = i1 ∧ i2",
+                "o1 = v1 ∧ i2");
+        booleanFunction.resolve();
+        assertEquals(2, booleanFunction.getNumberOfBooleanExpressions());
+    }
+
+    /**
+     * Verifies that resolving removes internal variables that are not in use, also
+     * when they were in use in the first elimination round.
+     */
+    @Test
+    public void resolvingShouldRecursivelyRemoveInternalVariablesThatAreNotInUse() {
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∧ i2", "v3 = i1 ∧ v2",
+                "o1 = v1 ∧ i2");
+        booleanFunction.resolve();
+        assertEquals(2, booleanFunction.getNumberOfBooleanExpressions());
     }
 
     /**
