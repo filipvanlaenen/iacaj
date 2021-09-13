@@ -14,6 +14,14 @@ import org.junit.jupiter.api.Test;
  */
 public class BooleanConstraintTest {
     /**
+     * Boolean equality constraint <code>i1 = False</code>.
+     */
+    private static final BooleanConstraint IP1_FALSE = BooleanConstraint.parse("i1", "False");
+    /**
+     * Boolean equality constraint <code>i1 = True</code>.
+     */
+    private static final BooleanConstraint IP1_TRUE = BooleanConstraint.parse("i1", "True");
+    /**
      * Boolean equality constraint <code>i2 = i1</code>.
      */
     private static final BooleanConstraint IP2_EQUAL_TO_IP1 = BooleanConstraint.parse("i2", "i1");
@@ -41,8 +49,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void trueIsNotAnInputParameter() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i1", "True");
-        assertTrue(constraint.getInputParameters().isEmpty());
+        assertTrue(IP1_TRUE.getInputParameters().isEmpty());
     }
 
     /**
@@ -50,8 +57,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void falseIsNotAnInputParameter() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i1", "False");
-        assertTrue(constraint.getInputParameters().isEmpty());
+        assertTrue(IP1_FALSE.getInputParameters().isEmpty());
     }
 
     /**
@@ -77,8 +83,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void trueIsExportedCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i1", "True");
-        assertEquals("i1 = True", constraint.toString());
+        assertEquals("i1 = True", IP1_TRUE.toString());
     }
 
     /**
@@ -86,8 +91,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void trueIsExportedToJavaCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i1", "True");
-        assertEquals("assert i1 == true;", constraint.toJavaString());
+        assertEquals("assert i1 == true;", IP1_TRUE.toJavaString());
     }
 
     /**
@@ -95,8 +99,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void falseIsExportedCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i1", "False");
-        assertEquals("i1 = False", constraint.toString());
+        assertEquals("i1 = False", IP1_FALSE.toString());
     }
 
     /**
@@ -104,8 +107,7 @@ public class BooleanConstraintTest {
      */
     @Test
     public void falseIsExportedToJavaCorrectly() {
-        BooleanConstraint constraint = BooleanConstraint.parse("i1", "False");
-        assertEquals("assert i1 == false;", constraint.toJavaString());
+        assertEquals("assert i1 == false;", IP1_FALSE.toJavaString());
     }
 
     /**
@@ -141,6 +143,22 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * False is not true.
+     */
+    @Test
+    public void falseShouldNotBeTrue() {
+        assertFalse(IP1_FALSE.isTrue());
+    }
+
+    /**
+     * True is true.
+     */
+    @Test
+    public void trueShouldBeTrue() {
+        assertTrue(IP1_TRUE.isTrue());
+    }
+
+    /**
      * Equality is not true.
      */
     @Test
@@ -154,6 +172,22 @@ public class BooleanConstraintTest {
     @Test
     public void oppositionShouldNotBeTrue() {
         assertFalse(IP2_NOT_EQUAL_TO_IP1.isTrue());
+    }
+
+    /**
+     * False is false.
+     */
+    @Test
+    public void falseShouldBeFalse() {
+        assertTrue(IP1_FALSE.isFalse());
+    }
+
+    /**
+     * True is not false.
+     */
+    @Test
+    public void trueShouldNotBeFalse() {
+        assertFalse(IP1_TRUE.isFalse());
     }
 
     /**
@@ -173,6 +207,22 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * A false constraint is not equal to <code>null</code>.
+     */
+    @Test
+    public void falseShouldNotBeEqualToNull() {
+        assertFalse(IP1_FALSE.equals(null));
+    }
+
+    /**
+     * A true constraint is not equal to <code>null</code>.
+     */
+    @Test
+    public void trueShouldNotBeEqualToNull() {
+        assertFalse(IP1_TRUE.equals(null));
+    }
+
+    /**
      * An Equality is not equal to <code>null</code>.
      */
     @Test
@@ -186,6 +236,22 @@ public class BooleanConstraintTest {
     @Test
     public void negationShouldNotBeEqualToNull() {
         assertFalse(IP2_NOT_EQUAL_TO_IP1.equals(null));
+    }
+
+    /**
+     * A false constraint is not equal to an empty string.
+     */
+    @Test
+    public void falseShouldNotBeEqualToEmptyString() {
+        assertFalse(IP1_FALSE.equals(""));
+    }
+
+    /**
+     * A true constraint is not equal to an empty string.
+     */
+    @Test
+    public void trueShouldNotBeEqualToEmptyString() {
+        assertFalse(IP1_TRUE.equals(""));
     }
 
     /**
@@ -205,6 +271,22 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * A false constraint is equal to itself.
+     */
+    @Test
+    public void falseShouldBeEqualToItself() {
+        assertEquals(IP1_FALSE, IP1_FALSE);
+    }
+
+    /**
+     * A true constraint is equal to itself.
+     */
+    @Test
+    public void trueShouldBeEqualToItself() {
+        assertEquals(IP1_TRUE, IP1_TRUE);
+    }
+
+    /**
      * An Equality is equal to itself.
      */
     @Test
@@ -221,11 +303,47 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * A false constraint is equal to another false constraint with the same input
+     * parameter.
+     */
+    @Test
+    public void falseShouldBeEqualToIdenticalFalse() {
+        assertEquals(IP1_FALSE, BooleanConstraint.parse("i1", "False"));
+    }
+
+    /**
+     * A true constraint is equal to another true constraint with the same input
+     * parameter.
+     */
+    @Test
+    public void trueShouldBeEqualToIdenticalTrue() {
+        assertEquals(IP1_TRUE, BooleanConstraint.parse("i1", "True"));
+    }
+
+    /**
      * An Equality is equal to another equality with the same input parameters.
      */
     @Test
     public void equalityShouldBeEqualToIdenticalEquality() {
         assertEquals(IP2_EQUAL_TO_IP1, BooleanConstraint.parse("i2", "i1"));
+    }
+
+    /**
+     * A false constraint has the same hashcode as another false constraint with the
+     * same input parameter.
+     */
+    @Test
+    public void falseShouldHaveSameHashcodeAsIdenticalFalse() {
+        assertEquals(IP1_FALSE.hashCode(), BooleanConstraint.parse("i1", "False").hashCode());
+    }
+
+    /**
+     * A true constraint has the same hashcode as another true constraint with the
+     * same input parameter.
+     */
+    @Test
+    public void trueShouldHaveSameHashcodeAsIdenticalTrue() {
+        assertEquals(IP1_TRUE.hashCode(), BooleanConstraint.parse("i1", "True").hashCode());
     }
 
     /**
@@ -255,11 +373,56 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * A false constraint is not equal to another false constraint with another
+     * input parameter.
+     */
+    @Test
+    public void falseShouldNotBeEqualToFalseWithOtherName() {
+        assertFalse(IP1_FALSE.equals(BooleanConstraint.parse("i2", "False")));
+    }
+
+    /**
+     * A true constraint is not equal to another true constraint with another input
+     * parameter.
+     */
+    @Test
+    public void trueShouldNotBeEqualToTrueWithOtherName() {
+        assertFalse(IP1_TRUE.equals(BooleanConstraint.parse("i2", "True")));
+    }
+
+    /**
      * An Equality is not equal to another equality with another name.
      */
     @Test
     public void equalityShouldNotBeEqualToEqualityWithOtherName() {
         assertFalse(IP2_EQUAL_TO_IP1.equals(BooleanConstraint.parse("i3", "i1")));
+    }
+
+    /**
+     * A false constraint should not have the same hashcode as another false
+     * constraint with another input parameter.
+     */
+    @Test
+    public void falseShouldNotHaveSameHashcodeAsFalseWithOtherName() {
+        assertFalse(IP1_FALSE.hashCode() == BooleanConstraint.parse("i2", "False").hashCode());
+    }
+
+    /**
+     * A true constraint should not have the same hashcode as another true
+     * constraint with another input parameter.
+     */
+    @Test
+    public void trueShouldNotHaveSameHashcodeAsTrueWithOtherName() {
+        assertFalse(IP1_TRUE.hashCode() == BooleanConstraint.parse("i2", "True").hashCode());
+    }
+
+    /**
+     * A true constraint should not have the same hashcode as a false constraint
+     * with the same input parameter.
+     */
+    @Test
+    public void trueShouldNotHaveSameHashcodeAsFalseWithSameInputParameter() {
+        assertFalse(IP1_TRUE.hashCode() == IP1_FALSE.hashCode());
     }
 
     /**
@@ -323,6 +486,38 @@ public class BooleanConstraintTest {
     }
 
     /**
+     * Verifies that a deep clone of false is equal to the prototype.
+     */
+    @Test
+    public void falseShouldBeEqualToDeepClone() {
+        assertEquals(IP1_FALSE, IP1_FALSE.deepClone());
+    }
+
+    /**
+     * Verifies that a deep clone of false is not identical to the prototype.
+     */
+    @Test
+    public void falseShouldNotBeIdenticalToDeepClone() {
+        assertFalse(IP1_FALSE == IP1_FALSE.deepClone());
+    }
+
+    /**
+     * Verifies that a deep clone of true is equal to the prototype.
+     */
+    @Test
+    public void trueShouldBeEqualToDeepClone() {
+        assertEquals(IP1_TRUE, IP1_TRUE.deepClone());
+    }
+
+    /**
+     * Verifies that a deep clone of true is not identical to the prototype.
+     */
+    @Test
+    public void trueShouldNotBeIdenticalToDeepClone() {
+        assertFalse(IP1_TRUE == IP1_TRUE.deepClone());
+    }
+
+    /**
      * Verifies that a deep clone of equality is equal to the prototype.
      */
     @Test
@@ -352,5 +547,13 @@ public class BooleanConstraintTest {
     @Test
     public void oppositionShouldNotBeIdenticalToDeepClone() {
         assertFalse(IP2_NOT_EQUAL_TO_IP1 == IP2_NOT_EQUAL_TO_IP1.deepClone());
+    }
+
+    /**
+     * Verifies that the number is wired correctly.
+     */
+    @Test
+    public void getNumberIsWiredCorrectlyFromTheConstructor() {
+        assertEquals(1, IP1_FALSE.getNumber());
     }
 }
