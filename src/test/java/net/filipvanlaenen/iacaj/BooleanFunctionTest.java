@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -102,14 +103,26 @@ public class BooleanFunctionTest {
 
     /**
      * Verifies that parsing a rich Boolean function recognizes the input parameters
-     * correctly, i.e. input parameters occurring in the constraints should not be
-     * included.
+     * correctly.
      */
     @Test
     public void parsingRichFunctionShouldRecognizeTheInputParameters() {
         BooleanFunction booleanFunction = createRichBooleanFunction();
-        Set<InputParameter> expected = createInputParameterSet("i3", "i5", "i7");
+        booleanFunction.addExpression(BooleanConstraint.parse("i9 = i8"));
+        Set<InputParameter> expected = createInputParameterSet("i3", "i5", "i7", "i8");
         assertEquals(expected, booleanFunction.getInputParameters());
+    }
+
+    /**
+     * Verifies that parsing a rich Boolean function recognizes the input parameters
+     * in calculation correctly.
+     */
+    @Test
+    public void parsingRichFunctionShouldRecognizeTheInputParametersInCalculation() {
+        BooleanFunction booleanFunction = createRichBooleanFunction();
+        booleanFunction.addExpression(BooleanConstraint.parse("i9 = i8"));
+        Set<InputParameter> expected = createInputParameterSet("i3", "i5", "i7");
+        assertEquals(expected, booleanFunction.getInputParametersInCalculation());
     }
 
     /**
@@ -123,6 +136,19 @@ public class BooleanFunctionTest {
         booleanFunction.resolve();
         Set<InputParameter> expected = createInputParameterSet("i2", "i3");
         assertEquals(expected, booleanFunction.getInputParameters());
+    }
+
+    /**
+     * Verifies that the input parameters in calculation are cleared and
+     * recalculated after resolving.
+     */
+    @Test
+    public void resolvingShouldRecalculateTheInputParametersInCalculation() {
+        String[] content = new String[] {"i1 = True", "i5 = i4", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3"};
+        BooleanFunction booleanFunction = BooleanFunction.parse(content);
+        booleanFunction.resolve();
+        Set<InputParameter> expected = createInputParameterSet("i2", "i3");
+        assertEquals(expected, booleanFunction.getInputParametersInCalculation());
     }
 
     /**
@@ -153,6 +179,17 @@ public class BooleanFunctionTest {
     }
 
     /**
+     * Verifies that a Boolean function with a constraint returns it.
+     */
+    @Test
+    public void shouldReturnConstraintsInSortedOrderFromARichBooleanFunction() {
+        List<BooleanConstraint> expected = List.of(BooleanConstraint.parse("i1", "True"),
+                BooleanConstraint.parse("i2", "False"), BooleanConstraint.parse("i4", "i3"),
+                BooleanConstraint.parse("i6", "¬i5"));
+        assertEquals(expected, createRichBooleanFunction().getSortedConstraints());
+    }
+
+    /**
      * Verifies the correct calculation of the number of constraints on a rich
      * Boolean function.
      */
@@ -171,20 +208,43 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies the correct calculation of the number of input parameters on a
-     * rich Boolean function.
+     * Verifies the correct calculation of the number of input parameters on a rich
+     * Boolean function.
      */
     @Test
     public void shouldReturnTheCorrectNumberOfInputParametersOnARichBooleanFunction() {
         assertEquals(3, createRichBooleanFunction().getNumberOfInputParameters());
     }
+
     /**
-     * Verifies the correct calculation of the number of input parameters in calculation on a
-     * rich Boolean function.
+     * Verifies the correct calculation of the number of input parameters in
+     * calculation on a rich Boolean function.
      */
     @Test
     public void shouldReturnTheCorrectNumberOfInputParametersInCalculationOnARichBooleanFunction() {
         assertEquals(3, createRichBooleanFunction().getNumberOfInputParametersInCalculation());
+    }
+
+    /**
+     * Verifies that adding a constraint with two new input parameters increments
+     * the number of input parameters.
+     */
+    @Test
+    public void numberOfInputParametersShouldIncludeInputParametersFromConstraints() {
+        BooleanFunction bf = createRichBooleanFunction();
+        bf.addExpression(BooleanConstraint.parse("i9 = i8"));
+        assertEquals(4, bf.getNumberOfInputParameters());
+    }
+
+    /**
+     * Verifies that adding a constraint with two new input parameters doesn't
+     * increment the number of input parameters in calculation.
+     */
+    @Test
+    public void numberOfInputParametersInCalculationShouldNotIncludeInputParametersFromConstraints() {
+        BooleanFunction bf = createRichBooleanFunction();
+        bf.addExpression(BooleanConstraint.parse("i9 = i8"));
+        assertEquals(3, bf.getNumberOfInputParametersInCalculation());
     }
 
     /**
