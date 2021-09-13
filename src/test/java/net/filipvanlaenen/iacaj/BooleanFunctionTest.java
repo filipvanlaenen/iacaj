@@ -14,6 +14,19 @@ import org.junit.jupiter.api.Test;
  */
 public class BooleanFunctionTest {
     /**
+     * Magic number three.
+     */
+    private static final int THREE = 3;
+    /**
+     * Magic number four.
+     */
+    private static final int FOUR = 4;
+    /**
+     * Magic number nine.
+     */
+    private static final int NINE = 9;
+
+    /**
      * Creates a rich Boolean function, i.e. a Boolean function with all the
      * features needed for unit testing.
      *
@@ -216,7 +229,7 @@ public class BooleanFunctionTest {
      */
     @Test
     public void shouldReturnTheCorrectNumberOfConstraintsOnARichBooleanFunction() {
-        assertEquals(4, createRichBooleanFunction().getNumberOfConstraints());
+        assertEquals(FOUR, createRichBooleanFunction().getNumberOfConstraints());
     }
 
     /**
@@ -225,7 +238,7 @@ public class BooleanFunctionTest {
      */
     @Test
     public void shouldReturnTheCorrectNumberOfExpressionsOnARichBooleanFunction() {
-        assertEquals(9, createRichBooleanFunction().getNumberOfBooleanExpressions());
+        assertEquals(NINE, createRichBooleanFunction().getNumberOfBooleanExpressions());
     }
 
     /**
@@ -234,7 +247,7 @@ public class BooleanFunctionTest {
      */
     @Test
     public void shouldReturnTheCorrectNumberOfInputParametersOnARichBooleanFunction() {
-        assertEquals(3, createRichBooleanFunction().getNumberOfInputParameters());
+        assertEquals(THREE, createRichBooleanFunction().getNumberOfInputParameters());
     }
 
     /**
@@ -243,7 +256,7 @@ public class BooleanFunctionTest {
      */
     @Test
     public void shouldReturnTheCorrectNumberOfInputParametersInCalculationOnARichBooleanFunction() {
-        assertEquals(3, createRichBooleanFunction().getNumberOfInputParametersInCalculation());
+        assertEquals(THREE, createRichBooleanFunction().getNumberOfInputParametersInCalculation());
     }
 
     /**
@@ -254,7 +267,7 @@ public class BooleanFunctionTest {
     public void numberOfInputParametersShouldIncludeInputParametersFromConstraints() {
         BooleanFunction bf = createRichBooleanFunction();
         bf.addExpression(BooleanConstraint.parse("i9 = i8"));
-        assertEquals(4, bf.getNumberOfInputParameters());
+        assertEquals(FOUR, bf.getNumberOfInputParameters());
     }
 
     /**
@@ -265,7 +278,7 @@ public class BooleanFunctionTest {
     public void numberOfInputParametersInCalculationShouldNotIncludeInputParametersFromConstraints() {
         BooleanFunction bf = createRichBooleanFunction();
         bf.addExpression(BooleanConstraint.parse("i9 = i8"));
-        assertEquals(3, bf.getNumberOfInputParametersInCalculation());
+        assertEquals(THREE, bf.getNumberOfInputParametersInCalculation());
     }
 
     /**
