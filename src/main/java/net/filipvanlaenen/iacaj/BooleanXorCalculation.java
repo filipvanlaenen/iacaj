@@ -1,7 +1,10 @@
 package net.filipvanlaenen.iacaj;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Class representing an Xor calculation.
@@ -39,31 +42,36 @@ public final class BooleanXorCalculation extends BooleanCalculation {
     @Override
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
         expandOperands(booleanFunction);
-        boolean eliminated = true;
-        while (eliminated) {
-            BooleanOperand operandA = null;
-            BooleanOperand operandB = null;
-            for (BooleanOperand a : getOperands()) {
-                for (BooleanOperand b : getOperands()) {
-                    if (a != b && a.getName().equals(b.getName())) {
-                        operandA = a;
-                        operandB = b;
-                    }
-                }
+        Set<BooleanOperand> doubleOperands = new HashSet<BooleanOperand>();
+        List<BooleanOperand> sortedOperands = new ArrayList<BooleanOperand>(getOperands());
+        sortedOperands.sort(new Comparator<BooleanOperand>() {
+            @Override
+            public int compare(BooleanOperand arg0, BooleanOperand arg1) {
+                return arg0.getName().compareTo(arg1.getName());
             }
-            eliminated = operandA != null;
-            if (eliminated) {
-                removeOperand(operandA);
-                removeOperand(operandB);
-                boolean localResolution = operandA.isNegated() ^ operandB.isNegated();
-                if (getNumberOfOperands() == 0) {
-                    return BooleanConstant.get(localResolution);
-                }
-                if (!localResolution) {
-                    BooleanOperand firstOperand = getOperands().get(0);
-                    removeOperand(firstOperand);
-                    addOperand(firstOperand.negated());
-                }
+        });
+        for (int i = 0; i < sortedOperands.size() - 1; i++) {
+            BooleanOperand a = sortedOperands.get(i);
+            BooleanOperand b = sortedOperands.get(i + 1);
+            if (a.getName().equals(b.getName())) {
+                doubleOperands.add(a);
+                doubleOperands.add(b);
+                i++;
+            }
+        }
+        if (!doubleOperands.isEmpty()) {
+            boolean localResolution = false;
+            for (BooleanOperand doubleOperand : doubleOperands) {
+                removeOperand(doubleOperand);
+                localResolution = localResolution ^ doubleOperand.isNegated();
+            }
+            if (getNumberOfOperands() == 0) {
+                return BooleanConstant.get(localResolution);
+            }
+            if (!localResolution) {
+                BooleanOperand firstOperand = getOperands().get(0);
+                removeOperand(firstOperand);
+                addOperand(firstOperand.negated());
             }
         }
         List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
