@@ -44,6 +44,10 @@ public final class BooleanOperand {
         this.negated = negated;
         number = extractNumberFromName();
     }
+    
+    BooleanOperand(final BooleanOperand prototype) {
+        this(prototype.getName(), prototype.isNegated());
+    }
 
     /**
      * Extracts the number from the name.

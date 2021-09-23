@@ -170,7 +170,7 @@ public class BooleanFunctionTest {
         BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∧ i2", "v3 = i1 ∧ i2",
                 "o1 = v1 ∧ i2");
         booleanFunction.resolve();
-        assertEquals(2, booleanFunction.getNumberOfBooleanExpressions());
+        assertEquals(1, booleanFunction.getNumberOfBooleanExpressions());
     }
 
     /**
@@ -179,10 +179,10 @@ public class BooleanFunctionTest {
      */
     @Test
     public void resolvingShouldRecursivelyRemoveInternalVariablesThatAreNotInUse() {
-        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∧ i2", "v3 = i1 ∧ v2",
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∨ i2", "v3 = i1 ∧ v2",
                 "o1 = v1 ∧ i2");
         booleanFunction.resolve();
-        assertEquals(2, booleanFunction.getNumberOfBooleanExpressions());
+        assertEquals(1, booleanFunction.getNumberOfBooleanExpressions());
     }
 
     /**

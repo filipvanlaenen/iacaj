@@ -86,6 +86,14 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
                         BooleanEquation bq = (BooleanEquation) rhs;
                         expansions.add(new BooleanOperand(bq.getOperand(), operand.isNegated() ^ bq.isNegated()));
                         expandedOperands.add(operand);
+                    } else if (rhs instanceof BooleanCalculation) {
+                        if (!operand.isNegated() && getOperator() == rhs.getOperator()) {
+                            BooleanCalculation bc = (BooleanCalculation) rhs;
+                            for (BooleanOperand bo : bc.getOperands()) {
+                                expansions.add(new BooleanOperand(bo));
+                            }
+                            expandedOperands.add(operand);
+                        }
                     }
                 }
             }

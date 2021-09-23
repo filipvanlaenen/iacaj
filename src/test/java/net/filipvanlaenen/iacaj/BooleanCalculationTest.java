@@ -90,6 +90,42 @@ public class BooleanCalculationTest {
     }
 
     /**
+     * Verifies that operands that refer to a calculation with the same operator are
+     * replaced with the referred calculation.
+     */
+    @Test
+    public void shouldResolveAndOperandsReferringToAndCalculation() {
+        BooleanCalculation calculation = new BooleanAndCalculation("v1 ∧ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ∧ i2 ∧ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that operands that refer to a calculation with the same operator are
+     * replaced with the referred calculation.
+     */
+    @Test
+    public void shouldResolveOrOperandsReferringToOrCalculation() {
+        BooleanCalculation calculation = new BooleanOrCalculation("v1 ∨ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∨ i2");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ∨ i2 ∨ v2", resolved.toString());
+    }
+
+    /**
+     * Verifies that operands that refer to a calculation with the same operator are
+     * replaced with the referred calculation.
+     */
+    @Test
+    public void shouldResolveXorOperandsReferringToXorCalculation() {
+        BooleanCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2");
+        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ⊻ i2");
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals("i1 ⊻ i2 ⊻ v2", resolved.toString());
+    }
+
+    /**
      * Verifies that negated operands that refer to Boolean equations are replaced
      * with the negation of the right hand side of the Boolean equation.
      */
