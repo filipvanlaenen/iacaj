@@ -28,7 +28,7 @@
 
   Finally, it is worth reading the documentation.
   
-  Modified for SAPOR2MD.
+  Modified for IACAJ.
 
 -->
 
@@ -79,6 +79,11 @@
        <property name="message" value="Line has trailing spaces."/>
     </module>
 
+    <module name="LineLength">
+       <!-- Modified for IACAJ to increase line length to 120. -->
+       <property name="max" value="120"/>
+    </module>
+
     <!-- Checks for Headers                                -->
     <!-- See http://checkstyle.sourceforge.net/config_header.html   -->
     <!-- <module name="Header"> -->
@@ -118,10 +123,6 @@
 
         <!-- Checks for Size Violations.                    -->
         <!-- See http://checkstyle.sourceforge.net/config_sizes.html -->
-        <module name="LineLength">
-          <!-- Modified for IACAJ to increase line length to 120. -->
-          <property name="max" value="120"/>
-        </module>
         <module name="MethodLength"/>
         <module name="ParameterNumber"/>
 
