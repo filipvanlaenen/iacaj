@@ -13,8 +13,7 @@ public final class BooleanXorCalculation extends BooleanCalculation {
     /**
      * Constructor taking the right hand side string as parameter.
      *
-     * @param rightHandSideString A right hand side string representing the Xor
-     *                            calculation.
+     * @param rightHandSideString A right hand side string representing the Xor calculation.
      */
     public BooleanXorCalculation(final String rightHandSideString) {
         super(rightHandSideString);
@@ -46,7 +45,7 @@ public final class BooleanXorCalculation extends BooleanCalculation {
         List<BooleanOperand> sortedOperands = new ArrayList<BooleanOperand>(getOperands());
         sortedOperands.sort(new Comparator<BooleanOperand>() {
             @Override
-            public int compare(BooleanOperand arg0, BooleanOperand arg1) {
+            public int compare(final BooleanOperand arg0, final BooleanOperand arg1) {
                 return arg0.getName().compareTo(arg1.getName());
             }
         });
