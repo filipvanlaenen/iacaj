@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
 import net.filipvanlaenen.iacaj.Attack;
@@ -21,6 +19,8 @@ import net.filipvanlaenen.iacaj.producer.RotateProducer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 import net.filipvanlaenen.iacaj.producer.ShiftProducer;
 import net.filipvanlaenen.iacaj.producer.XorProducer;
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
 
 /**
  * Class implementing a command line interface.
@@ -98,14 +98,14 @@ public final class CommandLineInterface {
             }
         },
         /**
-         * Command to produce a specific hash function, possibly with a specified number
-         * of rounds, and export it to a file.
+         * Command to produce a specific hash function, possibly with a specified number of rounds, and export it to a
+         * file.
          */
         Produce {
             @Override
             void execute(final String[] args) throws IOException {
                 String function = args[1];
-                List<Integer> parameters = new ArrayList<Integer>();
+                ModifiableOrderedCollection<Integer> parameters = new ModifiableOrderedArrayCollection<Integer>();
                 String fileName = null;
                 int i = 2;
                 while (i < args.length) {
@@ -139,8 +139,7 @@ public final class CommandLineInterface {
             }
         },
         /**
-         * Command to read in a Boolean function from a file and produce a report on its
-         * complexity.
+         * Command to read in a Boolean function from a file and produce a report on its complexity.
          */
         Report {
             @Override
@@ -160,8 +159,7 @@ public final class CommandLineInterface {
             }
         },
         /**
-         * Command to read in a Boolean function from a file, resolve it, and export it
-         * to a file.
+         * Command to read in a Boolean function from a file, resolve it, and export it to a file.
          */
         Resolve {
             @Override
@@ -186,10 +184,9 @@ public final class CommandLineInterface {
         abstract void execute(String[] args) throws IOException;
 
         /**
-         * Outputs a Boolean function. If the file name is <code>null</code>, then the
-         * Boolean function is written to <code>stdout</code>. Otherwise, the Boolean
-         * function is written to a file, with the format depending on the extension of
-         * the file name.
+         * Outputs a Boolean function. If the file name is <code>null</code>, then the Boolean function is written to
+         * <code>stdout</code>. Otherwise, the Boolean function is written to a file, with the format depending on the
+         * extension of the file name.
          *
          * @param bf       The Boolean function.
          * @param fileName The name of the file, can be <code>null</code>.

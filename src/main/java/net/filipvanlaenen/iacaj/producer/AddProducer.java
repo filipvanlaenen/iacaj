@@ -1,8 +1,7 @@
 package net.filipvanlaenen.iacaj.producer;
 
-import java.util.List;
-
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Class producing a Boolean function ADDing the first half of the input
@@ -15,7 +14,7 @@ public final class AddProducer extends Producer {
      *
      * @param parameters A list with parameters.
      */
-    public AddProducer(final List<Integer> parameters) {
+    public AddProducer(final OrderedCollection<Integer> parameters) {
         super(getItemOrNull(parameters, 0));
     }
 

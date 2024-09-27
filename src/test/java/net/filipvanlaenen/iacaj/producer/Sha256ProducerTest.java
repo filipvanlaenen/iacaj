@@ -3,7 +3,6 @@ package net.filipvanlaenen.iacaj.producer;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import net.filipvanlaenen.iacaj.BooleanExpression;
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the <code>Sha256Producer</code> class.
@@ -32,12 +32,12 @@ public class Sha256ProducerTest {
             + "0000000000000000000000000000000000000000000000000000000000000000";
 
     /**
-     * Verifies that when an input vector is applied representing an empty message,
-     * resolving the produced Boolean function produces the correct result.
+     * Verifies that when an input vector is applied representing an empty message, resolving the produced Boolean
+     * function produces the correct result.
      */
     @Test
     public void shouldProduceTheTestVectorForTheEmptyMessage() {
-        Producer producer = new Sha256Producer(Arrays.asList(new Integer[] {}));
+        Producer producer = new Sha256Producer(OrderedCollection.of());
         BooleanFunction booleanFunction = producer.produce();
         booleanFunction.addExpressions(createInputParameters(EMPTY_MESSAGE));
         booleanFunction.resolve();
@@ -50,8 +50,7 @@ public class Sha256ProducerTest {
      * Converts a string with a hexadecimal value into a set of input parameters.
      *
      * @param hexValue The string with the hexadecimal value.
-     * @return A set with the input parameters corresponding to the hexadecimal
-     *         value of the string.
+     * @return A set with the input parameters corresponding to the hexadecimal value of the string.
      */
     private Set<BooleanExpression> createInputParameters(final String hexValue) {
         Set<BooleanExpression> result = new HashSet<BooleanExpression>();
@@ -72,11 +71,9 @@ public class Sha256ProducerTest {
     }
 
     /**
-     * Extracts the output parameters as a hexadecimal string from a Boolean
-     * function.
+     * Extracts the output parameters as a hexadecimal string from a Boolean function.
      *
-     * @param booleanFunction The Boolean function from which to extract the output
-     *                        parameters.
+     * @param booleanFunction The Boolean function from which to extract the output parameters.
      * @return A hexadecimal string representing the output parameters.
      */
     private String extractOutputParameters(final BooleanFunction booleanFunction) {

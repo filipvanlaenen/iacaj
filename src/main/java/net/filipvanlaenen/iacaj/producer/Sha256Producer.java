@@ -1,10 +1,10 @@
 package net.filipvanlaenen.iacaj.producer;
 
 import java.math.BigInteger;
-import java.util.List;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Class producing a Boolean function for the SHA-256 hash function.
@@ -100,12 +100,12 @@ public final class Sha256Producer extends Producer {
      *
      * @param parameters A list with parameters.
      */
-    public Sha256Producer(final List<Integer> parameters) {
+    public Sha256Producer(final OrderedCollection<Integer> parameters) {
         super(WORD_LENGTH);
         if (parameters.isEmpty()) {
             this.numberOfRounds = DEFAULT_NUMBER_OF_ROUNDS;
         } else {
-            this.numberOfRounds = parameters.get(0);
+            this.numberOfRounds = parameters.getAt(0);
         }
     }
 

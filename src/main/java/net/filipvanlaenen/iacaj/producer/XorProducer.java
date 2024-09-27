@@ -1,21 +1,18 @@
 package net.filipvanlaenen.iacaj.producer;
 
-import java.util.List;
-
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
- * Class producing a Boolean function XORing the first half of the input
- * parameters with the second half.
+ * Class producing a Boolean function XORing the first half of the input parameters with the second half.
  */
 public final class XorProducer extends Producer {
     /**
-     * Creates a producer for XOR. If parameters are provided, the first parameter
-     * is used as the word length.
+     * Creates a producer for XOR. If parameters are provided, the first parameter is used as the word length.
      *
      * @param parameters A list with parameters.
      */
-    public XorProducer(final List<Integer> parameters) {
+    public XorProducer(final OrderedCollection<Integer> parameters) {
         super(getItemOrNull(parameters, 0));
     }
 

@@ -1,10 +1,9 @@
 package net.filipvanlaenen.iacaj.producer;
 
-import java.util.List;
-
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.BooleanOperation;
 import net.filipvanlaenen.iacaj.BooleanOperator;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Abstract superclass for producers of Boolean functions.
@@ -29,8 +28,8 @@ public abstract class Producer {
     private int wordLength;
 
     /**
-     * Constructor taking the word length as its parameter. If the word length is
-     * <code>null</code>, the default word length will be used.
+     * Constructor taking the word length as its parameter. If the word length is <code>null</code>, the default word
+     * length will be used.
      *
      * @param wordLength The word length.
      */
@@ -61,14 +60,14 @@ public abstract class Producer {
             bf.addExpression(sum);
             result.put(wordLength - 2, sum.getName());
             for (int i = wordLength - THREE; i >= 0; i--) {
-                BooleanOperation p1 = new BooleanOperation(getNextInternalVariableName(),
-                        w0.get(i + 1) + " ⊻ " + w1.get(i + 1));
+                BooleanOperation p1 =
+                        new BooleanOperation(getNextInternalVariableName(), w0.get(i + 1) + " ⊻ " + w1.get(i + 1));
                 bf.addExpression(p1);
-                BooleanOperation p2 = new BooleanOperation(getNextInternalVariableName(),
-                        carry.getName() + " ∧ " + p1.getName());
+                BooleanOperation p2 =
+                        new BooleanOperation(getNextInternalVariableName(), carry.getName() + " ∧ " + p1.getName());
                 bf.addExpression(p2);
-                BooleanOperation p3 = new BooleanOperation(getNextInternalVariableName(),
-                        w0.get(i + 1) + " ∧ " + w1.get(i + 1));
+                BooleanOperation p3 =
+                        new BooleanOperation(getNextInternalVariableName(), w0.get(i + 1) + " ∧ " + w1.get(i + 1));
                 bf.addExpression(p3);
                 carry = new BooleanOperation(getNextInternalVariableName(), p2.getName() + " ⊻ " + p3.getName());
                 bf.addExpression(carry);
@@ -134,8 +133,7 @@ public abstract class Producer {
     /**
      * Extracts a word from the input parameters.
      *
-     * @param wordIndex The index of the word to extract from the input parameters,
-     *                  starting from 0.
+     * @param wordIndex The index of the word to extract from the input parameters, starting from 0.
      * @return A word containing the input parameters.
      */
     protected Word extractWordFromInput(final int wordIndex) {
@@ -148,21 +146,20 @@ public abstract class Producer {
     }
 
     /**
-     * Returns an item in a list, or <code>null</code> if the list is too short for
-     * the provided index.
+     * Returns an item in a list, or <code>null</code> if the list is too short for the provided index.
      *
      * @param <T>   The type for the list items.
      * @param list  The list with items.
      * @param index The index for which to return the item.
      * @return The item at the provided index, or null if the list is too short.
      */
-    protected static <T> T getItemOrNull(final List<T> list, final int index) {
-        return index < list.size() ? list.get(index) : null;
+    protected static <T> T getItemOrNull(final OrderedCollection<T> list, final int index) {
+        return index < list.size() ? list.getAt(index) : null;
     }
 
     /**
-     * Returns the name for the next internal variable that can be used to add a
-     * Boolean expression to the Boolean function.
+     * Returns the name for the next internal variable that can be used to add a Boolean expression to the Boolean
+     * function.
      *
      * @return The name for the next internal variable.
      */
@@ -189,8 +186,7 @@ public abstract class Producer {
     public abstract BooleanFunction produce();
 
     /**
-     * Returns a word with all variables names shifted to the right with r
-     * positions.
+     * Returns a word with all variables names shifted to the right with r positions.
      *
      * @param bf   The Boolean function.
      * @param word The word to be shifted to the right.

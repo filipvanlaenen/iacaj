@@ -1,8 +1,7 @@
 package net.filipvanlaenen.iacaj.producer;
 
-import java.util.List;
-
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Class producing a Boolean function ORing the first half of the input
@@ -15,7 +14,7 @@ public final class OrProducer extends Producer {
      *
      * @param parameters A list with parameters.
      */
-    public OrProducer(final List<Integer> parameters) {
+    public OrProducer(final OrderedCollection<Integer> parameters) {
         super(getItemOrNull(parameters, 0));
     }
 

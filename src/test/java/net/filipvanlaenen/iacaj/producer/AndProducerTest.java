@@ -2,23 +2,21 @@ package net.filipvanlaenen.iacaj.producer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the <code>AndProducer</code> class.
  */
 public class AndProducerTest {
     /**
-     * Verifies that the producer can produce a Boolean function implementing AND for
-     * words of length 1.
+     * Verifies that the producer can produce a Boolean function implementing AND for words of length 1.
      */
     @Test
     public void shouldProduceAndFunctionWithWordLength1() {
-        Producer producer = new AndProducer(Arrays.asList(new Integer[] {1}));
+        Producer producer = new AndProducer(OrderedCollection.of(1));
         BooleanFunction booleanFunction = producer.produce();
         StringBuilder sb = new StringBuilder();
         sb.append("v1 = i1 ∧ i2\n");
@@ -28,12 +26,11 @@ public class AndProducerTest {
     }
 
     /**
-     * Verifies that the producer can produce a Boolean function implementing AND for
-     * words of length 2.
+     * Verifies that the producer can produce a Boolean function implementing AND for words of length 2.
      */
     @Test
     public void shouldProduceAndFunctionWithWordLength2() {
-        Producer producer = new AndProducer(Arrays.asList(new Integer[] {2}));
+        Producer producer = new AndProducer(OrderedCollection.of(2));
         BooleanFunction booleanFunction = producer.produce();
         StringBuilder sb = new StringBuilder();
         sb.append("v1 = i1 ∧ i3\n");

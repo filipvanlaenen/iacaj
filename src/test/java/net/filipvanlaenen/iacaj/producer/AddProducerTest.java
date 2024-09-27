@@ -2,11 +2,10 @@ package net.filipvanlaenen.iacaj.producer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.Arrays;
-
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.BooleanFunction;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the <code>AddProducer</code> class.
@@ -18,12 +17,11 @@ public class AddProducerTest {
     private static final int THREE = 3;
 
     /**
-     * Verifies that the producer can produce a Boolean function implementing ADD
-     * for words of length 1.
+     * Verifies that the producer can produce a Boolean function implementing ADD for words of length 1.
      */
     @Test
     public void shouldProduceAddFunctionWithWordLength1() {
-        Producer producer = new AddProducer(Arrays.asList(new Integer[] {1}));
+        Producer producer = new AddProducer(OrderedCollection.of(1));
         BooleanFunction booleanFunction = producer.produce();
         StringBuilder sb = new StringBuilder();
         sb.append("v1 = i1 ⊻ i2\n");
@@ -33,12 +31,11 @@ public class AddProducerTest {
     }
 
     /**
-     * Verifies that the producer can produce a Boolean function implementing ADD
-     * for words of length 2.
+     * Verifies that the producer can produce a Boolean function implementing ADD for words of length 2.
      */
     @Test
     public void shouldProduceAddFunctionWithWordLength2() {
-        Producer producer = new AddProducer(Arrays.asList(new Integer[] {2}));
+        Producer producer = new AddProducer(OrderedCollection.of(2));
         BooleanFunction booleanFunction = producer.produce();
         StringBuilder sb = new StringBuilder();
         sb.append("v1 = i2 ⊻ i4\n");
@@ -51,12 +48,11 @@ public class AddProducerTest {
     }
 
     /**
-     * Verifies that the producer can produce a Boolean function implementing ADD
-     * for words of length 3.
+     * Verifies that the producer can produce a Boolean function implementing ADD for words of length 3.
      */
     @Test
     public void shouldProduceAddFunctionWithWordLength3() {
-        Producer producer = new AddProducer(Arrays.asList(new Integer[] {THREE}));
+        Producer producer = new AddProducer(OrderedCollection.of(THREE));
         BooleanFunction booleanFunction = producer.produce();
         StringBuilder sb = new StringBuilder();
         sb.append("v1 = i3 ⊻ i6\n");
