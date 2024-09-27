@@ -1,8 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
@@ -45,7 +43,7 @@ public final class BooleanXorCalculation extends BooleanCalculation {
     @Override
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
         expandOperands(booleanFunction);
-        Set<BooleanOperand> doubleOperands = new HashSet<BooleanOperand>();
+        ModifiableCollection<BooleanOperand> doubleOperands = new ModifiableArrayCollection<BooleanOperand>();
         SortedCollection<BooleanOperand> sortedOperands =
                 new SortedArrayCollection<BooleanOperand>(new Comparator<BooleanOperand>() {
                     @Override
