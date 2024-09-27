@@ -1,5 +1,16 @@
 # Iterative Algebraic Collision Attack in Java
 
+- [Getting Started](#getting-started)
+- [Produce a Hash Function](#produce-a-hash-function)
+  - [ADD](#add)
+  - [AND](#and)
+  - [OR](#or)
+  - [ROTATE](#rotate)
+  - [SHA-256](#sha-256)
+  - [SHIFT](#shift)
+  - [XOR](#xor)
+- [Resolve a Boolean Function](#resolve-a-boolean-function)
+
 ## Getting Started
 
 First of all, you need to obtain a copy of the source code and compile it into
@@ -32,10 +43,7 @@ o3 = v3
 o4 = v4
 ```
 
-The sections below explain how to use the tool to perform different actions:
-
-* [Produce a Hash Function](#produce-a-hash-function)
-* [Resolve a Boolean Function](#resolve-a-boolean-function)
+The sections below explain how to use the tool to perform different actions.
 
 ## Produce a Hash Function
 
@@ -44,13 +52,13 @@ hash function, or one of the trivial sample Boolean functions. The trivial
 functions are added for testing purposes. Currently, the following functions can
 be produced:
 
-* [ADD](#add)
-* [AND](#and)
-* [OR](#or)
-* [ROTATE](#rotate)
-* [SHA-256](#sha-256)
-* [SHIFT](#shift)
-* [XOR](#xor)
+- [ADD](#add)
+- [AND](#and)
+- [OR](#or)
+- [ROTATE](#rotate)
+- [SHA-256](#sha-256)
+- [SHIFT](#shift)
+- [XOR](#xor)
 
 ### ADD
 
