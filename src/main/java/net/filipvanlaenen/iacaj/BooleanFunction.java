@@ -11,14 +11,19 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.SortedCollection;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
+import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
+
 /**
  * Class representing a (multi-dimensional) Boolean function.
  */
 public class BooleanFunction {
     /**
-     * Comparator used to sort the Boolean expressions when exporting the Boolean
-     * function. Input parameters should come first, followed by internal variables,
-     * and output parameters at the end. Each group should internally be sorted
+     * Comparator used to sort the Boolean expressions when exporting the Boolean function. Input parameters should come
+     * first, followed by internal variables, and output parameters at the end. Each group should internally be sorted
      * ascending according to the variable's number.
      */
     static final class BooleanExpressionComparator implements Comparator<BooleanExpression> {
@@ -38,8 +43,7 @@ public class BooleanFunction {
         }
 
         /**
-         * Compares two Boolean constraints for sorting. The comparison is done based on
-         * the numbers of the constraints.
+         * Compares two Boolean constraints for sorting. The comparison is done based on the numbers of the constraints.
          *
          * @param constraint0 The first Boolean constraint.
          * @param constraint1 The second Boolean constraint.
@@ -50,9 +54,8 @@ public class BooleanFunction {
         }
 
         /**
-         * Compares two Boolean operations for sorting. Output parameters are always
-         * larger than internal variables, otherwise the comparison is done based on the
-         * numbers.
+         * Compares two Boolean operations for sorting. Output parameters are always larger than internal variables,
+         * otherwise the comparison is done based on the numbers.
          *
          * @param operation0 The first Boolean operation.
          * @param operation1 The second Boolean operation.
@@ -76,7 +79,7 @@ public class BooleanFunction {
     /**
      * The Boolean expressions of the Boolean function.
      */
-    private Set<BooleanExpression> expressions = new HashSet<BooleanExpression>();
+    private ModifiableCollection<BooleanExpression> expressions = ModifiableCollection.of();
     /**
      * The Boolean constraints of the Boolean function.
      */
@@ -113,8 +116,7 @@ public class BooleanFunction {
     }
 
     /**
-     * Constructor copying the expression from another Boolean function and adding
-     * the constraints to it.
+     * Constructor copying the expression from another Boolean function and adding the constraints to it.
      *
      * @param prototype   The Boolean function to copy the expressions from.
      * @param constraints The constraints to be added to the Boolean function.
@@ -127,8 +129,7 @@ public class BooleanFunction {
     }
 
     /**
-     * Factory method creating a BooleanFunction instance based on an array of
-     * strings.
+     * Factory method creating a BooleanFunction instance based on an array of strings.
      *
      * @param content An array of strings representing a Boolean function.
      * @return A Boolean function.
@@ -172,8 +173,8 @@ public class BooleanFunction {
     }
 
     /**
-     * Exports the Boolean function to a string. The type of string is controlled by
-     * the export method provided to export the Boolean expression.
+     * Exports the Boolean function to a string. The type of string is controlled by the export method provided to
+     * export the Boolean expression.
      *
      * @param exportMethod The method to export the Boolean expressions to strings.
      * @return A string representation of the Boolean function.
@@ -207,8 +208,8 @@ public class BooleanFunction {
      *
      * @return A new set with all the expressions of the Boolean function.
      */
-    Set<BooleanExpression> getExpressions() {
-        return Set.copyOf(expressions);
+    Collection<BooleanExpression> getExpressions() {
+        return new ArrayCollection<BooleanExpression>(expressions);
     }
 
     /**
@@ -257,11 +258,9 @@ public class BooleanFunction {
     }
 
     /**
-     * Returns the number of input parameters of the Boolean function used in the
-     * calculation.
+     * Returns the number of input parameters of the Boolean function used in the calculation.
      *
-     * @return The number of input parameters of the Boolean function used in the
-     *         calculation.
+     * @return The number of input parameters of the Boolean function used in the calculation.
      */
     int getNumberOfInputParametersInCalculation() {
         return inputParametersInCalculation.size();
@@ -283,10 +282,8 @@ public class BooleanFunction {
      *
      * @return A sorted list with the Boolean expressions.
      */
-    private List<BooleanExpression> getSortedExpressions() {
-        List<BooleanExpression> sortedExpressions = new ArrayList<BooleanExpression>(expressions);
-        sortedExpressions.sort(new BooleanExpressionComparator());
-        return sortedExpressions;
+    private SortedCollection<BooleanExpression> getSortedExpressions() {
+        return new SortedArrayCollection<BooleanExpression>(new BooleanExpressionComparator(), expressions);
     }
 
     /**
