@@ -1,7 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
  * Class representing an internal variable.
@@ -10,11 +9,10 @@ public final class InternalVariable extends Variable {
     /**
      * A map with all the instances.
      */
-    private static Map<String, InternalVariable> instances = new HashMap<String, InternalVariable>();
+    private static ModifiableMap<String, InternalVariable> instances = ModifiableMap.empty();
 
     /**
-     * Returns the internal variable with the given name if it already exists, or
-     * creates a new one otherwise.
+     * Returns the internal variable with the given name if it already exists, or creates a new one otherwise.
      *
      * @param name Name of the internal variable.
      * @return The internal variable with that name, or a new instance.
@@ -24,7 +22,7 @@ public final class InternalVariable extends Variable {
             return instances.get(name);
         }
         InternalVariable newInstance = new InternalVariable(name);
-        instances.put(name, newInstance);
+        instances.add(name, newInstance);
         return newInstance;
     }
 
