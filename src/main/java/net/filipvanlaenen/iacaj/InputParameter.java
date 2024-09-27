@@ -1,7 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.HashMap;
-import java.util.Map;
+import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
  * Class representing an input parameter.
@@ -10,11 +9,10 @@ public final class InputParameter extends Variable {
     /**
      * A map with all the instances.
      */
-    private static Map<String, InputParameter> instances = new HashMap<String, InputParameter>();
+    private static ModifiableMap<String, InputParameter> instances = ModifiableMap.empty();
 
     /**
-     * Returns the input parameter with the given name if it already exists, or
-     * creates a new one otherwise.
+     * Returns the input parameter with the given name if it already exists, or creates a new one otherwise.
      *
      * @param name Name of the input parameter.
      * @return The input parameter with that name, or a new instance.
@@ -24,7 +22,7 @@ public final class InputParameter extends Variable {
             return instances.get(name);
         }
         InputParameter newInstance = new InputParameter(name);
-        instances.put(name, newInstance);
+        instances.add(name, newInstance);
         return newInstance;
     }
 
