@@ -33,8 +33,7 @@ public final class BooleanOperand {
     }
 
     /**
-     * Constructor taking the name and whether the operand is negated as its
-     * parameters.
+     * Constructor taking the name and whether the operand is negated as its parameters.
      *
      * @param name    The name of the operand.
      * @param negated Whether the operand is negated.
@@ -44,7 +43,7 @@ public final class BooleanOperand {
         this.negated = negated;
         number = extractNumberFromName();
     }
-    
+
     BooleanOperand(final BooleanOperand prototype) {
         this(prototype.getName(), prototype.isNegated());
     }
