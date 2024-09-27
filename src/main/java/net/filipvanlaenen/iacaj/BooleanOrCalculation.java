@@ -1,7 +1,8 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.ArrayList;
-import java.util.List;
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 
 /**
  * Class representing an Or calculation.
@@ -10,8 +11,7 @@ public final class BooleanOrCalculation extends BooleanCalculation {
     /**
      * Constructor taking the right hand side string as parameter.
      *
-     * @param rightHandSideString A right hand side string representing the Xor
-     *                            calculation.
+     * @param rightHandSideString A right hand side string representing the Xor calculation.
      */
     public BooleanOrCalculation(final String rightHandSideString) {
         super(rightHandSideString);
@@ -22,7 +22,7 @@ public final class BooleanOrCalculation extends BooleanCalculation {
      *
      * @param operands The list of operands.
      */
-    public BooleanOrCalculation(final List<BooleanOperand> operands) {
+    public BooleanOrCalculation(final Collection<BooleanOperand> operands) {
         super(operands);
     }
 
@@ -39,7 +39,7 @@ public final class BooleanOrCalculation extends BooleanCalculation {
     @Override
     protected BooleanRightHandSide resolve(final BooleanFunction booleanFunction) {
         expandOperands(booleanFunction);
-        List<BooleanOperand> falseOperands = new ArrayList<BooleanOperand>();
+        ModifiableCollection<BooleanOperand> falseOperands = new ModifiableArrayCollection<BooleanOperand>();
         for (BooleanOperand operand : getOperands()) {
             if (!operand.isNegated()) {
                 BooleanExpression be = booleanFunction.getExpression(operand.getName());
@@ -57,7 +57,7 @@ public final class BooleanOrCalculation extends BooleanCalculation {
             return BooleanConstant.FALSE;
         }
         if (getNumberOfOperands() == 1) {
-            BooleanOperand firstOperand = getOperands().get(0);
+            BooleanOperand firstOperand = getOperands().get();
             return new BooleanEquation(firstOperand.getName(), firstOperand.isNegated()).resolve(booleanFunction);
         }
         return this;

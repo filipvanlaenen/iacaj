@@ -1,8 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
@@ -11,16 +9,22 @@ import java.util.stream.Collectors;
 
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.SortedCollection;
+import net.filipvanlaenen.kolektoj.array.ArrayCollection;
+import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
+import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
 
 /**
  * Class representing a right hand side with a Boolean calculation.
  */
 public abstract class BooleanCalculation extends BooleanRightHandSide {
     /**
-     * A list with the operands. Note that the same operand can appear more than
-     * once in a calculation, therefore this is not a Set.
+     * A list with the operands. Note that the same operand can appear more than once in a calculation, therefore this
+     * is not a Set.
      */
-    private List<BooleanOperand> operands = new ArrayList<BooleanOperand>();
+    private ModifiableCollection<BooleanOperand> operands = new ModifiableArrayCollection<BooleanOperand>();
 
     /**
      * Constructor taking the operator and the right hand side as its parameters.
@@ -28,8 +32,8 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
      * @param rightHandSide The right hand side.
      */
     public BooleanCalculation(final String rightHandSide) {
-        String[] operandStrings = Arrays.stream(rightHandSide.split(getOperator().getSymbol())).map(String::trim)
-                .toArray(String[]::new);
+        String[] operandStrings =
+                Arrays.stream(rightHandSide.split(getOperator().getSymbol())).map(String::trim).toArray(String[]::new);
         for (String operandString : operandStrings) {
             addOperand(new BooleanOperand(operandString));
         }
@@ -40,8 +44,8 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
      *
      * @param operands The list of operands.
      */
-    public BooleanCalculation(final List<BooleanOperand> operands) {
-        this.operands = new ArrayList<BooleanOperand>(operands);
+    public BooleanCalculation(final Collection<BooleanOperand> operands) {
+        this.operands = new ModifiableArrayCollection<BooleanOperand>(operands);
     }
 
     /**
@@ -58,19 +62,18 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
      *
      * @param operandsToBeAdded The operands to be added to the Boolean calculation.
      */
-    protected void addOperands(final List<BooleanOperand> operandsToBeAdded) {
+    protected void addOperands(final Collection<BooleanOperand> operandsToBeAdded) {
         operands.addAll(operandsToBeAdded);
     }
 
     /**
      * Expands operands as part of resolving the Boolean calculation.
      *
-     * @param booleanFunction The Boolean function giving the context for the
-     *                        Boolean calculation.
+     * @param booleanFunction The Boolean function giving the context for the Boolean calculation.
      */
     protected void expandOperands(final BooleanFunction booleanFunction) {
-        List<BooleanOperand> expandedOperands = new ArrayList<BooleanOperand>();
-        List<BooleanOperand> expansions = new ArrayList<BooleanOperand>();
+        ModifiableCollection<BooleanOperand> expandedOperands = new ModifiableArrayCollection<BooleanOperand>();
+        ModifiableCollection<BooleanOperand> expansions = new ModifiableArrayCollection<BooleanOperand>();
         for (BooleanOperand operand : getOperands()) {
             BooleanExpression be = booleanFunction.getExpression(operand.getName());
             if (be != null) {
@@ -111,24 +114,25 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
      */
     private String exportToString(final String operatorString,
             final Function<BooleanOperand, String> operandExportMethod) {
-        operands.sort(new Comparator<BooleanOperand>() {
-            @Override
-            public int compare(final BooleanOperand arg0, final BooleanOperand arg1) {
-                if (arg0.isInputParameter()) {
-                    if (arg1.isInputParameter()) {
-                        return arg0.getNumber() - arg1.getNumber();
-                    } else {
-                        return -1;
+        SortedCollection<BooleanOperand> sortedOperands =
+                new SortedArrayCollection<BooleanOperand>(new Comparator<BooleanOperand>() {
+                    @Override
+                    public int compare(final BooleanOperand arg0, final BooleanOperand arg1) {
+                        if (arg0.isInputParameter()) {
+                            if (arg1.isInputParameter()) {
+                                return arg0.getNumber() - arg1.getNumber();
+                            } else {
+                                return -1;
+                            }
+                        } else if (arg1.isInputParameter()) {
+                            return 1;
+                        } else {
+                            return arg0.getNumber() - arg1.getNumber();
+                        }
                     }
-                } else if (arg1.isInputParameter()) {
-                    return 1;
-                } else {
-                    return arg0.getNumber() - arg1.getNumber();
-                }
-            }
-        });
+                }, operands);
         return String.join(" " + operatorString + " ",
-                operands.stream().map(operandExportMethod).collect(Collectors.toList()));
+                sortedOperands.stream().map(operandExportMethod).collect(Collectors.toList()));
     }
 
     @Override
@@ -166,8 +170,8 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
      *
      * @return An unmodifiable list of operands.
      */
-    protected List<BooleanOperand> getOperands() {
-        return Collections.unmodifiableList(operands);
+    protected Collection<BooleanOperand> getOperands() {
+        return new ArrayCollection<BooleanOperand>(operands);
     }
 
     @Override
@@ -183,8 +187,7 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
     /**
      * Remove an operand from the Boolean calculation.
      *
-     * @param operandToBeRemoved The operand to be removed from the Boolean
-     *                           calculation.
+     * @param operandToBeRemoved The operand to be removed from the Boolean calculation.
      */
     protected void removeOperand(final BooleanOperand operandToBeRemoved) {
         operands.remove(operandToBeRemoved);
@@ -193,10 +196,9 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
     /**
      * Removes a list of operands from the Boolean calculation.
      *
-     * @param operandsToBeRemoved The operands to be removed from the Boolean
-     *                            calculation.
+     * @param operandsToBeRemoved The operands to be removed from the Boolean calculation.
      */
-    protected void removeOperands(final List<BooleanOperand> operandsToBeRemoved) {
+    protected void removeOperands(final Collection<BooleanOperand> operandsToBeRemoved) {
         operands.removeAll(operandsToBeRemoved);
     }
 
