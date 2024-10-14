@@ -197,4 +197,10 @@ If no output file name is provided, the result is printed out on the command lin
 
 ## Report on the Complexity of a Boolean Function
 
+The following command reads a Boolean function from an input file and reports on its complexity:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar report ADD32.bf
+```
+
 ## Attack a Boolean Function
