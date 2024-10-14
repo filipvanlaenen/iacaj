@@ -1,7 +1,7 @@
 # Iterative Algebraic Collision Attack in Java
 
 - [Getting Started](#getting-started)
-- [Produce a Hash Function](#produce-a-hash-function)
+- [Produce a Boolean Function](#produce-a-boolean-function)
   - [ADD](#add)
   - [AND](#and)
   - [OR](#or)
@@ -10,6 +10,8 @@
   - [SHIFT](#shift)
   - [XOR](#xor)
 - [Resolve a Boolean Function](#resolve-a-boolean-function)
+- [Report on the Complexity of a Boolean Function](#report-on-the-complexity-of-a-boolean-function)
+- [Attack a Boolean Function](#attack-a-boolean-function)
 
 ## Getting Started
 
@@ -44,7 +46,7 @@ o4 = v4
 
 The sections below explain how to use the tool to perform different actions.
 
-## Produce a Hash Function
+## Produce a Boolean Function
 
 Use the `produce` command to produce a Boolean function for a cryptographic hash function, or one of the trivial sample
 Boolean functions. The trivial functions are added for testing purposes. Currently, the following functions can be
@@ -182,5 +184,17 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. 
 
-
 ## Resolve a Boolean Function
+
+The following commands read a Boolean function from an input file and try to resolve it:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar resolve ADD32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar resolve ADD32.bf ADD32-resolved.bf
+```
+
+If no output file name is provided, the result is printed out on the command line.
+
+## Report on the Complexity of a Boolean Function
+
+## Attack a Boolean Function
