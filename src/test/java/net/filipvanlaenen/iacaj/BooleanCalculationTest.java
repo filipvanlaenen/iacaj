@@ -2,11 +2,14 @@ package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.iacaj.BooleanCalculation.OperandComparator;
 
 /**
  * Unit tests on the <code>BooleanCalculation</code> class.
@@ -18,8 +21,7 @@ public class BooleanCalculationTest {
     private static final BooleanCalculation BOOLEAN_CALCULATION_I1_XOR_V1 = new BooleanXorCalculation("v1 ⊻ i1");
 
     /**
-     * Verifies that xor replaces an operand which is an input parameter constrained
-     * to be equal to another one.
+     * Verifies that xor replaces an operand which is an input parameter constrained to be equal to another one.
      */
     @Test
     public void shouldResolveAnInputParameterConstrainedToEquality() {
@@ -30,8 +32,7 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that xor replaces an operand which is a negated input parameter
-     * constrained to be equal to another one.
+     * Verifies that xor replaces an operand which is a negated input parameter constrained to be equal to another one.
      */
     @Test
     public void shouldResolveANegatedInputParameterConstrainedToEquality() {
@@ -42,8 +43,7 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that xor replaces an operand which is an input parameter constrained
-     * to be opposite to another one.
+     * Verifies that xor replaces an operand which is an input parameter constrained to be opposite to another one.
      */
     @Test
     public void shouldResolveAnInputParameterConstrainedToOpposition() {
@@ -54,8 +54,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that xor replaces an operand which is a negated input parameter
-     * constrained to be opposite to another one.
+     * Verifies that xor replaces an operand which is a negated input parameter constrained to be opposite to another
+     * one.
      */
     @Test
     public void shouldResolveANegatedInputParameterConstrainedToOpposition() {
@@ -66,8 +66,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that operands that refer to Boolean equations are replaced with the
-     * right hand side of the Boolean equation.
+     * Verifies that operands that refer to Boolean equations are replaced with the right hand side of the Boolean
+     * equation.
      */
     @Test
     public void shouldResolveOperandsReferringToBooleanEquations() {
@@ -78,8 +78,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that operands that refer to negated Boolean equations are replaced
-     * with the negation of the right hand side of the Boolean equation.
+     * Verifies that operands that refer to negated Boolean equations are replaced with the negation of the right hand
+     * side of the Boolean equation.
      */
     @Test
     public void shouldResolveOperandsReferringToNegatedBooleanEquations() {
@@ -90,8 +90,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that operands that refer to a calculation with the same operator are
-     * replaced with the referred calculation.
+     * Verifies that operands that refer to a calculation with the same operator are replaced with the referred
+     * calculation.
      */
     @Test
     public void shouldResolveAndOperandsReferringToAndCalculation() {
@@ -102,8 +102,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that operands that refer to a calculation with the same operator are
-     * replaced with the referred calculation.
+     * Verifies that operands that refer to a calculation with the same operator are replaced with the referred
+     * calculation.
      */
     @Test
     public void shouldResolveOrOperandsReferringToOrCalculation() {
@@ -114,8 +114,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that operands that refer to a calculation with the same operator are
-     * replaced with the referred calculation.
+     * Verifies that operands that refer to a calculation with the same operator are replaced with the referred
+     * calculation.
      */
     @Test
     public void shouldResolveXorOperandsReferringToXorCalculation() {
@@ -126,8 +126,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that negated operands that refer to Boolean equations are replaced
-     * with the negation of the right hand side of the Boolean equation.
+     * Verifies that negated operands that refer to Boolean equations are replaced with the negation of the right hand
+     * side of the Boolean equation.
      */
     @Test
     public void shouldResolveNegatedOperandsReferringToBooleanEquations() {
@@ -138,8 +138,8 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that negated operands that refer to negated Boolean equations are
-     * replaced with the negation of the right hand side of the Boolean equation.
+     * Verifies that negated operands that refer to negated Boolean equations are replaced with the negation of the
+     * right hand side of the Boolean equation.
      */
     @Test
     public void shouldResolveNegatedOperandsReferringToNegatedBooleanEquations() {
@@ -150,8 +150,7 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that input parameters are sorted correctly when exporting a Boolean
-     * calculation to a string.
+     * Verifies that input parameters are sorted correctly when exporting a Boolean calculation to a string.
      */
     @Test
     public void shouldSortInputParametersWhenExportingToAString() {
@@ -159,8 +158,7 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that internal variables are sorted correctly when exporting a
-     * Boolean calculation to a string.
+     * Verifies that internal variables are sorted correctly when exporting a Boolean calculation to a string.
      */
     @Test
     public void shouldSortInternalVariablesWhenExportingToAString() {
@@ -168,13 +166,59 @@ public class BooleanCalculationTest {
     }
 
     /**
-     * Verifies that input parameters are sorted before internal variables when
-     * exporting a Boolean calculation to a string.
+     * Verifies that input parameters are sorted before internal variables when exporting a Boolean calculation to a
+     * string.
      */
     @Test
     public void shouldSortInputParametersBeforeInternalVariablesWhenExportingToAString() {
         assertEquals("i4 ⊻ i5 ⊻ i6 ⊻ v1 ⊻ v2 ⊻ v3",
                 new BooleanXorCalculation("v1 ⊻ v2 ⊻ v3 ⊻ i4 ⊻ i5 ⊻ i6").toString());
+    }
+
+    /**
+     * Verifies that input parameters are sorted according to their number.
+     */
+    @Test
+    public void shouldSortInputParameters() {
+        OperandComparator comparator = new OperandComparator();
+        BooleanOperand i1 = new BooleanOperand("i1");
+        BooleanOperand i1Negated = new BooleanOperand("¬i1");
+        BooleanOperand i2 = new BooleanOperand("i2");
+        assertTrue(comparator.compare(i1, i2) < 0);
+        assertTrue(comparator.compare(i1, i1) == 0);
+        assertTrue(comparator.compare(i2, i1) > 0);
+        assertTrue(comparator.compare(i1, i1Negated) < 0);
+        assertTrue(comparator.compare(i1Negated, i1) > 0);
+        assertTrue(comparator.compare(i1Negated, i2) < 0);
+    }
+
+    /**
+     * Verifies that internal parameters are sorted according to their number.
+     */
+    @Test
+    public void shouldSortInternalParameters() {
+        OperandComparator comparator = new OperandComparator();
+        BooleanOperand v1 = new BooleanOperand("v1");
+        BooleanOperand v1Negated = new BooleanOperand("¬v1");
+        BooleanOperand v2 = new BooleanOperand("v2");
+        assertTrue(comparator.compare(v1, v2) < 0);
+        assertTrue(comparator.compare(v1, v1) == 0);
+        assertTrue(comparator.compare(v2, v1) > 0);
+        assertTrue(comparator.compare(v1, v1Negated) < 0);
+        assertTrue(comparator.compare(v1Negated, v1) > 0);
+        assertTrue(comparator.compare(v1Negated, v2) < 0);
+    }
+
+    /**
+     * Verifies that input parameters are sorted before internal parameters.
+     */
+    @Test
+    public void shouldSortInputParametersBeforeInternalParameters() {
+        OperandComparator comparator = new OperandComparator();
+        BooleanOperand i1 = new BooleanOperand("i1");
+        BooleanOperand v1 = new BooleanOperand("v1");
+        assertTrue(comparator.compare(i1, v1) < 0);
+        assertTrue(comparator.compare(v1, i1) > 0);
     }
 
     /**

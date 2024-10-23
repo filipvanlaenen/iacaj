@@ -21,10 +21,32 @@ import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
  */
 public abstract class BooleanCalculation extends BooleanRightHandSide {
     /**
-     * A list with the operands. Note that the same operand can appear more than once in a calculation, therefore this
-     * is not a Set.
+     * A list with the operands. Note that the same operand can appear more than once in a calculation.
      */
     private ModifiableCollection<BooleanOperand> operands = new ModifiableArrayCollection<BooleanOperand>();
+
+    static final class OperandComparator implements Comparator<BooleanOperand> {
+        @Override
+        public int compare(final BooleanOperand arg0, final BooleanOperand arg1) {
+            if (arg0.isInputParameter() && !arg1.isInputParameter()) {
+                return -1;
+            } else if (!arg0.isInputParameter() && arg1.isInputParameter()) {
+                return 1;
+            }
+            int difference = arg0.getNumber() - arg1.getNumber();
+            if (difference != 0) {
+                return difference;
+            }
+            if (arg0.isNegated() && !arg1.isNegated()) {
+                return 1;
+            } else if (!arg0.isNegated() && arg1.isNegated()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        }
+
+    }
 
     /**
      * Constructor taking the operator and the right hand side as its parameters.
@@ -89,14 +111,13 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
                         BooleanEquation bq = (BooleanEquation) rhs;
                         expansions.add(new BooleanOperand(bq.getOperand(), operand.isNegated() ^ bq.isNegated()));
                         expandedOperands.add(operand);
-                    } else if (rhs instanceof BooleanCalculation) {
-                        if (!operand.isNegated() && getOperator() == rhs.getOperator()) {
-                            BooleanCalculation bc = (BooleanCalculation) rhs;
-                            for (BooleanOperand bo : bc.getOperands()) {
-                                expansions.add(new BooleanOperand(bo));
-                            }
-                            expandedOperands.add(operand);
+                    } else if (rhs instanceof BooleanCalculation && !operand.isNegated()
+                            && getOperator() == rhs.getOperator()) {
+                        BooleanCalculation bc = (BooleanCalculation) rhs;
+                        for (BooleanOperand bo : bc.getOperands()) {
+                            expansions.add(new BooleanOperand(bo));
                         }
+                        expandedOperands.add(operand);
                     }
                 }
             }
@@ -115,22 +136,7 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
     private String exportToString(final String operatorString,
             final Function<BooleanOperand, String> operandExportMethod) {
         SortedCollection<BooleanOperand> sortedOperands =
-                new SortedArrayCollection<BooleanOperand>(new Comparator<BooleanOperand>() {
-                    @Override
-                    public int compare(final BooleanOperand arg0, final BooleanOperand arg1) {
-                        if (arg0.isInputParameter()) {
-                            if (arg1.isInputParameter()) {
-                                return arg0.getNumber() - arg1.getNumber();
-                            } else {
-                                return -1;
-                            }
-                        } else if (arg1.isInputParameter()) {
-                            return 1;
-                        } else {
-                            return arg0.getNumber() - arg1.getNumber();
-                        }
-                    }
-                }, operands);
+                new SortedArrayCollection<BooleanOperand>(new OperandComparator(), operands);
         return String.join(" " + operatorString + " ",
                 sortedOperands.stream().map(operandExportMethod).collect(Collectors.toList()));
     }
