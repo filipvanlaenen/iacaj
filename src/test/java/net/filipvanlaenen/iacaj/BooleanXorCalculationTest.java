@@ -130,6 +130,17 @@ public class BooleanXorCalculationTest {
     }
 
     /**
+     * Verifies that xor between many identical and opposed operands is resolved correctly.
+     */
+    @Test
+    public void shouldResolveXorBetweenManyIdenticalAndOpposedOperandsCorrectly() {
+        BooleanCalculation calculation = new BooleanXorCalculation("v1 ⊻ v2 ⊻ v2 ⊻ ¬v3 ⊻ ¬v1 ⊻ v2 ⊻ ¬v2 ⊻ v3");
+        BooleanFunction booleanFunction = BooleanFunction.parse();
+        BooleanRightHandSide resolved = calculation.resolve(booleanFunction);
+        assertEquals(BooleanConstant.TRUE, resolved);
+    }
+
+    /**
      * Verifies that xor with two open operands is not resolved.
      */
     @Test
@@ -150,8 +161,8 @@ public class BooleanXorCalculationTest {
     }
 
     /**
-     * Verifies that if the result of resolve is a BooleanEquation, the resulting
-     * BooleanEquation should be resolved too.
+     * Verifies that if the result of resolve is a BooleanEquation, the resulting BooleanEquation should be resolved
+     * too.
      */
     @Test
     public void shouldResolveResultingBooleanEquationIfOnlyOneOperandRemainsAfterResolution() {
