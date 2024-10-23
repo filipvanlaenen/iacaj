@@ -14,14 +14,14 @@ public final class InputParameterPair {
     private final InputParameter lastInputParameter;
 
     /**
-     * Constructor taking two input parameters as parameters. The input parameters
-     * do not need to be provided in the right order.
+     * Constructor taking two input parameters as parameters. The input parameters do not need to be provided in the
+     * right order.
      *
      * @param inputParameter1 An input parameter.
      * @param inputParameter2 An input parameter.
      */
     InputParameterPair(final InputParameter inputParameter1, final InputParameter inputParameter2) {
-        // Replacing less-than with less-than-or-equal-to produces an equivalent mutant.
+        // EQMU: Replacing less-than with less-than-or-equal-to produces an equivalent mutant.
         if (inputParameter1.getNumber() < inputParameter2.getNumber()) {
             firstInputParameter = inputParameter1;
             lastInputParameter = inputParameter2;
@@ -62,7 +62,7 @@ public final class InputParameterPair {
 
     @Override
     public int hashCode() {
-        // Replacing addition with subtraction produces an equivalent mutant.
+        // EQMU: Replacing addition with subtraction produces an equivalent mutant.
         return firstInputParameter.hashCode() + lastInputParameter.hashCode();
     }
 }

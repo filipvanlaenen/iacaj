@@ -9,8 +9,7 @@ import java.util.List;
  */
 public abstract class BooleanConstraint extends BooleanExpression {
     /**
-     * Class representing a Boolean constraint requiring an input parameter to be
-     * true.
+     * Class representing a Boolean constraint requiring an input parameter to be true.
      */
     static class BooleanTrueConstraint extends BooleanConstraint {
         /**
@@ -69,8 +68,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * Class representing a Boolean constraint requiring an input parameter to be
-     * false.
+     * Class representing a Boolean constraint requiring an input parameter to be false.
      */
     static class BooleanFalseConstraint extends BooleanConstraint {
         /**
@@ -129,8 +127,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * Class representing a Boolean constraint requiring that two input parameters
-     * are equal to each other.
+     * Class representing a Boolean constraint requiring that two input parameters are equal to each other.
      */
     static class BooleanEqualityConstraint extends BooleanConstraint {
         /**
@@ -177,7 +174,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
 
         @Override
         public int hashCode() {
-            // Replacing addition with subtraction produces an equivalent mutant.
+            // EQMU: Replacing addition with subtraction produces an equivalent mutant.
             return getName().hashCode() + otherInputParameter.hashCode();
         }
 
@@ -203,8 +200,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * Class representing a Boolean constraint requiring that two input parameters
-     * are opposite to each other.
+     * Class representing a Boolean constraint requiring that two input parameters are opposite to each other.
      */
     static class BooleanOppositionConstraint extends BooleanConstraint {
         /**
@@ -251,7 +247,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
 
         @Override
         public int hashCode() {
-            // Replacing addition with subtraction produces an equivalent mutant.
+            // EQMU: Replacing addition with subtraction produces an equivalent mutant.
             return getName().hashCode() + otherInputParameter.hashCode();
         }
 
@@ -277,19 +273,16 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * The name of the constrained input parameter, also used as the name of the
-     * constraint.
+     * The name of the constrained input parameter, also used as the name of the constraint.
      */
     private final String name;
     /**
-     * The number of the constrained input parameter, also used as the number of the
-     * constraint.
+     * The number of the constrained input parameter, also used as the number of the constraint.
      */
     private final int number;
 
     /**
-     * Creates a Boolean constraint based on the left hand side and the right hand
-     * side of the expression.
+     * Creates a Boolean constraint based on the left hand side and the right hand side of the expression.
      *
      * @param leftHandSide  The left hand side of the constraint.
      * @param rightHandSide The right hand side of the constraint.
@@ -308,8 +301,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * Constructor using the name of the constrained input parameter as its
-     * parameter.
+     * Constructor using the name of the constrained input parameter as its parameter.
      *
      * @param name The name of the constrained input parameter.
      */
@@ -327,8 +319,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * Returns the name of the constraint, which is equal to the name of the
-     * constrained input parameter.
+     * Returns the name of the constraint, which is equal to the name of the constrained input parameter.
      *
      * @return The name of the constraint.
      */
@@ -337,9 +328,8 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     /**
-     * Returns the number of the constraint, which is equal to the number of the
-     * constrained input parameter. This number is useful for sorting the
-     * constraints numerically.
+     * Returns the number of the constraint, which is equal to the number of the constrained input parameter. This
+     * number is useful for sorting the constraints numerically.
      *
      * @return The number of the constraint.
      */
