@@ -3,8 +3,8 @@ package net.filipvanlaenen.iacaj;
 import java.util.List;
 
 /**
- * Class representing a Boolean expression. A Boolean expression consists of a
- * result name, an equation sign, and operands and operators.
+ * Class representing a Boolean expression. A Boolean expression consists of a result name, an equation sign, and
+ * operands and operators.
  */
 public abstract class BooleanExpression {
     /**
@@ -72,8 +72,7 @@ public abstract class BooleanExpression {
     /**
      * Resolves the Boolean expressions.
      *
-     * @param booleanFunction The Boolean function giving the context for the
-     *                        expression.
+     * @param booleanFunction The Boolean function giving the context for the expression.
      */
     protected abstract void resolve(BooleanFunction booleanFunction);
 
@@ -83,5 +82,4 @@ public abstract class BooleanExpression {
      * @return Java code representing the Boolean expression.
      */
     public abstract String toJavaString();
-
 }

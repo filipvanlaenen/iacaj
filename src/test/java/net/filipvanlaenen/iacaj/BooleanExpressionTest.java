@@ -51,4 +51,13 @@ public class BooleanExpressionTest {
         BooleanOperation operation = (BooleanOperation) BooleanExpression.parse("o1 = i1 ⊻ i2");
         assertEquals(BooleanOperator.Xor, operation.getOperator());
     }
+
+    /**
+     * Verifies that parsing detects a constraint.
+     */
+    @Test
+    public void parsingDetectsAConstraint() {
+        BooleanConstraint constraint = (BooleanConstraint) BooleanExpression.parse("i1 = True");
+        assertEquals("i1", constraint.getName());
+    }
 }
