@@ -9,8 +9,7 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
 /**
  * Class producing a Boolean function for the SHA-256 hash function.
  *
- * The pseudocode can be found here:
- * https://en.wikipedia.org/wiki/SHA-2#Pseudocode
+ * The pseudocode can be found here: https://en.wikipedia.org/wiki/SHA-2#Pseudocode
  */
 public final class Sha256Producer extends Producer {
     /**
@@ -95,8 +94,7 @@ public final class Sha256Producer extends Producer {
     private Word[] w;
 
     /**
-     * Creates a producer for SHA-256. If parameters are provided, the first
-     * parameter is used as the number of rounds.
+     * Creates a producer for SHA-256. If parameters are provided, the first parameter is used as the number of rounds.
      *
      * @param parameters A list with parameters.
      */
@@ -137,7 +135,7 @@ public final class Sha256Producer extends Producer {
         Word result = new Word(WORD_LENGTH);
         for (int i = 1; i <= WORD_LENGTH; i++) {
             String rightHandSide;
-            if (value.mod(new BigInteger("2")).equals(BigInteger.ZERO)) {
+            if (value.mod(BigInteger.valueOf(2L)).equals(BigInteger.ZERO)) {
                 rightHandSide = "False";
             } else {
                 rightHandSide = "True";
@@ -145,7 +143,7 @@ public final class Sha256Producer extends Producer {
             BooleanOperation bo = new BooleanOperation(getNextInternalVariableName(), rightHandSide);
             bf.addExpression(bo);
             result.put(WORD_LENGTH - i, bo.getName());
-            value = value.divide(new BigInteger("2"));
+            value = value.divide(BigInteger.valueOf(2L));
         }
         return result;
     }

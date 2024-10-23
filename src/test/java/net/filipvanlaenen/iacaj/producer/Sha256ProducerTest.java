@@ -58,14 +58,14 @@ public class Sha256ProducerTest {
         int wordLength = hexValue.length() * FOUR;
         for (int i = 0; i < wordLength; i++) {
             String rightHandSide;
-            if (value.mod(new BigInteger("2")).equals(BigInteger.ZERO)) {
+            if (value.mod(BigInteger.valueOf(2L)).equals(BigInteger.ZERO)) {
                 rightHandSide = "False";
             } else {
                 rightHandSide = "True";
             }
             BooleanOperation bo = new BooleanOperation("i" + (wordLength - i), rightHandSide);
             result.add(bo);
-            value = value.divide(new BigInteger("2"));
+            value = value.divide(BigInteger.valueOf(2L));
         }
         return result;
     }
