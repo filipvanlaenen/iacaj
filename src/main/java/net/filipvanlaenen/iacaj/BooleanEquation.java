@@ -5,8 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Class representing a right hand side of a Boolean operation with an equation
- * (or negation).
+ * Class representing a right hand side of a Boolean operation with an equation (or negation).
  */
 public final class BooleanEquation extends BooleanRightHandSide {
     /**
@@ -33,8 +32,7 @@ public final class BooleanEquation extends BooleanRightHandSide {
     }
 
     /**
-     * Constructor taking the operand and whether it should be negated as
-     * parameters.
+     * Constructor taking the operand and whether it should be negated as parameters.
      *
      * @param operand The name of the operand.
      * @param negated Whether the operand should be negated or not.
@@ -93,7 +91,7 @@ public final class BooleanEquation extends BooleanRightHandSide {
 
     @Override
     public int hashCode() {
-        // Negating the conditional produces an equivalent mutant.
+        // EQMU: Negating the conditional produces an equivalent mutant.
         return negated ? -operand.hashCode() : operand.hashCode();
     }
 
