@@ -2,6 +2,7 @@ package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import org.junit.jupiter.api.Test;
 public class InternalVariableTest {
     /**
      * Verifies that an internal variable can be retrieved. The name used has a high number to increase the chance that
-     * it hasn't een used before.
+     * it hasn't been used before.
      */
     @Test
     public void getShouldReturnAnInternalVariableWithTheCorrectName() {
@@ -26,6 +27,7 @@ public class InternalVariableTest {
     @Test
     public void getShouldReturnTheSameInternalVariableForTheSameName() {
         InternalVariable expected = InternalVariable.get("v100002");
+        assertNotNull(expected);
         assertEquals(expected, InternalVariable.get("v100002"));
     }
 
