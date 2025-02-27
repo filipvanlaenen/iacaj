@@ -81,7 +81,7 @@ public abstract class Producer {
     }
 
     /**
-     * Combines to words using AND.
+     * Combines two words using AND.
      *
      * @param bf    The Boolean function.
      * @param words The words to be ANDed together.
@@ -168,7 +168,7 @@ public abstract class Producer {
     }
 
     /**
-     * Combines to words using OR.
+     * Combines two words using OR.
      *
      * @param bf    The Boolean function.
      * @param words The words to be ORed together.
@@ -214,7 +214,7 @@ public abstract class Producer {
     }
 
     /**
-     * Combines to words using XOR.
+     * Combines two words using XOR.
      *
      * @param bf    The Boolean function.
      * @param words The words to be XORed together.
