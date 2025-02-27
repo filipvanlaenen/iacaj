@@ -73,6 +73,29 @@ public class ProducerTest {
     }
 
     /**
+     * Verifies that words of length three can be ADDed. Tests the functionality through <code>AddProducer</code>.
+     */
+    @Test
+    public void addWordsShouldAddWordsOfLengthThree() {
+        Producer producer = new AddProducer(OrderedCollection.of(3));
+        BooleanFunction booleanFunction = producer.produce();
+        StringBuilder sb = new StringBuilder();
+        sb.append("v1 = i3 ⊻ i6\n");
+        sb.append("v2 = i3 ∧ i6\n");
+        sb.append("v3 = i2 ⊻ i5 ⊻ v2\n");
+        sb.append("v4 = i2 ⊻ i5\n");
+        sb.append("v5 = v2 ∧ v4\n");
+        sb.append("v6 = i2 ∧ i5\n");
+        sb.append("v7 = v5 ⊻ v6\n");
+        sb.append("v8 = i1 ⊻ i4 ⊻ v7\n");
+        sb.append("o1 = v8\n");
+        sb.append("o2 = v3\n");
+        sb.append("o3 = v1");
+        String expected = sb.toString();
+        assertEquals(expected, booleanFunction.toString());
+    }
+
+    /**
      * Verifies that words can be ANDed. Tests the functionality through <code>AndProducer</code>.
      */
     @Test

@@ -51,7 +51,7 @@ public abstract class Producer {
                 w0.get(wordLength - 1) + " ⊻ " + w1.get(wordLength - 1));
         bf.addExpression(sum);
         result.put(wordLength - 1, sum.getName());
-        if (wordLength > 1) {
+        if (wordLength != 1) {
             BooleanOperation carry = new BooleanOperation(getNextInternalVariableName(),
                     w0.get(wordLength - 1) + " ∧ " + w1.get(wordLength - 1));
             bf.addExpression(carry);
