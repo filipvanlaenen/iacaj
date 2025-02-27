@@ -200,7 +200,9 @@ public abstract class Producer {
             bf.addExpression(bo);
             result.put(i, bo.getName());
         }
+        // EQMU: Changing the conditional boundary produces an equivalent mutant.
         int lowerBound = r < 0 ? 0 : r;
+        // EQMU: Changing the conditional boundary produces an equivalent mutant.
         int upperBound = r < 0 ? wordLength + r : wordLength;
         for (int i = lowerBound; i < upperBound; i++) {
             result.put(i, word.get(i - r));
