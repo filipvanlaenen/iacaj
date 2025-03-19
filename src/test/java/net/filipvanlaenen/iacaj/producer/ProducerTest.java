@@ -14,6 +14,11 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
  */
 public class ProducerTest {
     /**
+     * The magic number 3.
+     */
+    private static final int THREE = 3;
+
+    /**
      * Verifies that when a word length is provided, it is used. Tests the functionality through
      * <code>AndProducer</code>.
      */
@@ -77,7 +82,7 @@ public class ProducerTest {
      */
     @Test
     public void addWordsShouldAddWordsOfLengthThree() {
-        Producer producer = new AddProducer(OrderedCollection.of(3));
+        Producer producer = new AddProducer(OrderedCollection.of(THREE));
         BooleanFunction booleanFunction = producer.produce();
         StringBuilder sb = new StringBuilder();
         sb.append("v1 = i3 ⊻ i6\n");
