@@ -58,7 +58,7 @@ public class AttackRecordsTest {
      * parameter to constrain to True if a constraint to False is already present.
      */
     @Test
-    public void constrainsInputParameterOccurringTwiceToTrueWhenFalseAlreadyPresent() {
+    public void constraintsInputParameterOccurringTwiceToTrueWhenFalseAlreadyPresent() {
         String[] content = new String[] {"o1 = i1 ∧ i2", "o2 = i1 ∧ i3"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         AttackRecords attackRecords = new AttackRecords(booleanFunction);

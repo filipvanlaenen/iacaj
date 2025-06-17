@@ -10,6 +10,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
  * Unit tests on the <code>BooleanOperation</code> class.
  */
@@ -60,19 +62,16 @@ public class BooleanOperationTest {
     }
 
     /**
-     * Verifies that getInternalVariables extracts the input parameter and not the
-     * internal variable.
+     * Verifies that getInternalVariables extracts the input parameter and not the internal variable.
      */
     @Test
     public void shouldExtractInputParameter() {
-        List<InputParameter> expected = new ArrayList<InputParameter>();
-        expected.add(InputParameter.get("i1"));
-        assertEquals(expected, BOOLEAN_OPERATION_I1_AND_V1.getInputParameters());
+        OrderedCollection<InputParameter> expected = OrderedCollection.of(InputParameter.get("i1"));
+        assertTrue(expected.containsSame(BOOLEAN_OPERATION_I1_AND_V1.getInputParameters()));
     }
 
     /**
-     * Verifies that getInternalVariables extracts the internal variable and not the
-     * input parameter.
+     * Verifies that getInternalVariables extracts the internal variable and not the input parameter.
      */
     @Test
     public void shouldExtractInternalVariable() {
@@ -98,8 +97,7 @@ public class BooleanOperationTest {
     }
 
     /**
-     * Verifies that a Boolean operation can detect that it doesn't represent an
-     * output parameter.
+     * Verifies that a Boolean operation can detect that it doesn't represent an output parameter.
      */
     @Test
     public void shouldDetectInternalVariable() {
@@ -108,8 +106,7 @@ public class BooleanOperationTest {
     }
 
     /**
-     * Verifies that a Boolean operation can detect that it represents an output
-     * parameter.
+     * Verifies that a Boolean operation can detect that it represents an output parameter.
      */
     @Test
     public void shouldDetectOutputParameter() {
@@ -158,8 +155,7 @@ public class BooleanOperationTest {
     }
 
     /**
-     * Verifies that <code>deepClone</code> returns an object that produces the same
-     * string.
+     * Verifies that <code>deepClone</code> returns an object that produces the same string.
      */
     @Test
     public void deepCloneShouldReturnAnObjectWithTheSameToStringResult() {

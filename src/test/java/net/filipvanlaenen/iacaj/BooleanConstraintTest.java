@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the <code>BooleanConstraint</code> class.
@@ -36,8 +36,8 @@ public class BooleanConstraintTest {
      * @param names The names of the input parameters to be added to the set.
      * @return A set with input parameters having the provided names.
      */
-    private List<InputParameter> createInputParameterSet(final String... names) {
-        List<InputParameter> result = new ArrayList<InputParameter>();
+    private OrderedCollection<InputParameter> createInputParameterSet(final String... names) {
+        ModifiableOrderedCollection<InputParameter> result = ModifiableOrderedCollection.<InputParameter>empty();
         for (String name : names) {
             result.add(InputParameter.get(name));
         }
@@ -61,21 +61,19 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * Verifies that equality to another input parameter is registered as an input
-     * parameter.
+     * Verifies that equality to another input parameter is registered as an input parameter.
      */
     @Test
     public void equalityReturnsAnInputParameter() {
-        assertEquals(createInputParameterSet("i1"), IP2_EQUAL_TO_IP1.getInputParameters());
+        assertTrue(createInputParameterSet("i1").containsSame(IP2_EQUAL_TO_IP1.getInputParameters()));
     }
 
     /**
-     * Verifies that negation to another input parameter is registered as an input
-     * parameter.
+     * Verifies that negation to another input parameter is registered as an input parameter.
      */
     @Test
     public void negationReturnsAnInputParameter() {
-        assertEquals(createInputParameterSet("i1"), IP2_NOT_EQUAL_TO_IP1.getInputParameters());
+        assertTrue(createInputParameterSet("i1").containsSame(IP2_NOT_EQUAL_TO_IP1.getInputParameters()));
     }
 
     /**
@@ -303,8 +301,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A false constraint is equal to another false constraint with the same input
-     * parameter.
+     * A false constraint is equal to another false constraint with the same input parameter.
      */
     @Test
     public void falseShouldBeEqualToIdenticalFalse() {
@@ -312,8 +309,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A true constraint is equal to another true constraint with the same input
-     * parameter.
+     * A true constraint is equal to another true constraint with the same input parameter.
      */
     @Test
     public void trueShouldBeEqualToIdenticalTrue() {
@@ -329,8 +325,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A false constraint has the same hashcode as another false constraint with the
-     * same input parameter.
+     * A false constraint has the same hashcode as another false constraint with the same input parameter.
      */
     @Test
     public void falseShouldHaveSameHashcodeAsIdenticalFalse() {
@@ -338,8 +333,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A true constraint has the same hashcode as another true constraint with the
-     * same input parameter.
+     * A true constraint has the same hashcode as another true constraint with the same input parameter.
      */
     @Test
     public void trueShouldHaveSameHashcodeAsIdenticalTrue() {
@@ -347,8 +341,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * An Equality has the same hashcode as another equality with the same input
-     * parameters.
+     * An Equality has the same hashcode as another equality with the same input parameters.
      */
     @Test
     public void equalityShouldHaveSameHashcodeAsIdenticalEquality() {
@@ -364,8 +357,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * An Negation has the same hashcode as another Negation with the same input
-     * parameters.
+     * An Negation has the same hashcode as another Negation with the same input parameters.
      */
     @Test
     public void negationShouldHaveSameHashcodeAsIdenticalNegation() {
@@ -373,8 +365,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A false constraint is not equal to another false constraint with another
-     * input parameter.
+     * A false constraint is not equal to another false constraint with another input parameter.
      */
     @Test
     public void falseShouldNotBeEqualToFalseWithOtherName() {
@@ -382,8 +373,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A true constraint is not equal to another true constraint with another input
-     * parameter.
+     * A true constraint is not equal to another true constraint with another input parameter.
      */
     @Test
     public void trueShouldNotBeEqualToTrueWithOtherName() {
@@ -399,8 +389,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A false constraint should not have the same hashcode as another false
-     * constraint with another input parameter.
+     * A false constraint should not have the same hashcode as another false constraint with another input parameter.
      */
     @Test
     public void falseShouldNotHaveSameHashcodeAsFalseWithOtherName() {
@@ -408,8 +397,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A true constraint should not have the same hashcode as another true
-     * constraint with another input parameter.
+     * A true constraint should not have the same hashcode as another true constraint with another input parameter.
      */
     @Test
     public void trueShouldNotHaveSameHashcodeAsTrueWithOtherName() {
@@ -417,8 +405,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * A true constraint should not have the same hashcode as a false constraint
-     * with the same input parameter.
+     * A true constraint should not have the same hashcode as a false constraint with the same input parameter.
      */
     @Test
     public void trueShouldNotHaveSameHashcodeAsFalseWithSameInputParameter() {
@@ -426,8 +413,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * An Equality should not have the same hashcode as another equality with
-     * another name.
+     * An Equality should not have the same hashcode as another equality with another name.
      */
     @Test
     public void equalityShouldNotHaveSameHashcodeAsEqualityWithOtherName() {
@@ -443,8 +429,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * An Negation should not have the same hashcode as another Negation with
-     * another name.
+     * An Negation should not have the same hashcode as another Negation with another name.
      */
     @Test
     public void negationShouldNotHaveSameHashcodeAsNegationWithOtherName() {
@@ -460,8 +445,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * An Equality should not have the same hashcode as another equality with
-     * another input parameter.
+     * An Equality should not have the same hashcode as another equality with another input parameter.
      */
     @Test
     public void equalityShouldNotHaveSameHashcodeAsEqualityWithOtherInputParameter() {
@@ -477,8 +461,7 @@ public class BooleanConstraintTest {
     }
 
     /**
-     * An Negation should not have the same hashcode as another Negation with
-     * another input parameter.
+     * An Negation should not have the same hashcode as another Negation with another input parameter.
      */
     @Test
     public void negationShouldNotHaveSameHashcodeAsNegationWithOtherInputParameter() {

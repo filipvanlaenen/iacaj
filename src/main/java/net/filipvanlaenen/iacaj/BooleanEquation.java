@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
  * Class representing a right hand side of a Boolean operation with an equation (or negation).
  */
@@ -58,11 +60,11 @@ public final class BooleanEquation extends BooleanRightHandSide {
     }
 
     @Override
-    public List<InputParameter> getInputParameters() {
+    public OrderedCollection<InputParameter> getInputParameters() {
         if (InputParameter.isInputParameter(operand)) {
-            return Arrays.asList(InputParameter.get(operand));
+            return OrderedCollection.of(InputParameter.get(operand));
         } else {
-            return Collections.emptyList();
+            return OrderedCollection.<InputParameter>empty();
         }
     }
 

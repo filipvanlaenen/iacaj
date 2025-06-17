@@ -11,10 +11,12 @@ import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
+import net.filipvanlaenen.kolektoj.collectors.OrderedCollectionCollector;
 
 /**
  * Class representing a right hand side with a Boolean calculation.
@@ -100,10 +102,11 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
             BooleanExpression be = booleanFunction.getExpression(operand.getName());
             if (be != null) {
                 if (be instanceof BooleanEqualityConstraint) {
-                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), operand.isNegated()));
+                    expansions.add(new BooleanOperand(be.getInputParameters().getAt(0).getName(), operand.isNegated()));
                     expandedOperands.add(operand);
                 } else if (be instanceof BooleanOppositionConstraint) {
-                    expansions.add(new BooleanOperand(be.getInputParameters().get(0).getName(), !operand.isNegated()));
+                    expansions
+                            .add(new BooleanOperand(be.getInputParameters().getAt(0).getName(), !operand.isNegated()));
                     expandedOperands.add(operand);
                 } else if (be instanceof BooleanOperation) {
                     BooleanRightHandSide rhs = ((BooleanOperation) be).getRightHandSide();
@@ -142,14 +145,13 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
     }
 
     @Override
-    public final List<InputParameter> getInputParameters() {
+    public final OrderedCollection<InputParameter> getInputParameters() {
         return operands.stream().filter(new Predicate<BooleanOperand>() {
-
             @Override
             public boolean test(final BooleanOperand operand) {
                 return InputParameter.isInputParameter(operand.getName());
             }
-        }).map(BooleanOperand::getName).map(InputParameter::get).collect(Collectors.toList());
+        }).map(BooleanOperand::getName).map(InputParameter::get).collect(OrderedCollectionCollector.toCollection());
     }
 
     @Override

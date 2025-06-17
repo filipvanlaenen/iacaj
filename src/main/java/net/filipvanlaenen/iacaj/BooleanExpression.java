@@ -2,6 +2,8 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.List;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
  * Class representing a Boolean expression. A Boolean expression consists of a result name, an equation sign, and
  * operands and operators.
@@ -39,7 +41,7 @@ public abstract class BooleanExpression {
      *
      * @return The input parameters of the Boolean expression.
      */
-    public abstract List<InputParameter> getInputParameters();
+    public abstract OrderedCollection<InputParameter> getInputParameters();
 
     /**
      * Returns the internal variables of the Boolean expression.

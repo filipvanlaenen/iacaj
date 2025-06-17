@@ -1,14 +1,13 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.Set;
+import net.filipvanlaenen.kolektoj.Collection;
 
 /**
  * Class performing the attack on a Boolean function.
  */
 public class Attack {
     /**
-     * The maximal number of iterations before the <code>perform</code> method will
-     * return and report progress.
+     * The maximal number of iterations before the <code>perform</code> method will return and report progress.
      */
     static final int MAXIMUM_NUMBER_OF_ITERATIONS = 128;
 
@@ -27,7 +26,7 @@ public class Attack {
     /**
      * The input parameters of the Boolean function.
      */
-    private Set<InputParameter> inputParameters;
+    private Collection<InputParameter> inputParameters;
 
     /**
      * Constructor taking the Boolean function to attack as its parameter.
@@ -39,15 +38,13 @@ public class Attack {
     }
 
     /**
-     * Initialized the attack. This includes verifying that the Boolean function has
-     * input parameters, and that none of the input parameters are eliminated after
-     * resolving the Boolean function without constraints
+     * Initialized the attack. This includes verifying that the Boolean function has input parameters, and that none of
+     * the input parameters are eliminated after resolving the Boolean function without constraints
      *
-     * @return <code>null</code> if the attack can start, or a final attack result
-     *         if the attack shouldn't start.
+     * @return <code>null</code> if the attack can start, or a final attack result if the attack shouldn't start.
      */
     private AttackResult initialize() {
-        Set<InputParameter> initialInputParameters = booleanFunction.getInputParameters();
+        Collection<InputParameter> initialInputParameters = booleanFunction.getInputParameters();
         if (initialInputParameters.isEmpty()) {
             return new NoInputParameters();
         }
@@ -65,8 +62,7 @@ public class Attack {
     }
 
     /**
-     * Performs the attack. Can be called again to continue if a progress report was
-     * returned by the previous call.
+     * Performs the attack. Can be called again to continue if a progress report was returned by the previous call.
      *
      * @return A final attack result or a progress report.
      */

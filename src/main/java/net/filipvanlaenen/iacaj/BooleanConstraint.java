@@ -1,8 +1,9 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Class representing a Boolean constraint.
@@ -27,8 +28,8 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
-        public List<InputParameter> getInputParameters() {
-            return Collections.emptyList();
+        public OrderedCollection<InputParameter> getInputParameters() {
+            return OrderedCollection.<InputParameter>empty();
         }
 
         @Override
@@ -101,8 +102,8 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
-        public List<InputParameter> getInputParameters() {
-            return Collections.emptyList();
+        public OrderedCollection<InputParameter> getInputParameters() {
+            return OrderedCollection.<InputParameter>empty();
         }
 
         @Override
@@ -135,9 +136,9 @@ public abstract class BooleanConstraint extends BooleanExpression {
          */
         private final String otherInputParameter;
         /**
-         * A list with the other input parameter.
+         * An ordered collection with the other input parameter.
          */
-        private final List<InputParameter> inputParameterList;
+        private final OrderedCollection<InputParameter> inputParameterList;
 
         /**
          * Constructor using the names of the input parameters as its parameters.
@@ -148,8 +149,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
         BooleanEqualityConstraint(final String name, final String otherName) {
             super(name);
             this.otherInputParameter = otherName;
-            inputParameterList = new ArrayList<InputParameter>();
-            inputParameterList.add(InputParameter.get(otherName));
+            inputParameterList = OrderedCollection.of(InputParameter.get(otherName));
         }
 
         @Override
@@ -168,7 +168,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
-        public List<InputParameter> getInputParameters() {
+        public OrderedCollection<InputParameter> getInputParameters() {
             return inputParameterList;
         }
 
@@ -208,9 +208,9 @@ public abstract class BooleanConstraint extends BooleanExpression {
          */
         private final String otherInputParameter;
         /**
-         * A list with the other input parameter.
+         * An ordered collection with the other input parameter.
          */
-        private final List<InputParameter> inputParameterList;
+        private final OrderedCollection<InputParameter> inputParameterList;
 
         /**
          * Constructor using the names of the input variables as its parameters.
@@ -221,8 +221,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
         BooleanOppositionConstraint(final String name, final String otherName) {
             super(name);
             this.otherInputParameter = otherName;
-            inputParameterList = new ArrayList<InputParameter>();
-            inputParameterList.add(InputParameter.get(otherName));
+            inputParameterList = OrderedCollection.of(InputParameter.get(otherName));
         }
 
         @Override
@@ -241,7 +240,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
         }
 
         @Override
-        public List<InputParameter> getInputParameters() {
+        public OrderedCollection<InputParameter> getInputParameters() {
             return inputParameterList;
         }
 
@@ -311,7 +310,7 @@ public abstract class BooleanConstraint extends BooleanExpression {
     }
 
     @Override
-    public abstract List<InputParameter> getInputParameters();
+    public abstract OrderedCollection<InputParameter> getInputParameters();
 
     @Override
     public final List<InternalVariable> getInternalVariables() {

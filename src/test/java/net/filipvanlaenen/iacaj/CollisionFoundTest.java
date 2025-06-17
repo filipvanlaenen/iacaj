@@ -2,10 +2,10 @@ package net.filipvanlaenen.iacaj;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 
 /**
  * Unit tests on the <code>CollisionFound</code> class.
@@ -21,8 +21,8 @@ public class CollisionFoundTest {
      *
      * @return A set with four input parameters.
      */
-    private Set<InputParameter> createFourInputParameters() {
-        Set<InputParameter> inputParameters = new HashSet<InputParameter>();
+    private Collection<InputParameter> createFourInputParameters() {
+        ModifiableCollection<InputParameter> inputParameters = ModifiableCollection.<InputParameter>empty();
         for (int i = 1; i <= FOUR; i++) {
             inputParameters.add(InputParameter.get("i" + i));
         }
@@ -30,15 +30,14 @@ public class CollisionFoundTest {
     }
 
     /**
-     * Verifies that <code>toString</code> produces a correct message when the
-     * collision has one constraint, one eliminated input parameter and two free
-     * input input parameters.
+     * Verifies that <code>toString</code> produces a correct message when the collision has one constraint, one
+     * eliminated input parameter and two free input input parameters.
      */
     @Test
     public void toStringIsCorrectForOneConstraintOneEliminatedParameterAndTwoFreeInputParameters() {
         String[] content = new String[] {"i1 = True", "o1 = i3 ∧ i4"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> inputParameters = createFourInputParameters();
+        Collection<InputParameter> inputParameters = createFourInputParameters();
         CollisionFound collisionFound = new CollisionFound(booleanFunction, inputParameters);
         StringBuffer expected = new StringBuffer();
         expected.append("Collision found:\n");
@@ -50,15 +49,14 @@ public class CollisionFoundTest {
     }
 
     /**
-     * Verifies that <code>toString</code> produces a correct message when the
-     * collision has two constraints, one eliminated input parameter and one free
-     * input input parameter.
+     * Verifies that <code>toString</code> produces a correct message when the collision has two constraints, one
+     * eliminated input parameter and one free input input parameter.
      */
     @Test
     public void toStringIsCorrectForTwoConstraintsOneEliminatedInputParameterAndOneFreeInputInputParameter() {
         String[] content = new String[] {"i1 = True", "i2 = True", "o1 = i4"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> inputParameters = createFourInputParameters();
+        Collection<InputParameter> inputParameters = createFourInputParameters();
         CollisionFound collisionFound = new CollisionFound(booleanFunction, inputParameters);
         StringBuffer expected = new StringBuffer();
         expected.append("Collision found:\n");
@@ -71,15 +69,14 @@ public class CollisionFoundTest {
     }
 
     /**
-     * Verifies that <code>toString</code> produces a correct message when the
-     * collision has one constraint, two eliminated input parameters and one free
-     * input parameter.
+     * Verifies that <code>toString</code> produces a correct message when the collision has one constraint, two
+     * eliminated input parameters and one free input parameter.
      */
     @Test
     public void toStringIsCorrectForOneConstraintTwoEliminatedInputParametersAndOneFreeInputParameter() {
         String[] content = new String[] {"i1 = True", "o1 = i4"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> inputParameters = createFourInputParameters();
+        Collection<InputParameter> inputParameters = createFourInputParameters();
         CollisionFound collisionFound = new CollisionFound(booleanFunction, inputParameters);
         StringBuffer expected = new StringBuffer();
         expected.append("Collision found:\n");
@@ -91,15 +88,14 @@ public class CollisionFoundTest {
     }
 
     /**
-     * Verifies that <code>toString</code> produces a correct message when the
-     * collision has one constraint, three eliminated input parameters and no free
-     * input parameters.
+     * Verifies that <code>toString</code> produces a correct message when the collision has one constraint, three
+     * eliminated input parameters and no free input parameters.
      */
     @Test
     public void toStringIsCorrectForOneConstraintTwoEliminatedInputParametersAndNoFreeInputParameters() {
         String[] content = new String[] {"i1 = True", "o1 = True"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> inputParameters = createFourInputParameters();
+        Collection<InputParameter> inputParameters = createFourInputParameters();
         CollisionFound collisionFound = new CollisionFound(booleanFunction, inputParameters);
         StringBuffer expected = new StringBuffer();
         expected.append("Collision found:\n");

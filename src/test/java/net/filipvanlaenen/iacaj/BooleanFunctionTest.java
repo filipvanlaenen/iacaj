@@ -9,6 +9,9 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
+
 /**
  * Unit tests on the <code>BooleanFunction</code> class.
  */
@@ -27,8 +30,7 @@ public class BooleanFunctionTest {
     private static final int NINE = 9;
 
     /**
-     * Creates a rich Boolean function, i.e. a Boolean function with all the
-     * features needed for unit testing.
+     * Creates a rich Boolean function, i.e. a Boolean function with all the features needed for unit testing.
      *
      * @return A rich Boolean function.
      */
@@ -70,8 +72,8 @@ public class BooleanFunctionTest {
      * @param names The names of the input parameters to be added to the set.
      * @return A set with input parameters having the provided names.
      */
-    private Set<InputParameter> createInputParameterSet(final String... names) {
-        Set<InputParameter> result = new HashSet<InputParameter>();
+    private Collection<InputParameter> createInputParameterSet(final String... names) {
+        ModifiableCollection<InputParameter> result = ModifiableCollection.<InputParameter>empty();
         for (String name : names) {
             result.add(InputParameter.get(name));
         }
@@ -79,87 +81,80 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that parsing a simple AND expression results in a Boolean function
-     * with two input parameters.
+     * Verifies that parsing a simple AND expression results in a Boolean function with two input parameters.
      */
     @Test
     public void shouldParseSimpleAndExpressionWithTwoInputParameters() {
         String[] content = new String[] {"o1 = i1 ∧ i2"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> expected = createInputParameterSet("i1", "i2");
-        assertEquals(expected, booleanFunction.getInputParameters());
+        Collection<InputParameter> expected = createInputParameterSet("i1", "i2");
+        assertTrue(expected.containsSame(booleanFunction.getInputParameters()));
     }
 
     /**
-     * Verifies that parsing a simple AND expression results in a Boolean function
-     * with three input parameters.
+     * Verifies that parsing a simple AND expression results in a Boolean function with three input parameters.
      */
     @Test
     public void shouldParseSimpleAndExpressionWithThreeInputParameters() {
         String[] content = new String[] {"o1 = i1 ∧ i2 ∧ i3"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> expected = createInputParameterSet("i1", "i2", "i3");
-        assertEquals(expected, booleanFunction.getInputParameters());
+        Collection<InputParameter> expected = createInputParameterSet("i1", "i2", "i3");
+        assertTrue(expected.containsSame(booleanFunction.getInputParameters()));
     }
 
     /**
-     * Verifies that parsing two simple AND expressions joins the input parameters
-     * correctly.
+     * Verifies that parsing two simple AND expressions joins the input parameters correctly.
      */
     @Test
     public void shouldParseTwoSimpleAndExpressionWithThreeInputParameters() {
         String[] content = new String[] {"o1 = i1 ∧ i2", "o2 = i2 ∧ i3"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
-        Set<InputParameter> expected = createInputParameterSet("i1", "i2", "i3");
-        assertEquals(expected, booleanFunction.getInputParameters());
+        Collection<InputParameter> expected = createInputParameterSet("i1", "i2", "i3");
+        assertTrue(expected.containsSame(booleanFunction.getInputParameters()));
     }
 
     /**
-     * Verifies that parsing a rich Boolean function recognizes the input parameters
-     * correctly.
+     * Verifies that parsing a rich Boolean function recognizes the input parameters correctly.
      */
     @Test
     public void parsingRichFunctionShouldRecognizeTheInputParameters() {
         BooleanFunction booleanFunction = createRichBooleanFunction();
         booleanFunction.addExpression(BooleanConstraint.parse("i9 = i8"));
-        Set<InputParameter> expected = createInputParameterSet("i3", "i5", "i7", "i8");
-        assertEquals(expected, booleanFunction.getInputParameters());
+        Collection<InputParameter> expected = createInputParameterSet("i3", "i5", "i7", "i8");
+        assertTrue(expected.containsSame(booleanFunction.getInputParameters()));
     }
 
     /**
-     * Verifies that parsing a rich Boolean function recognizes the input parameters
-     * in calculation correctly.
+     * Verifies that parsing a rich Boolean function recognizes the input parameters in calculation correctly.
      */
     @Test
     public void parsingRichFunctionShouldRecognizeTheInputParametersInCalculation() {
         BooleanFunction booleanFunction = createRichBooleanFunction();
         booleanFunction.addExpression(BooleanConstraint.parse("i9 = i8"));
-        Set<InputParameter> expected = createInputParameterSet("i3", "i5", "i7");
-        assertEquals(expected, booleanFunction.getInputParametersInCalculation());
+        Collection<InputParameter> expected = createInputParameterSet("i3", "i5", "i7");
+        assertTrue(expected.containsSame(booleanFunction.getInputParametersInCalculation()));
     }
 
     /**
-     * Verifies that the input parameters are cleared and recalculated after
-     * resolving.
+     * Verifies that the input parameters are cleared and recalculated after resolving.
      */
     @Test
     public void resolvingShouldRecalculateTheInputParameters() {
         BooleanFunction booleanFunction = BooleanFunction.parse("i1 = True", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3");
         booleanFunction.resolve();
-        Set<InputParameter> expected = createInputParameterSet("i2", "i3");
-        assertEquals(expected, booleanFunction.getInputParameters());
+        Collection<InputParameter> expected = createInputParameterSet("i2", "i3");
+        assertTrue(expected.containsSame(booleanFunction.getInputParameters()));
     }
 
     /**
-     * Verifies that the input parameters in calculation are cleared and
-     * recalculated after resolving.
+     * Verifies that the input parameters in calculation are cleared and recalculated after resolving.
      */
     @Test
     public void resolvingShouldRecalculateTheInputParametersInCalculation() {
         BooleanFunction booleanFunction = BooleanFunction.parse("i1 = True", "i5 = i4", "o1 = i1 ∧ i2", "o2 = i2 ∧ i3");
         booleanFunction.resolve();
-        Set<InputParameter> expected = createInputParameterSet("i2", "i3");
-        assertEquals(expected, booleanFunction.getInputParametersInCalculation());
+        Collection<InputParameter> expected = createInputParameterSet("i2", "i3");
+        assertTrue(expected.containsSame(booleanFunction.getInputParametersInCalculation()));
     }
 
     /**
@@ -167,20 +162,20 @@ public class BooleanFunctionTest {
      */
     @Test
     public void resolvingShouldRemoveInternalVariablesThatAreNotInUse() {
-        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∧ i2", "v3 = i1 ∧ i2",
-                "o1 = v1 ∧ i2");
+        BooleanFunction booleanFunction =
+                BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∧ i2", "v3 = i1 ∧ i2", "o1 = v1 ∧ i2");
         booleanFunction.resolve();
         assertEquals(1, booleanFunction.getNumberOfBooleanExpressions());
     }
 
     /**
-     * Verifies that resolving removes internal variables that are not in use, also
-     * when they were in use in the first elimination round.
+     * Verifies that resolving removes internal variables that are not in use, also when they were in use in the first
+     * elimination round.
      */
     @Test
     public void resolvingShouldRecursivelyRemoveInternalVariablesThatAreNotInUse() {
-        BooleanFunction booleanFunction = BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∨ i2", "v3 = i1 ∧ v2",
-                "o1 = v1 ∧ i2");
+        BooleanFunction booleanFunction =
+                BooleanFunction.parse("v1 = i1 ∧ i2", "v2 = i1 ∨ i2", "v3 = i1 ∧ v2", "o1 = v1 ∧ i2");
         booleanFunction.resolve();
         assertEquals(1, booleanFunction.getNumberOfBooleanExpressions());
     }
@@ -194,8 +189,7 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that a Boolean function without constraints returns an empty set of
-     * constraints.
+     * Verifies that a Boolean function without constraints returns an empty set of constraints.
      */
     @Test
     public void booleanFunctionWithoutConstraintsShouldReturnAnEmptySetOfConstraints() {
@@ -217,15 +211,14 @@ public class BooleanFunctionTest {
      */
     @Test
     public void shouldReturnConstraintsInSortedOrderFromARichBooleanFunction() {
-        List<BooleanConstraint> expected = List.of(BooleanConstraint.parse("i1", "True"),
-                BooleanConstraint.parse("i2", "False"), BooleanConstraint.parse("i4", "i3"),
-                BooleanConstraint.parse("i6", "¬i5"));
+        List<BooleanConstraint> expected =
+                List.of(BooleanConstraint.parse("i1", "True"), BooleanConstraint.parse("i2", "False"),
+                        BooleanConstraint.parse("i4", "i3"), BooleanConstraint.parse("i6", "¬i5"));
         assertEquals(expected, createRichBooleanFunction().getSortedConstraints());
     }
 
     /**
-     * Verifies the correct calculation of the number of constraints on a rich
-     * Boolean function.
+     * Verifies the correct calculation of the number of constraints on a rich Boolean function.
      */
     @Test
     public void shouldReturnTheCorrectNumberOfConstraintsOnARichBooleanFunction() {
@@ -233,8 +226,7 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies the correct calculation of the number of Boolean expressions on a
-     * rich Boolean function.
+     * Verifies the correct calculation of the number of Boolean expressions on a rich Boolean function.
      */
     @Test
     public void shouldReturnTheCorrectNumberOfExpressionsOnARichBooleanFunction() {
@@ -242,8 +234,7 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies the correct calculation of the number of input parameters on a rich
-     * Boolean function.
+     * Verifies the correct calculation of the number of input parameters on a rich Boolean function.
      */
     @Test
     public void shouldReturnTheCorrectNumberOfInputParametersOnARichBooleanFunction() {
@@ -251,8 +242,7 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies the correct calculation of the number of input parameters in
-     * calculation on a rich Boolean function.
+     * Verifies the correct calculation of the number of input parameters in calculation on a rich Boolean function.
      */
     @Test
     public void shouldReturnTheCorrectNumberOfInputParametersInCalculationOnARichBooleanFunction() {
@@ -260,8 +250,7 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that adding a constraint with two new input parameters increments
-     * the number of input parameters.
+     * Verifies that adding a constraint with two new input parameters increments the number of input parameters.
      */
     @Test
     public void numberOfInputParametersShouldIncludeInputParametersFromConstraints() {
@@ -271,8 +260,8 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that adding a constraint with two new input parameters doesn't
-     * increment the number of input parameters in calculation.
+     * Verifies that adding a constraint with two new input parameters doesn't increment the number of input parameters
+     * in calculation.
      */
     @Test
     public void numberOfInputParametersInCalculationShouldNotIncludeInputParametersFromConstraints() {
@@ -302,8 +291,8 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies export of a Boolean function to a string after cloning it from
-     * another Boolean function together with constraints.
+     * Verifies export of a Boolean function to a string after cloning it from another Boolean function together with
+     * constraints.
      */
     @Test
     public void shouldExportARichBooleanFunctionCorrectlyAfterCloningFromAnotherBooleanFunctionAndConstraints() {
@@ -321,8 +310,8 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that exporting a BooleanFunction started as an empty function but
-     * with an expression added is exported correctly.
+     * Verifies that exporting a BooleanFunction started as an empty function but with an expression added is exported
+     * correctly.
      */
     @Test
     public void shouldExportAddedExpressionCorrectly() {
@@ -332,14 +321,14 @@ public class BooleanFunctionTest {
     }
 
     /**
-     * Verifies that exporting a BooleanFunction started as an empty function but
-     * with two expressions added is exported correctly.
+     * Verifies that exporting a BooleanFunction started as an empty function but with two expressions added is exported
+     * correctly.
      */
     @Test
     public void shouldExportAddedExpressionsCorrectly() {
         BooleanFunction bf = new BooleanFunction();
-        Set<BooleanExpression> booleanExpressions = Set.of(BooleanExpression.parse("o1 = i1 ∧ i2"),
-                BooleanExpression.parse("o2 = i2 ∧ i3"));
+        Set<BooleanExpression> booleanExpressions =
+                Set.of(BooleanExpression.parse("o1 = i1 ∧ i2"), BooleanExpression.parse("o2 = i2 ∧ i3"));
         bf.addExpressions(booleanExpressions);
         StringBuilder sb = new StringBuilder();
         sb.append("o1 = i1 ∧ i2\n");

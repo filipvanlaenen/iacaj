@@ -2,6 +2,8 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.List;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
  * Class representing the right hand side of a Boolean operation.
  */
@@ -39,7 +41,7 @@ public abstract class BooleanRightHandSide {
      *
      * @return A list with the input parameters used in the right hand side.
      */
-    public abstract List<InputParameter> getInputParameters();
+    public abstract OrderedCollection<InputParameter> getInputParameters();
 
     /**
      * Returns a list with the internal variables used in the right hand side.

@@ -104,7 +104,7 @@ public final class BooleanConstraints {
             for (BooleanConstraint constraint : constraints) {
                 if (constraint instanceof BooleanEqualityConstraint) {
                     BooleanEqualityConstraint bec = (BooleanEqualityConstraint) constraint;
-                    InputParameter ip = bec.getInputParameters().get(0);
+                    InputParameter ip = bec.getInputParameters().getAt(0);
                     for (BooleanConstraint other : constraints) {
                         if (other != constraint && other.getName().equals(ip.getName())) {
                             constraintA = constraint;
@@ -113,7 +113,7 @@ public final class BooleanConstraints {
                     }
                 } else if (constraint instanceof BooleanOppositionConstraint) {
                     BooleanOppositionConstraint boc = (BooleanOppositionConstraint) constraint;
-                    InputParameter ip = boc.getInputParameters().get(0);
+                    InputParameter ip = boc.getInputParameters().getAt(0);
                     for (BooleanConstraint other : constraints) {
                         if (other != constraint && other.getName().equals(ip.getName())) {
                             constraintA = constraint;
@@ -128,13 +128,13 @@ public final class BooleanConstraints {
                     if (constraintB instanceof BooleanEqualityConstraint) {
                         BooleanEqualityConstraint b = (BooleanEqualityConstraint) constraintB;
                         BooleanEqualityConstraint r =
-                                new BooleanEqualityConstraint(a.getName(), b.getInputParameters().get(0).getName());
+                                new BooleanEqualityConstraint(a.getName(), b.getInputParameters().getAt(0).getName());
                         constraints.remove(constraintA);
                         constraints.add(r);
                     } else if (constraintB instanceof BooleanOppositionConstraint) {
                         BooleanOppositionConstraint b = (BooleanOppositionConstraint) constraintB;
                         BooleanOppositionConstraint r =
-                                new BooleanOppositionConstraint(a.getName(), b.getInputParameters().get(0).getName());
+                                new BooleanOppositionConstraint(a.getName(), b.getInputParameters().getAt(0).getName());
                         constraints.remove(constraintA);
                         constraints.add(r);
                     } else if (constraintB instanceof BooleanTrueConstraint) {
@@ -151,13 +151,13 @@ public final class BooleanConstraints {
                     if (constraintB instanceof BooleanEqualityConstraint) {
                         BooleanEqualityConstraint b = (BooleanEqualityConstraint) constraintB;
                         BooleanOppositionConstraint r =
-                                new BooleanOppositionConstraint(a.getName(), b.getInputParameters().get(0).getName());
+                                new BooleanOppositionConstraint(a.getName(), b.getInputParameters().getAt(0).getName());
                         constraints.remove(constraintA);
                         constraints.add(r);
                     } else if (constraintB instanceof BooleanOppositionConstraint) {
                         BooleanOppositionConstraint b = (BooleanOppositionConstraint) constraintB;
                         BooleanEqualityConstraint r =
-                                new BooleanEqualityConstraint(a.getName(), b.getInputParameters().get(0).getName());
+                                new BooleanEqualityConstraint(a.getName(), b.getInputParameters().getAt(0).getName());
                         constraints.remove(constraintA);
                         constraints.add(r);
                     } else if (constraintB instanceof BooleanTrueConstraint) {

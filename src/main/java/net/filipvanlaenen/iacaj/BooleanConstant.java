@@ -3,9 +3,10 @@ package net.filipvanlaenen.iacaj;
 import java.util.Collections;
 import java.util.List;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
- * Class representing a right hand side of a Boolean operation with a constant,
- * i.e. either True or False.
+ * Class representing a right hand side of a Boolean operation with a constant, i.e. either True or False.
  */
 public final class BooleanConstant extends BooleanRightHandSide {
     /**
@@ -48,8 +49,8 @@ public final class BooleanConstant extends BooleanRightHandSide {
     }
 
     @Override
-    public List<InputParameter> getInputParameters() {
-        return Collections.emptyList();
+    public OrderedCollection<InputParameter> getInputParameters() {
+        return OrderedCollection.<InputParameter>empty();
     }
 
     @Override

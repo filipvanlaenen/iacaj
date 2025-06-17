@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
  * Class representing a complexity report for a Boolean function.
  */
@@ -70,26 +72,20 @@ public final class ComplexityReport {
         abstract long measureIncrement(BooleanExpression booleanExpression);
 
         /**
-         * Measures the increment in the metric for an input parameter in a Boolean
-         * expression.
+         * Measures the increment in the metric for an input parameter in a Boolean expression.
          *
          * @param booleanExpression The Boolean expression to measure the increment.
-         * @param inputParameter    The input parameter for which to measure the
-         *                          increment.
-         * @return The increment in the metric for the input parameter in the Boolean
-         *         expression.
+         * @param inputParameter    The input parameter for which to measure the increment.
+         * @return The increment in the metric for the input parameter in the Boolean expression.
          */
         abstract long measureIncrement(BooleanExpression booleanExpression, InputParameter inputParameter);
 
         /**
-         * Measures the increment in the metric for an input parameter pair in a Boolean
-         * expression.
+         * Measures the increment in the metric for an input parameter pair in a Boolean expression.
          *
          * @param booleanExpression  The Boolean expression to measure the increment.
-         * @param inputParameterPair The input parameter pair for which to measure the
-         *                           increment.
-         * @return The increment in the metric for the input parameter pair in the
-         *         Boolean expression.
+         * @param inputParameterPair The input parameter pair for which to measure the increment.
+         * @return The increment in the metric for the input parameter pair in the Boolean expression.
          */
         abstract long measureIncrement(BooleanExpression booleanExpression, InputParameterPair inputParameterPair);
     }
@@ -112,11 +108,9 @@ public final class ComplexityReport {
     private final Set<InputParameterPair> inputParameterPairs;
 
     /**
-     * Constructor with the Boolean function for which to produce a complexity
-     * report as its parameter.
+     * Constructor with the Boolean function for which to produce a complexity report as its parameter.
      *
-     * @param booleanFunction The Boolean function for which to produce a complexity
-     *                        report.
+     * @param booleanFunction The Boolean function for which to produce a complexity report.
      */
     public ComplexityReport(final BooleanFunction booleanFunction) {
         aggregatedValues = new HashMap<Metric, Long>();
@@ -149,8 +143,7 @@ public final class ComplexityReport {
      * Returns the value for a metric for an input parameter pair.
      *
      * @param metric             The metric for which to return the value.
-     * @param inputParameterPair The input parameter pair for which to return the
-     *                           value.
+     * @param inputParameterPair The input parameter pair for which to return the value.
      * @return The value for a metric for an input parameter pair.
      */
     Long getInputParameterPairValue(final Metric metric, final InputParameterPair inputParameterPair) {
@@ -160,10 +153,8 @@ public final class ComplexityReport {
     /**
      * Returns the value for a metric for an input parameter.
      *
-     * @param metric         The metric for which to return the input parameter's
-     *                       value.
-     * @param inputParameter The input parameter for which to return the metric's
-     *                       value.
+     * @param metric         The metric for which to return the input parameter's value.
+     * @param inputParameter The input parameter for which to return the metric's value.
      * @return The value for a metric for an input parameter.
      */
     Long getInputParameterValue(final Metric metric, final InputParameter inputParameter) {
@@ -173,8 +164,7 @@ public final class ComplexityReport {
     /**
      * Measures all the metrics for a Boolean function.
      *
-     * @param booleanFunction The Boolean function for which to produce a complexity
-     *                        report.
+     * @param booleanFunction The Boolean function for which to produce a complexity report.
      */
     private void measure(final BooleanFunction booleanFunction) {
         for (Metric metric : Metric.values()) {
@@ -213,16 +203,16 @@ public final class ComplexityReport {
      * Calculates all the input parameter pairs from a list of input parameters.
      *
      * @param inputParameters A list of input parameters.
-     * @return A set of input parameter pairs calculated from the list of input
-     *         parameters.
+     * @return A set of input parameter pairs calculated from the list of input parameters.
      */
-    private Set<InputParameterPair> calculateInputParameterPairs(final List<InputParameter> inputParameters) {
+    private Set<InputParameterPair> calculateInputParameterPairs(
+            final OrderedCollection<InputParameter> inputParameters) {
         Set<InputParameterPair> result = new HashSet<InputParameterPair>();
         // Replacing less-than with less-than-or-equal-to produces an equivalent mutant
         // because the inner loop won't run.
         for (int i = 0; i < inputParameters.size(); i++) {
             for (int j = i + 1; j < inputParameters.size(); j++) {
-                result.add(new InputParameterPair(inputParameters.get(i), inputParameters.get(j)));
+                result.add(new InputParameterPair(inputParameters.getAt(i), inputParameters.getAt(j)));
             }
         }
         return result;
@@ -234,8 +224,8 @@ public final class ComplexityReport {
         for (Metric metric : Metric.values()) {
             sb.append(metric.getHumanReadableName() + ": " + getAggregatedValue(metric) + "\n");
             Map<InputParameter, Long> inputParameterValuesMap = inputParameterValues.get(metric);
-            List<InputParameter> sortedInputParameters = new ArrayList<InputParameter>(
-                    inputParameterValuesMap.keySet());
+            List<InputParameter> sortedInputParameters =
+                    new ArrayList<InputParameter>(inputParameterValuesMap.keySet());
             sortedInputParameters.sort(new Comparator<InputParameter>() {
                 @Override
                 public int compare(final InputParameter ip0, final InputParameter ip1) {
@@ -243,8 +233,8 @@ public final class ComplexityReport {
                 }
             });
             Map<InputParameterPair, Long> inputParameterPairValuesMap = inputParameterPairValues.get(metric);
-            List<InputParameterPair> sortedInputParameterPairs = new ArrayList<InputParameterPair>(
-                    getInputParameterPairs());
+            List<InputParameterPair> sortedInputParameterPairs =
+                    new ArrayList<InputParameterPair>(getInputParameterPairs());
             sortedInputParameterPairs.sort(new Comparator<InputParameterPair>() {
                 @Override
                 public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {

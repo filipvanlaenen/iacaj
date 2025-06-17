@@ -2,6 +2,8 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.List;
 
+import net.filipvanlaenen.kolektoj.OrderedCollection;
+
 /**
  * Class representing a Boolean operation.
  */
@@ -20,8 +22,8 @@ public final class BooleanOperation extends BooleanExpression {
     private BooleanRightHandSide rightHandSide;
 
     /**
-     * Constructor, creating a Boolean expression based on the left hand side and
-     * the right hand side of the expression as strings.
+     * Constructor, creating a Boolean expression based on the left hand side and the right hand side of the expression
+     * as strings.
      *
      * @param leftHandSide        The left hand side of the operation.
      * @param rightHandSideString The right hand side of the operation as a string.
@@ -31,8 +33,7 @@ public final class BooleanOperation extends BooleanExpression {
     }
 
     /**
-     * Constructor, creating a Boolean expression based on the left hand side and
-     * the right hand side of the expression.
+     * Constructor, creating a Boolean expression based on the left hand side and the right hand side of the expression.
      *
      * @param leftHandSide  The left hand side of the operation.
      * @param rightHandSide The right hand side of the operation.
@@ -49,7 +50,7 @@ public final class BooleanOperation extends BooleanExpression {
     }
 
     @Override
-    public List<InputParameter> getInputParameters() {
+    public OrderedCollection<InputParameter> getInputParameters() {
         return rightHandSide.getInputParameters();
     }
 

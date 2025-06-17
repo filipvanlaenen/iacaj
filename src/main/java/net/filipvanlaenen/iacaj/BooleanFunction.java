@@ -12,6 +12,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
@@ -91,11 +92,13 @@ public class BooleanFunction {
     /**
      * The input parameters of the Boolean function.
      */
-    private Set<InputParameter> inputParameters = new HashSet<InputParameter>();
+    private ModifiableCollection<InputParameter> inputParameters =
+            ModifiableCollection.<InputParameter>of(ElementCardinality.DISTINCT_ELEMENTS);
     /**
      * The input parameters of the Boolean function being used in the calculation.
      */
-    private Set<InputParameter> inputParametersInCalculation = new HashSet<InputParameter>();
+    private ModifiableCollection<InputParameter> inputParametersInCalculation =
+            ModifiableCollection.<InputParameter>of(ElementCardinality.DISTINCT_ELEMENTS);
 
     /**
      * Constructor to create an empty Boolean function.
@@ -217,8 +220,8 @@ public class BooleanFunction {
      *
      * @return The input parameters of the Boolean function.
      */
-    public Set<InputParameter> getInputParameters() {
-        return Set.copyOf(inputParameters);
+    public Collection<InputParameter> getInputParameters() {
+        return Collection.of(inputParameters);
     }
 
     /**
@@ -226,8 +229,8 @@ public class BooleanFunction {
      *
      * @return The input parameters of the Boolean function used in the calculation.
      */
-    public Set<InputParameter> getInputParametersInCalculation() {
-        return Set.copyOf(inputParametersInCalculation);
+    public Collection<InputParameter> getInputParametersInCalculation() {
+        return Collection.of(inputParametersInCalculation);
     }
 
     /**

@@ -1,11 +1,18 @@
 package net.filipvanlaenen.iacaj;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the <code>BooleanEquation</code> class.
@@ -151,8 +158,7 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that a Boolean equation is not equal to an object of another type,
-     * like e.g. an empty string.
+     * Verifies that a Boolean equation is not equal to an object of another type, like e.g. an empty string.
      */
     @Test
     public void booleanEquationShouldNotBeEqualToEmptyString() {
@@ -160,8 +166,7 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that a Boolean equation is equal to another Boolean equation
-     * constructed in the same manner.
+     * Verifies that a Boolean equation is equal to another Boolean equation constructed in the same manner.
      */
     @Test
     public void booleanEquationShouldBeEqualToBooleanEquationWithSameParameters() {
@@ -177,8 +182,7 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that a Boolean equation is not equal to a Boolean equation with
-     * another name.
+     * Verifies that a Boolean equation is not equal to a Boolean equation with another name.
      */
     @Test
     public void booleanEquationShouldNotBeEqualToBooleanEquationWithOtherName() {
@@ -194,8 +198,7 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that a Boolean equation doesn't have the same hash code as its
-     * negation.
+     * Verifies that a Boolean equation doesn't have the same hash code as its negation.
      */
     @Test
     public void booleanEquationShouldNotHaveSameHashCodeAsNegatedBooleanEquation() {
@@ -203,8 +206,7 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that a Boolean equation doesn't have the same hash code as a Boolean
-     * equation with another name.
+     * Verifies that a Boolean equation doesn't have the same hash code as a Boolean equation with another name.
      */
     @Test
     public void booleanEquationShouldNotHaveSameHashCodeAsBooleanEquationWithOtherName() {
@@ -212,8 +214,8 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that a Boolean equation referring to an internal variable returns an
-     * empty list for the input parameters.
+     * Verifies that a Boolean equation referring to an internal variable returns an empty list for the input
+     * parameters.
      */
     @Test
     public void inputParametersListIsEmptyWhenReferringToInternalVariable() {
@@ -221,19 +223,18 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that getInputParameters on a Boolean equation referring to an input
-     * parameter returns a list with that input parameter.
+     * Verifies that getInputParameters on a Boolean equation referring to an input parameter returns a list with that
+     * input parameter.
      */
     @Test
     public void inputParametersListContainsTheInputParameterWhenReferringToInputParameter() {
-        List<InputParameter> expected = new ArrayList<InputParameter>();
-        expected.add(InputParameter.get("i1"));
-        assertEquals(expected, BOOLEAN_EQUATION_I1.getInputParameters());
+        OrderedCollection<InputParameter> expected = OrderedCollection.of(InputParameter.get("i1"));
+        assertTrue(expected.containsSame(BOOLEAN_EQUATION_I1.getInputParameters()));
     }
 
     /**
-     * Verifies that a Boolean equation referring to an input parameter returns an
-     * empty list for the internal variables.
+     * Verifies that a Boolean equation referring to an input parameter returns an empty list for the internal
+     * variables.
      */
     @Test
     public void internalVariablesEmptyWhenReferringToInputParameter() {
@@ -241,8 +242,8 @@ public class BooleanEquationTest {
     }
 
     /**
-     * Verifies that getInternalVariables on a Boolean equation referring to an
-     * internal variable returns a list with that internal variable.
+     * Verifies that getInternalVariables on a Boolean equation referring to an internal variable returns a list with
+     * that internal variable.
      */
     @Test
     public void internalVariablesListContainsTheInternalVariableWhenReferringToInternalVariable() {

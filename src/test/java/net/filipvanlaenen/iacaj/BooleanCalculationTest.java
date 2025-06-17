@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.BooleanCalculation.OperandComparator;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
  * Unit tests on the <code>BooleanCalculation</code> class.
@@ -236,9 +237,8 @@ public class BooleanCalculationTest {
      */
     @Test
     public void shouldExtractTheInputParameters() {
-        List<InputParameter> expected = new ArrayList<InputParameter>();
-        expected.add(InputParameter.get("i1"));
-        assertEquals(expected, BOOLEAN_CALCULATION_I1_XOR_V1.getInputParameters());
+        OrderedCollection<InputParameter> expected = OrderedCollection.of(InputParameter.get("i1"));
+        assertTrue(expected.containsSame(BOOLEAN_CALCULATION_I1_XOR_V1.getInputParameters()));
     }
 
     /**
