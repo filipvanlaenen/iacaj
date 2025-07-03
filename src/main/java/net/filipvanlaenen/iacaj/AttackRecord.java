@@ -1,8 +1,6 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.List;
 
 import net.filipvanlaenen.iacaj.ComplexityReport.Metric;
 import net.filipvanlaenen.kolektoj.Collection;
@@ -84,17 +82,14 @@ class AttackRecord {
      *
      * @return A prioritized list of the input parameter pairs.
      */
-    List<InputParameterPair> getPrioritizedInputParameterPairs() {
-        List<InputParameterPair> prioritizedInputParameterPairs =
-                new ArrayList<InputParameterPair>(complexityReport.getInputParameterPairs());
-        prioritizedInputParameterPairs.sort(new Comparator<InputParameterPair>() {
+    SortedCollection<InputParameterPair> getPrioritizedInputParameterPairs() {
+        return SortedCollection.<InputParameterPair>of(new Comparator<InputParameterPair>() {
             @Override
             public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {
                 Long m0 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp0);
                 Long m1 = complexityReport.getInputParameterPairValue(Metric.NumberOfExpressions, ipp1);
                 return m1.intValue() - m0.intValue();
             }
-        });
-        return prioritizedInputParameterPairs;
+        }, complexityReport.getInputParameterPairs());
     }
 }

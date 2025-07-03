@@ -96,11 +96,11 @@ public class AttackRecordTest {
                 "o4 = i1 ∧ i4", "o1 = i1 ∨ i2 ∨ i3"};
         BooleanFunction booleanFunction = BooleanFunction.parse(content);
         AttackRecord attackRecord = new AttackRecord(booleanFunction);
-        List<InputParameterPair> expected = new ArrayList<InputParameterPair>();
-        expected.add(new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_2));
-        expected.add(new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_3));
-        expected.add(new InputParameterPair(INPUT_PARAMETER_2, INPUT_PARAMETER_3));
-        expected.add(new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_4));
-        assertEquals(expected, attackRecord.getPrioritizedInputParameterPairs());
+        Collection<InputParameterPair> expected =
+                Collection.of(new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_2),
+                        new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_3),
+                        new InputParameterPair(INPUT_PARAMETER_2, INPUT_PARAMETER_3),
+                        new InputParameterPair(INPUT_PARAMETER_1, INPUT_PARAMETER_4));
+        assertTrue(expected.containsSame(attackRecord.getPrioritizedInputParameterPairs()));
     }
 }

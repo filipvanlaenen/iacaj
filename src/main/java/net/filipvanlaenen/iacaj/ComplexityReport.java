@@ -8,7 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.SortedCollection;
 
 /**
  * Class representing a complexity report for a Boolean function.
@@ -105,7 +108,7 @@ public final class ComplexityReport {
     /**
      * Set holding all registered input parameter pairs.
      */
-    private final Set<InputParameterPair> inputParameterPairs;
+    private final ModifiableCollection<InputParameterPair> inputParameterPairs;
 
     /**
      * Constructor with the Boolean function for which to produce a complexity report as its parameter.
@@ -115,7 +118,7 @@ public final class ComplexityReport {
     public ComplexityReport(final BooleanFunction booleanFunction) {
         aggregatedValues = new HashMap<Metric, Long>();
         inputParameterValues = new HashMap<Metric, Map<InputParameter, Long>>();
-        inputParameterPairs = new HashSet<InputParameterPair>();
+        inputParameterPairs = ModifiableCollection.<InputParameterPair>empty();
         inputParameterPairValues = new HashMap<Metric, Map<InputParameterPair, Long>>();
         measure(booleanFunction);
     }
@@ -135,8 +138,8 @@ public final class ComplexityReport {
      *
      * @return A set with all the registered input parameter pairs.
      */
-    Set<InputParameterPair> getInputParameterPairs() {
-        return inputParameterPairs;
+    Collection<InputParameterPair> getInputParameterPairs() {
+        return Collection.of(inputParameterPairs);
     }
 
     /**
@@ -233,19 +236,18 @@ public final class ComplexityReport {
                 }
             });
             Map<InputParameterPair, Long> inputParameterPairValuesMap = inputParameterPairValues.get(metric);
-            List<InputParameterPair> sortedInputParameterPairs =
-                    new ArrayList<InputParameterPair>(getInputParameterPairs());
-            sortedInputParameterPairs.sort(new Comparator<InputParameterPair>() {
-                @Override
-                public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {
-                    int c = ipp0.getFirst().getNumber() - ipp1.getFirst().getNumber();
-                    if (c == 0) {
-                        return ipp0.getLast().getNumber() - ipp1.getLast().getNumber();
-                    } else {
-                        return c;
-                    }
-                }
-            });
+            SortedCollection<InputParameterPair> sortedInputParameterPairs =
+                    SortedCollection.<InputParameterPair>of(new Comparator<InputParameterPair>() {
+                        @Override
+                        public int compare(final InputParameterPair ipp0, final InputParameterPair ipp1) {
+                            int c = ipp0.getFirst().getNumber() - ipp1.getFirst().getNumber();
+                            if (c == 0) {
+                                return ipp0.getLast().getNumber() - ipp1.getLast().getNumber();
+                            } else {
+                                return c;
+                            }
+                        }
+                    }, getInputParameterPairs());
             for (int i = 0; i < sortedInputParameters.size(); i++) {
                 InputParameter sortedInputParameter = sortedInputParameters.get(i);
                 sb.append("  " + sortedInputParameter.getName() + ": "
@@ -254,9 +256,8 @@ public final class ComplexityReport {
                     sb.append("\n");
                 }
             }
-
             for (int i = 0; i < sortedInputParameterPairs.size(); i++) {
-                InputParameterPair sortedInputParameterPair = sortedInputParameterPairs.get(i);
+                InputParameterPair sortedInputParameterPair = sortedInputParameterPairs.getAt(i);
                 sb.append("  " + sortedInputParameterPair.getFirst().getName() + "×"
                         + sortedInputParameterPair.getLast().getName() + ": "
                         + inputParameterPairValuesMap.get(sortedInputParameterPair));
