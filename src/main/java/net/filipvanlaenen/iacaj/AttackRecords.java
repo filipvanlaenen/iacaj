@@ -3,11 +3,11 @@ package net.filipvanlaenen.iacaj;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.filipvanlaenen.iacaj.ComplexityReport.Metric;
+import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.SortedCollection;
 
 /**
  * Class keeping track of all performed attacks on a Boolean function.
@@ -23,14 +23,13 @@ public class AttackRecords {
     private long bestNumberOfExpressions = Long.MAX_VALUE;
 
     /**
-     * Class representing an attack line, i.e. a set of attack records with the same
-     * number of Boolean constraints.
+     * Class representing an attack line, i.e. a set of attack records with the same number of Boolean constraints.
      */
     public class AttackLine {
         /**
          * The attacks records, mapped by their constraints.
          */
-        private final Map<BooleanConstraints, AttackRecord> attackRecords;
+        private final ModifiableMap<BooleanConstraints, AttackRecord> attackRecords;
         /**
          * The predecessor of the attack line.
          */
@@ -50,12 +49,12 @@ public class AttackRecords {
          */
         AttackLine(final AttackLine predecessor) {
             this.predecessor = predecessor;
-            attackRecords = new HashMap<BooleanConstraints, AttackRecord>();
+            attackRecords = ModifiableMap.<BooleanConstraints, AttackRecord>empty();
         }
 
         /**
-         * Adds a Boolean function to the attack line. Note that the Boolean function is
-         * not added, but an attack record created from it.
+         * Adds a Boolean function to the attack line. Note that the Boolean function is not added, but an attack record
+         * created from it.
          *
          * @param booleanFunction The Boolean function to be added.
          */
@@ -65,13 +64,12 @@ public class AttackRecords {
         }
 
         /**
-         * Extends the Boolean constraints of a parent attack record with a new
-         * constraint, such that the result can be used as the next collision candidate.
-         * Returns <code>null</code> if none can be found.
+         * Extends the Boolean constraints of a parent attack record with a new constraint, such that the result can be
+         * used as the next collision candidate. Returns <code>null</code> if none can be found.
          *
          * @param parent The parent attack record to extend.
-         * @return A Boolean constraints instance that is the next collision candidate
-         *         extended fro the parent attack record.
+         * @return A Boolean constraints instance that is the next collision candidate extended fro the parent attack
+         *         record.
          */
         private BooleanConstraints extendParent(final AttackRecord parent) {
             BooleanConstraints parentConstraints = parent.getConstraints();
@@ -86,8 +84,8 @@ public class AttackRecords {
                 }
             }
             for (InputParameterPair inputParameterPair : parent.getPrioritizedInputParameterPairs()) {
-                BooleanConstraints extensionWithEquality = parentConstraints.extend(inputParameterPair.getFirst(),
-                        inputParameterPair.getLast().getName());
+                BooleanConstraints extensionWithEquality =
+                        parentConstraints.extend(inputParameterPair.getFirst(), inputParameterPair.getLast().getName());
                 if (!attackRecords.containsKey(extensionWithEquality)) {
                     return extensionWithEquality;
                 }
@@ -101,14 +99,13 @@ public class AttackRecords {
         }
 
         /**
-         * Returns the next collision candidate for this attack line. Returns
-         * <code>null</code> if no collision candidates for this attack line can be
-         * found.
+         * Returns the next collision candidate for this attack line. Returns <code>null</code> if no collision
+         * candidates for this attack line can be found.
          *
          * @return The next collision candidate for this attack line, or null.
          */
         BooleanConstraints findNextCollisionCandidate() {
-            List<AttackRecord> parents = predecessor.getPrioritizedAttackRecords();
+            SortedCollection<AttackRecord> parents = predecessor.getPrioritizedAttackRecords();
             for (AttackRecord parent : parents) {
                 BooleanConstraints candidate = extendParent(parent);
                 if (candidate != null) {
@@ -132,20 +129,17 @@ public class AttackRecords {
          *
          * @return A prioritized list of attack records.
          */
-        private List<AttackRecord> getPrioritizedAttackRecords() {
-            List<AttackRecord> prioritizedAttackRecords = new ArrayList<AttackRecord>(attackRecords.values());
-            prioritizedAttackRecords.sort(new Comparator<AttackRecord>() {
+        private SortedCollection<AttackRecord> getPrioritizedAttackRecords() {
+            return SortedCollection.<AttackRecord>of(new Comparator<AttackRecord>() {
                 @Override
                 public int compare(final AttackRecord attackRecord0, final AttackRecord attackRecord1) {
                     return 0;
                 }
-            });
-            return prioritizedAttackRecords;
+            }, attackRecords.getValues());
         }
 
         /**
-         * Returns the size of the attack line, i.e. the number of attack records stored
-         * in this attack line.
+         * Returns the size of the attack line, i.e. the number of attack records stored in this attack line.
          *
          * @return The size of the attack line.
          */
@@ -155,14 +149,13 @@ public class AttackRecords {
     }
 
     /**
-     * The attack lines in which the resolved Boolean functions are stored by number
-     * of constraints.
+     * The attack lines in which the resolved Boolean functions are stored by number of constraints.
      */
     private final AttackLine[] attackLines;
 
     /**
-     * Constructor taking a Boolean function as its parameter. It is assumed that
-     * the Boolean function has no constraints.
+     * Constructor taking a Boolean function as its parameter. It is assumed that the Boolean function has no
+     * constraints.
      *
      * @param booleanFunction The Boolean function to attack.
      */
@@ -176,11 +169,9 @@ public class AttackRecords {
     }
 
     /**
-     * Adds a Boolean function to the attack records. It is assumed that the Boolean
-     * function is already resolved.
+     * Adds a Boolean function to the attack records. It is assumed that the Boolean function is already resolved.
      *
-     * @param booleanFunction The Boolean function to be added to the attack
-     *                        records.
+     * @param booleanFunction The Boolean function to be added to the attack records.
      */
     void add(final BooleanFunction booleanFunction) {
         attackLines[booleanFunction.getNumberOfConstraints()].add(booleanFunction);
@@ -192,11 +183,10 @@ public class AttackRecords {
     }
 
     /**
-     * Finds a set of Boolean constraints that is the next collision candidate.
-     * Returns <code>null</code> if none can be found.
+     * Finds a set of Boolean constraints that is the next collision candidate. Returns <code>null</code> if none can be
+     * found.
      *
-     * @return A BooleanConstraints instance representing the next collision
-     *         candidate.
+     * @return A BooleanConstraints instance representing the next collision candidate.
      */
     BooleanConstraints findNextCollisionCandidate() {
         List<AttackLine> prioritizedAttackLines = getPrioritizedAttackLines();
@@ -228,9 +218,8 @@ public class AttackRecords {
     }
 
     /**
-     * Sorts the attack lines according to priority: edges first, then regular
-     * lines, and lines with empty predecessors at the end. Edges are lines that are
-     * empty, but with a predecessor that is not empty.
+     * Sorts the attack lines according to priority: edges first, then regular lines, and lines with empty predecessors
+     * at the end. Edges are lines that are empty, but with a predecessor that is not empty.
      *
      * @return A prioritized list of the attack lines.
      */
