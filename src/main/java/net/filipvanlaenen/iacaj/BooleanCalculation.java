@@ -2,7 +2,6 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -155,13 +154,13 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
     }
 
     @Override
-    public final List<InternalVariable> getInternalVariables() {
+    public final OrderedCollection<InternalVariable> getInternalVariables() {
         return operands.stream().filter(new Predicate<BooleanOperand>() {
             @Override
             public boolean test(final BooleanOperand operand) {
                 return !InputParameter.isInputParameter(operand.getName());
             }
-        }).map(BooleanOperand::getName).map(InternalVariable::get).collect(Collectors.toList());
+        }).map(BooleanOperand::getName).map(InternalVariable::get).collect(OrderedCollectionCollector.toCollection());
     }
 
     /**

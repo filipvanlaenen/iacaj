@@ -1,7 +1,5 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.List;
-
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -48,7 +46,7 @@ public abstract class BooleanExpression {
      *
      * @return The internal variables of the Boolean expression.
      */
-    protected abstract List<InternalVariable> getInternalVariables();
+    protected abstract OrderedCollection<InternalVariable> getInternalVariables();
 
     /**
      * Returns the name of the Boolean expression.

@@ -4,9 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.BooleanCalculation.OperandComparator;
@@ -227,9 +224,9 @@ public class BooleanCalculationTest {
      */
     @Test
     public void shouldExtractTheInternalVariables() {
-        List<InternalVariable> expected = new ArrayList<InternalVariable>();
-        expected.add(InternalVariable.get("v1"));
-        assertEquals(expected, BOOLEAN_CALCULATION_I1_XOR_V1.getInternalVariables());
+        OrderedCollection<InternalVariable> expected =
+                OrderedCollection.<InternalVariable>of(InternalVariable.get("v1"));
+        assertTrue(expected.containsSame(BOOLEAN_CALCULATION_I1_XOR_V1.getInternalVariables()));
     }
 
     /**

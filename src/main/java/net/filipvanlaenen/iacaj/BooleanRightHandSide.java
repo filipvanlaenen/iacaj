@@ -1,7 +1,5 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.List;
-
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -48,7 +46,7 @@ public abstract class BooleanRightHandSide {
      *
      * @return A list with the internal variables used in the right hand side.
      */
-    public abstract List<InternalVariable> getInternalVariables();
+    public abstract OrderedCollection<InternalVariable> getInternalVariables();
 
     /**
      * Returns the operator used in the right hand side.

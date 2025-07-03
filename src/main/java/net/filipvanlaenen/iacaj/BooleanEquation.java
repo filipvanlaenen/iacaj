@@ -1,9 +1,5 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -69,11 +65,11 @@ public final class BooleanEquation extends BooleanRightHandSide {
     }
 
     @Override
-    public List<InternalVariable> getInternalVariables() {
+    public OrderedCollection<InternalVariable> getInternalVariables() {
         if (InternalVariable.isInternalVariable(operand)) {
-            return Arrays.asList(InternalVariable.get(operand));
+            return OrderedCollection.<InternalVariable>of(InternalVariable.get(operand));
         } else {
-            return Collections.emptyList();
+            return OrderedCollection.<InternalVariable>empty();
         }
     }
 

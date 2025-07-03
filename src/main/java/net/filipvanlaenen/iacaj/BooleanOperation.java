@@ -1,7 +1,5 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.List;
-
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -55,7 +53,7 @@ public final class BooleanOperation extends BooleanExpression {
     }
 
     @Override
-    public List<InternalVariable> getInternalVariables() {
+    public OrderedCollection<InternalVariable> getInternalVariables() {
         return rightHandSide.getInternalVariables();
     }
 

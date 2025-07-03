@@ -1,8 +1,5 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.Collections;
-import java.util.List;
-
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -54,8 +51,8 @@ public final class BooleanConstant extends BooleanRightHandSide {
     }
 
     @Override
-    public List<InternalVariable> getInternalVariables() {
-        return Collections.emptyList();
+    public OrderedCollection<InternalVariable> getInternalVariables() {
+        return OrderedCollection.<InternalVariable>empty();
     }
 
     @Override

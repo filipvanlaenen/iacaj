@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.kolektoj.OrderedCollection;
@@ -75,9 +72,9 @@ public class BooleanOperationTest {
      */
     @Test
     public void shouldExtractInternalVariable() {
-        List<InternalVariable> expected = new ArrayList<InternalVariable>();
-        expected.add(InternalVariable.get("v1"));
-        assertEquals(expected, BOOLEAN_OPERATION_I1_AND_V1.getInternalVariables());
+        OrderedCollection<InternalVariable> expected =
+                OrderedCollection.<InternalVariable>of(InternalVariable.get("v1"));
+        assertTrue(expected.containsSame(BOOLEAN_OPERATION_I1_AND_V1.getInternalVariables()));
     }
 
     /**

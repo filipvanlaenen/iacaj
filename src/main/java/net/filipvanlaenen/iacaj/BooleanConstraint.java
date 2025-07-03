@@ -1,8 +1,5 @@
 package net.filipvanlaenen.iacaj;
 
-import java.util.Collections;
-import java.util.List;
-
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -313,8 +310,8 @@ public abstract class BooleanConstraint extends BooleanExpression {
     public abstract OrderedCollection<InputParameter> getInputParameters();
 
     @Override
-    public final List<InternalVariable> getInternalVariables() {
-        return Collections.emptyList();
+    public final OrderedCollection<InternalVariable> getInternalVariables() {
+        return OrderedCollection.<InternalVariable>empty();
     }
 
     /**
