@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanEqualityConstraint;
 import net.filipvanlaenen.iacaj.BooleanConstraint.BooleanOppositionConstraint;
@@ -15,7 +14,7 @@ import net.filipvanlaenen.kolektoj.SortedCollection;
 import net.filipvanlaenen.kolektoj.array.ArrayCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
-import net.filipvanlaenen.kolektoj.collectors.OrderedCollectionCollector;
+import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
  * Class representing a right hand side with a Boolean calculation.
@@ -140,7 +139,7 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
         SortedCollection<BooleanOperand> sortedOperands =
                 new SortedArrayCollection<BooleanOperand>(new OperandComparator(), operands);
         return String.join(" " + operatorString + " ",
-                sortedOperands.stream().map(operandExportMethod).collect(Collectors.toList()));
+                sortedOperands.stream().map(operandExportMethod).collect(Collectors.toOrderedCollection()));
     }
 
     @Override
@@ -150,7 +149,7 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
             public boolean test(final BooleanOperand operand) {
                 return InputParameter.isInputParameter(operand.getName());
             }
-        }).map(BooleanOperand::getName).map(InputParameter::get).collect(OrderedCollectionCollector.toCollection());
+        }).map(BooleanOperand::getName).map(InputParameter::get).collect(Collectors.toOrderedCollection());
     }
 
     @Override
@@ -160,7 +159,7 @@ public abstract class BooleanCalculation extends BooleanRightHandSide {
             public boolean test(final BooleanOperand operand) {
                 return !InputParameter.isInputParameter(operand.getName());
             }
-        }).map(BooleanOperand::getName).map(InternalVariable::get).collect(OrderedCollectionCollector.toCollection());
+        }).map(BooleanOperand::getName).map(InternalVariable::get).collect(Collectors.toOrderedCollection());
     }
 
     /**

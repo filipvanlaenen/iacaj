@@ -2,12 +2,12 @@ package net.filipvanlaenen.iacaj;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.SortedCollection;
-import net.filipvanlaenen.kolektoj.collectors.CollectionCollector;
+import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
  * Attack result when a collision has been found.
@@ -47,7 +47,8 @@ public final class CollisionFound implements AttackResult {
                 return inputParameter0.getNumber() - inputParameter1.getNumber();
             }
         }, inputParameterSet);
-        List<String> names = sortedInputParameters.stream().map(InputParameter::getName).collect(Collectors.toList());
+        OrderedCollection<String> names =
+                sortedInputParameters.stream().map(InputParameter::getName).collect(Collectors.toOrderedCollection());
         return String.join(", ", names);
     }
 
@@ -62,13 +63,13 @@ public final class CollisionFound implements AttackResult {
             sb.append("  Constraints:\n");
         }
         sb.append("    ");
-        List<String> constraintLines =
-                constraints.stream().map(BooleanConstraint::toString).collect(Collectors.toList());
+        OrderedCollection<String> constraintLines =
+                constraints.stream().map(BooleanConstraint::toString).collect(Collectors.toOrderedCollection());
         sb.append(String.join("\n    ", constraintLines));
         sb.append("\n");
         ModifiableCollection<InputParameter> eliminatedInputParameters = ModifiableCollection.of(inputParameters);
-        Collection<InputParameter> constrainedInputParameterNames = constraints.stream()
-                .map(c -> InputParameter.get(c.getName())).collect(CollectionCollector.toCollection());
+        Collection<InputParameter> constrainedInputParameterNames =
+                constraints.stream().map(c -> InputParameter.get(c.getName())).collect(Collectors.toCollection());
         eliminatedInputParameters.removeAll(constrainedInputParameterNames);
         Collection<InputParameter> freeInputParameters = collision.getInputParametersInCalculation();
         eliminatedInputParameters.removeAll(freeInputParameters);
