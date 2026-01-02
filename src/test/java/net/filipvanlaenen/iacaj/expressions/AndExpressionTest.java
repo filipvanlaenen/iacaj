@@ -1,6 +1,6 @@
 package net.filipvanlaenen.iacaj.expressions;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,16 +8,12 @@ import org.junit.jupiter.api.Test;
  * Unit tests on the <code>AndExpression</code> class.
  */
 public class AndExpressionTest {
-    private void verify(String original, String expected) {
-        assertEquals(Parser.parse(expected), Parser.parse(original).simplify());
-    }
-
     /**
      * Verifies that <code>a ∧ a</code> is simplified into <code>a</code>.
      */
     @Test
     public void simplifyShouldReduceAAndAToA() {
-        verify("a ∧ a", "a");
+        parseSimplifyAndAssertEquals("a ∧ a", "a");
     }
 
     /**
@@ -25,7 +21,7 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceAAndAAndBToAAndB() {
-        verify("a ∧ a ∧ b", "a ∧ b");
+        parseSimplifyAndAssertEquals("a ∧ a ∧ b", "a ∧ b");
     }
 
     /**
@@ -33,7 +29,7 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceAAndNotAToFalse() {
-        verify("a ∧ ¬a", "false");
+        parseSimplifyAndAssertEquals("a ∧ ¬a", "false");
     }
 
     /**
@@ -41,7 +37,7 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceAAndNotAAndBToFalse() {
-        verify("a ∧ ¬a ∧ b", "false");
+        parseSimplifyAndAssertEquals("a ∧ ¬a ∧ b", "false");
     }
 
     /**
@@ -49,7 +45,7 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAAndAToFalse() {
-        verify("¬a ∧ a", "false");
+        parseSimplifyAndAssertEquals("¬a ∧ a", "false");
     }
 
     /**
@@ -57,7 +53,7 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAAndAAndBToFalse() {
-        verify("¬a ∧ a ∧ b", "false");
+        parseSimplifyAndAssertEquals("¬a ∧ a ∧ b", "false");
     }
 
     /**
@@ -65,7 +61,7 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAAndNotAToNotA() {
-        verify("¬a ∧ ¬a", "¬a");
+        parseSimplifyAndAssertEquals("¬a ∧ ¬a", "¬a");
     }
 
     /**
@@ -73,6 +69,6 @@ public class AndExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAAndNotAAndBToNotAAndB() {
-        verify("¬a ∧ ¬a ∧ b", "¬a ∧ b");
+        parseSimplifyAndAssertEquals("¬a ∧ ¬a ∧ b", "¬a ∧ b");
     }
 }

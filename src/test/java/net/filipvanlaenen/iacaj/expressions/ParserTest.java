@@ -10,7 +10,13 @@ import net.filipvanlaenen.kolektoj.ValueCollection;
  * Unit tests on the <code>Parser</code> class.
  */
 public class ParserTest {
+    /**
+     * Variable a.
+     */
     private static final Variable VARIABLE_A = new Variable("a");
+    /**
+     * Variable b.
+     */
     private static final Variable VARIABLE_B = new Variable("b");
 
     /**

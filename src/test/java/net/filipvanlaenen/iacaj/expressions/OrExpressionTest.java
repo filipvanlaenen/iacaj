@@ -1,6 +1,6 @@
 package net.filipvanlaenen.iacaj.expressions;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -8,16 +8,12 @@ import org.junit.jupiter.api.Test;
  * Unit tests on the <code>OrExpression</code> class.
  */
 public class OrExpressionTest {
-    private void verify(String original, String expected) {
-        assertEquals(Parser.parse(expected), Parser.parse(original).simplify());
-    }
-
     /**
      * Verifies that <code>a ∨ a</code> is simplified into <code>a</code>.
      */
     @Test
     public void simplifyShouldReduceAOrAToA() {
-        verify("a ∨ a", "a");
+        parseSimplifyAndAssertEquals("a ∨ a", "a");
     }
 
     /**
@@ -25,7 +21,7 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceAOrAOrBToAOrB() {
-        verify("a ∨ a ∨ b", "a ∨ b");
+        parseSimplifyAndAssertEquals("a ∨ a ∨ b", "a ∨ b");
     }
 
     /**
@@ -33,7 +29,7 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceAOrNotAToTrue() {
-        verify("a ∨ ¬a", "true");
+        parseSimplifyAndAssertEquals("a ∨ ¬a", "true");
     }
 
     /**
@@ -41,7 +37,7 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceAOrNotAOrBToTrue() {
-        verify("a ∨ ¬a ∨ b", "true");
+        parseSimplifyAndAssertEquals("a ∨ ¬a ∨ b", "true");
     }
 
     /**
@@ -49,7 +45,7 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAOrAToTrue() {
-        verify("¬a ∨ a", "true");
+        parseSimplifyAndAssertEquals("¬a ∨ a", "true");
     }
 
     /**
@@ -57,7 +53,7 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAOrAOrBToTrue() {
-        verify("¬a ∨ a ∨ b", "true");
+        parseSimplifyAndAssertEquals("¬a ∨ a ∨ b", "true");
     }
 
     /**
@@ -65,7 +61,7 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAOrNotAToNotA() {
-        verify("¬a ∨ ¬a", "¬a");
+        parseSimplifyAndAssertEquals("¬a ∨ ¬a", "¬a");
     }
 
     /**
@@ -73,6 +69,6 @@ public class OrExpressionTest {
      */
     @Test
     public void simplifyShouldReduceNotAOrNotAOrBToNotAOrB() {
-        verify("¬a ∨ ¬a ∨ b", "¬a ∨ b");
+        parseSimplifyAndAssertEquals("¬a ∨ ¬a ∨ b", "¬a ∨ b");
     }
 }
