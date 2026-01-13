@@ -13,6 +13,9 @@ import net.filipvanlaenen.kolektoj.collectors.Collectors;
  */
 public record OrFunction(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
         implements Function {
+    private static final String OR_WITH_SPACES = " " + Operator.OR + " ";
+    private static final String OR_NOT_WITH_SPACES = OR_WITH_SPACES + Operator.NOT;
+
     @Override
     public Expression simplify() {
         // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
@@ -45,15 +48,16 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
 
     @Override
     public String toString() {
-        String dv = String.join(" ∨ ", directVariables.stream().map(Variable::name).collect(Collectors.toCollection()));
-        String nv =
-                String.join(" ∨ ¬", negatedVariables.stream().map(Variable::name).collect(Collectors.toCollection()));
+        String dv = String.join(OR_WITH_SPACES,
+                directVariables.stream().map(Variable::name).collect(Collectors.toCollection()));
+        String nv = String.join(OR_NOT_WITH_SPACES,
+                negatedVariables.stream().map(Variable::name).collect(Collectors.toCollection()));
         if (dv.isEmpty()) {
-            return "¬" + nv;
+            return Operator.NOT + nv;
         } else if (nv.isEmpty()) {
             return dv;
         } else {
-            return dv + " ∨ ¬" + nv;
+            return dv + OR_NOT_WITH_SPACES + nv;
         }
     }
 }

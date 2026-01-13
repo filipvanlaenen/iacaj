@@ -3,6 +3,7 @@ package net.filipvanlaenen.iacaj;
 /**
  * Enumeration representing the operators.
  */
+@Deprecated
 public enum BooleanOperator {
     /**
      * The logical AND operator.
@@ -55,8 +56,7 @@ public enum BooleanOperator {
     /**
      * Creates a right hand side object based from a string.
      *
-     * @param rightHandSideString The string representing a right hand side
-     *                            expression.
+     * @param rightHandSideString The string representing a right hand side expression.
      * @return A right hand side object parsed from the string.
      */
     abstract BooleanRightHandSide createBooleanCalculation(String rightHandSideString);

@@ -13,6 +13,6 @@ public record NegationExpression(Variable variable) implements Expression {
 
     @Override
     public String toString() {
-        return "¬" + variable.name();
+        return Operator.NOT + variable.name();
     }
 }

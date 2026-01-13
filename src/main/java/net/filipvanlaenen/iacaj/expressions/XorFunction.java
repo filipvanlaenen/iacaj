@@ -14,6 +14,8 @@ import net.filipvanlaenen.nombrajkolektoj.integers.UpdatableIntegerMap;
  * @param negated   True if the xor function is negated.
  */
 public record XorFunction(ValueCollection<Variable> variables, boolean negated) implements Function {
+    private static final String XOR_WITH_SPACES = " " + Operator.XOR + " ";
+
     @Override
     public Expression simplify() {
         // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
@@ -43,7 +45,7 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
 
     @Override
     public String toString() {
-        return (negated ? "¬" : "")
-                + String.join(" ⊻ ", variables.stream().map(Variable::name).collect(Collectors.toCollection()));
+        return (negated ? Operator.NOT : "") + String.join(XOR_WITH_SPACES,
+                variables.stream().map(Variable::name).collect(Collectors.toCollection()));
     }
 }
