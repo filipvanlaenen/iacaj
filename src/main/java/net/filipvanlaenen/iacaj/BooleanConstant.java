@@ -5,6 +5,7 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
 /**
  * Class representing a right hand side of a Boolean operation with a constant, i.e. either True or False.
  */
+@Deprecated
 public final class BooleanConstant extends BooleanRightHandSide {
     /**
      * The constant value.

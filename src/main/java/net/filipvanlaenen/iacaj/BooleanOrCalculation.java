@@ -7,6 +7,7 @@ import net.filipvanlaenen.kolektoj.array.ModifiableArrayCollection;
 /**
  * Class representing an Or calculation.
  */
+@Deprecated
 public final class BooleanOrCalculation extends BooleanCalculation {
     /**
      * Constructor taking the right hand side string as parameter.

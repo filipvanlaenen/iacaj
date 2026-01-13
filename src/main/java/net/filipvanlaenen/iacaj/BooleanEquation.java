@@ -5,6 +5,7 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
 /**
  * Class representing a right hand side of a Boolean operation with an equation (or negation).
  */
+@Deprecated
 public final class BooleanEquation extends BooleanRightHandSide {
     /**
      * Whether or not the equation is negated.

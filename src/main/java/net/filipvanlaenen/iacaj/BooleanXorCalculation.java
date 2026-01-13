@@ -11,6 +11,7 @@ import net.filipvanlaenen.kolektoj.array.SortedArrayCollection;
 /**
  * Class representing an Xor calculation.
  */
+@Deprecated
 public final class BooleanXorCalculation extends BooleanCalculation {
     /**
      * Constructor taking the right hand side string as parameter.
