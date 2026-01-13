@@ -2,15 +2,31 @@ package net.filipvanlaenen.iacaj.expressions;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import net.filipvanlaenen.kolektoj.ValueCollection;
+
 /**
- * Utility class providing assertions for the unit tests.
+ * Utility class providing assertions and other useful functions for the unit tests.
  */
 public final class Assertions {
     /**
      * Private constructor to prevent instantiation of this utility class.
      */
     private Assertions() {
+    }
 
+    /**
+     * Creates a value collection of variables from a list of variable names.
+     *
+     * @param names The names of the variables.
+     * @return A value collection containing variables with the provided names.
+     */
+    static ValueCollection<Variable> createVariableCollection(final String... names) {
+        // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/111
+        Variable[] variables = new Variable[names.length];
+        for (int i = 0; i < names.length; i++) {
+            variables[i] = new Variable(names[i]);
+        }
+        return ValueCollection.of(variables);
     }
 
     /**

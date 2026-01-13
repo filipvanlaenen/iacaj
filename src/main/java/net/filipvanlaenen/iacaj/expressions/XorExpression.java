@@ -2,6 +2,7 @@ package net.filipvanlaenen.iacaj.expressions;
 
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
+import net.filipvanlaenen.kolektoj.collectors.Collectors;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.nombrajkolektoj.integers.UpdatableIntegerMap;
@@ -38,5 +39,11 @@ public record XorExpression(ValueCollection<Variable> variables, boolean negated
             Variable[] direct = newVariables.toArray(new Variable[0]);
             return new XorExpression(ValueCollection.of(direct), negated);
         }
+    }
+
+    @Override
+    public String toString() {
+        return (negated ? "¬" : "")
+                + String.join(" ⊻ ", variables.stream().map(Variable::name).collect(Collectors.toCollection()));
     }
 }

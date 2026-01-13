@@ -1,6 +1,8 @@
 package net.filipvanlaenen.iacaj.expressions;
 
+import static net.filipvanlaenen.iacaj.expressions.Assertions.createVariableCollection;
 import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -78,5 +80,23 @@ public class XorExpressionTest {
     @Test
     public void simplifyShouldReduceNotAXorNotAXorBToNotB() {
         parseSimplifyAndAssertEquals("¬a ⊻ ¬a ⊻ b", "b");
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>a ⊻ a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnAXorACorrectly() {
+        Expression e = new XorExpression(createVariableCollection("a", "a"), false);
+        assertEquals("a ⊻ a", e.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>¬a ⊻ a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnNotAXorACorrectly() {
+        Expression e = new XorExpression(createVariableCollection("a", "a"), true);
+        assertEquals("¬a ⊻ a", e.toString());
     }
 }

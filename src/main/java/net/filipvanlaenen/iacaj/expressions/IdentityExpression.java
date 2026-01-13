@@ -10,4 +10,9 @@ public record IdentityExpression(Variable variable) implements Expression {
     public Expression simplify() {
         return this;
     }
+    
+    @Override
+    public String toString() {
+        return variable.name();
+    }
 }

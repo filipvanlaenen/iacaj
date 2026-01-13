@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj.expressions;
 
 import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -22,5 +23,21 @@ public class LiteralExpressionTest {
     @Test
     public void simplifyShouldReduceFalseToFalse() {
         parseSimplifyAndAssertEquals("false", "false");
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>true</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnTrueCorrectly() {
+        assertEquals("true", LiteralExpression.TRUE.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>false</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnFalseCorrectly() {
+        assertEquals("false", LiteralExpression.FALSE.toString());
     }
 }

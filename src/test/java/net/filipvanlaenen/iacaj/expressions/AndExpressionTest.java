@@ -1,6 +1,8 @@
 package net.filipvanlaenen.iacaj.expressions;
 
+import static net.filipvanlaenen.iacaj.expressions.Assertions.createVariableCollection;
 import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -70,5 +72,32 @@ public class AndExpressionTest {
     @Test
     public void simplifyShouldReduceNotAAndNotAAndBToNotAAndB() {
         parseSimplifyAndAssertEquals("¬a ∧ ¬a ∧ b", "¬a ∧ b");
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>a ∧ a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnAAndACorrectly() {
+        Expression e = new AndExpression(createVariableCollection("a", "a"), createVariableCollection());
+        assertEquals("a ∧ a", e.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>¬a ∧ ¬a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnNotAAndNotACorrectly() {
+        Expression e = new AndExpression(createVariableCollection(), createVariableCollection("a", "a"));
+        assertEquals("¬a ∧ ¬a", e.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>a ∧ ¬a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnAAndNotACorrectly() {
+        Expression e = new AndExpression(createVariableCollection("a"), createVariableCollection("a"));
+        assertEquals("a ∧ ¬a", e.toString());
     }
 }

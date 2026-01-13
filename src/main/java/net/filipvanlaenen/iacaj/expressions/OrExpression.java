@@ -3,6 +3,7 @@ package net.filipvanlaenen.iacaj.expressions;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
  * An or expression.
@@ -39,6 +40,20 @@ public record OrExpression(ValueCollection<Variable> directVariables, ValueColle
             }
         } else {
             return LiteralExpression.TRUE;
+        }
+    }
+
+    @Override
+    public String toString() {
+        String dv = String.join(" ∨ ", directVariables.stream().map(Variable::name).collect(Collectors.toCollection()));
+        String nv =
+                String.join(" ∨ ¬", negatedVariables.stream().map(Variable::name).collect(Collectors.toCollection()));
+        if (dv.isEmpty()) {
+            return "¬" + nv;
+        } else if (nv.isEmpty()) {
+            return dv;
+        } else {
+            return dv + " ∨ ¬" + nv;
         }
     }
 }

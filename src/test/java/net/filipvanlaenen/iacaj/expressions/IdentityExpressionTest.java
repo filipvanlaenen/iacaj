@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj.expressions;
 
 import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,5 +15,13 @@ public class IdentityExpressionTest {
     @Test
     public void simplifyShouldReduceAToA() {
         parseSimplifyAndAssertEquals("a", "a");
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnACorrectly() {
+        assertEquals("a", new IdentityExpression(new Variable("a")).toString());
     }
 }

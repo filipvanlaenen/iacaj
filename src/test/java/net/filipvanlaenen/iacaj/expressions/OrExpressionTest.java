@@ -1,6 +1,8 @@
 package net.filipvanlaenen.iacaj.expressions;
 
+import static net.filipvanlaenen.iacaj.expressions.Assertions.createVariableCollection;
 import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -70,5 +72,32 @@ public class OrExpressionTest {
     @Test
     public void simplifyShouldReduceNotAOrNotAOrBToNotAOrB() {
         parseSimplifyAndAssertEquals("¬a ∨ ¬a ∨ b", "¬a ∨ b");
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>a ∨ a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnAOrACorrectly() {
+        Expression e = new OrExpression(createVariableCollection("a", "a"), createVariableCollection());
+        assertEquals("a ∨ a", e.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>¬a ∨ ¬a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnNotAOrNotACorrectly() {
+        Expression e = new OrExpression(createVariableCollection(), createVariableCollection("a", "a"));
+        assertEquals("¬a ∨ ¬a", e.toString());
+    }
+
+    /**
+     * Verifies that <code>toString</code> returns <code>a ∨ ¬a</code> correctly.
+     */
+    @Test
+    public void toStringShouldReturnAOrNotACorrectly() {
+        Expression e = new OrExpression(createVariableCollection("a"), createVariableCollection("a"));
+        assertEquals("a ∨ ¬a", e.toString());
     }
 }
