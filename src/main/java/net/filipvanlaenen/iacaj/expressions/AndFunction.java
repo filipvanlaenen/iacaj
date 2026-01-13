@@ -6,13 +6,13 @@ import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
- * An and expression.
+ * A function using <code>and</code>.
  *
- * @param directVariables  The variables occurring directly in the and expression.
- * @param negatedVariables The variables occurring negated in the and expression.
+ * @param directVariables  The variables occurring directly in the and function.
+ * @param negatedVariables The variables occurring negated in the and function.
  */
-public record AndExpression(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
-        implements CompositeExpression {
+public record AndFunction(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
+        implements Function {
     @Override
     public Expression simplify() {
         // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
@@ -36,7 +36,7 @@ public record AndExpression(ValueCollection<Variable> directVariables, ValueColl
                 // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
                 Variable[] direct = newDirectVariables.toArray(new Variable[0]);
                 Variable[] negated = newNegatedVariables.toArray(new Variable[0]);
-                return new AndExpression(ValueCollection.of(direct), ValueCollection.of(negated));
+                return new AndFunction(ValueCollection.of(direct), ValueCollection.of(negated));
             }
         } else {
             return LiteralExpression.FALSE;

@@ -6,13 +6,13 @@ import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
- * An or expression.
+ * A function using <code>or</code>.
  *
- * @param directVariables  The variables occurring directly in the or expression.
- * @param negatedVariables The variables occurring negated in the or expression.
+ * @param directVariables  The variables occurring directly in the or function.
+ * @param negatedVariables The variables occurring negated in the or function.
  */
-public record OrExpression(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
-        implements CompositeExpression {
+public record OrFunction(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
+        implements Function {
     @Override
     public Expression simplify() {
         // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
@@ -36,7 +36,7 @@ public record OrExpression(ValueCollection<Variable> directVariables, ValueColle
                 // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
                 Variable[] direct = newDirectVariables.toArray(new Variable[0]);
                 Variable[] negated = newNegatedVariables.toArray(new Variable[0]);
-                return new OrExpression(ValueCollection.of(direct), ValueCollection.of(negated));
+                return new OrFunction(ValueCollection.of(direct), ValueCollection.of(negated));
             }
         } else {
             return LiteralExpression.TRUE;

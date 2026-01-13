@@ -56,7 +56,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableAAndB() {
-        assertEquals(new AndExpression(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty()),
+        assertEquals(new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty()),
                 Parser.parse("a ∧ b"));
     }
 
@@ -65,7 +65,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableAAndNotB() {
-        assertEquals(new AndExpression(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_B)),
+        assertEquals(new AndFunction(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_B)),
                 Parser.parse("a ∧ ¬b"));
     }
 
@@ -74,7 +74,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableAOrNotB() {
-        assertEquals(new OrExpression(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_B)),
+        assertEquals(new OrFunction(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_B)),
                 Parser.parse("a ∨ ¬b"));
     }
 
@@ -83,6 +83,6 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableAXorNotB() {
-        assertEquals(new XorExpression(ValueCollection.of(VARIABLE_A, VARIABLE_B), true), Parser.parse("a ⊻ ¬b"));
+        assertEquals(new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), true), Parser.parse("a ⊻ ¬b"));
     }
 }

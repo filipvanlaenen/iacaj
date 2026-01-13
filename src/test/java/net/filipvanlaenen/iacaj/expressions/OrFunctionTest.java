@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests on the <code>OrExpression</code> class.
  */
-public class OrExpressionTest {
+public class OrFunctionTest {
     /**
      * Verifies that <code>a ∨ a</code> is simplified into <code>a</code>.
      */
@@ -79,7 +79,7 @@ public class OrExpressionTest {
      */
     @Test
     public void toStringShouldReturnAOrACorrectly() {
-        Expression e = new OrExpression(createVariableCollection("a", "a"), createVariableCollection());
+        Expression e = new OrFunction(createVariableCollection("a", "a"), createVariableCollection());
         assertEquals("a ∨ a", e.toString());
     }
 
@@ -88,7 +88,7 @@ public class OrExpressionTest {
      */
     @Test
     public void toStringShouldReturnNotAOrNotACorrectly() {
-        Expression e = new OrExpression(createVariableCollection(), createVariableCollection("a", "a"));
+        Expression e = new OrFunction(createVariableCollection(), createVariableCollection("a", "a"));
         assertEquals("¬a ∨ ¬a", e.toString());
     }
 
@@ -97,7 +97,7 @@ public class OrExpressionTest {
      */
     @Test
     public void toStringShouldReturnAOrNotACorrectly() {
-        Expression e = new OrExpression(createVariableCollection("a"), createVariableCollection("a"));
+        Expression e = new OrFunction(createVariableCollection("a"), createVariableCollection("a"));
         assertEquals("a ∨ ¬a", e.toString());
     }
 }

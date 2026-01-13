@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests on the <code>AndExpression</code> class.
  */
-public class AndExpressionTest {
+public class AndFunctionTest {
     /**
      * Verifies that <code>a ∧ a</code> is simplified into <code>a</code>.
      */
@@ -79,7 +79,7 @@ public class AndExpressionTest {
      */
     @Test
     public void toStringShouldReturnAAndACorrectly() {
-        Expression e = new AndExpression(createVariableCollection("a", "a"), createVariableCollection());
+        Expression e = new AndFunction(createVariableCollection("a", "a"), createVariableCollection());
         assertEquals("a ∧ a", e.toString());
     }
 
@@ -88,7 +88,7 @@ public class AndExpressionTest {
      */
     @Test
     public void toStringShouldReturnNotAAndNotACorrectly() {
-        Expression e = new AndExpression(createVariableCollection(), createVariableCollection("a", "a"));
+        Expression e = new AndFunction(createVariableCollection(), createVariableCollection("a", "a"));
         assertEquals("¬a ∧ ¬a", e.toString());
     }
 
@@ -97,7 +97,7 @@ public class AndExpressionTest {
      */
     @Test
     public void toStringShouldReturnAAndNotACorrectly() {
-        Expression e = new AndExpression(createVariableCollection("a"), createVariableCollection("a"));
+        Expression e = new AndFunction(createVariableCollection("a"), createVariableCollection("a"));
         assertEquals("a ∧ ¬a", e.toString());
     }
 }

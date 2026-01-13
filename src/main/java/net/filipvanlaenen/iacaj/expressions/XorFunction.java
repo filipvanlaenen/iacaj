@@ -8,12 +8,12 @@ import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.nombrajkolektoj.integers.UpdatableIntegerMap;
 
 /**
- * An xor expression.
+ * A function using <code>xor</code>.
  *
- * @param variables The variables occurring in the xor expression.
- * @param negated   True if the xor expression is negated.
+ * @param variables The variables occurring in the xor function.
+ * @param negated   True if the xor function is negated.
  */
-public record XorExpression(ValueCollection<Variable> variables, boolean negated) implements CompositeExpression {
+public record XorFunction(ValueCollection<Variable> variables, boolean negated) implements Function {
     @Override
     public Expression simplify() {
         // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
@@ -37,7 +37,7 @@ public record XorExpression(ValueCollection<Variable> variables, boolean negated
         } else {
             // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
             Variable[] direct = newVariables.toArray(new Variable[0]);
-            return new XorExpression(ValueCollection.of(direct), negated);
+            return new XorFunction(ValueCollection.of(direct), negated);
         }
     }
 

@@ -68,10 +68,10 @@ public final class Parser {
             return LiteralExpression.FALSE;
         } else if (s.contains(AND)) {
             OrderedCollection<ValueCollection<Variable>> variables = extractVariables(s, AND);
-            return new AndExpression(variables.getAt(0), variables.getAt(1));
+            return new AndFunction(variables.getAt(0), variables.getAt(1));
         } else if (s.contains(OR)) {
             OrderedCollection<ValueCollection<Variable>> variables = extractVariables(s, OR);
-            return new OrExpression(variables.getAt(0), variables.getAt(1));
+            return new OrFunction(variables.getAt(0), variables.getAt(1));
         } else if (s.contains(XOR)) {
             OrderedCollection<ValueCollection<Variable>> variables = extractVariables(s, XOR);
             // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/99
@@ -80,7 +80,7 @@ public final class Parser {
             // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
             Variable[] directArray = directVariables.toArray(new Variable[0]);
             ValueCollection<Variable> direct = ValueCollection.of(directArray);
-            return new XorExpression(direct, variables.getAt(1).size() % 2 == 1);
+            return new XorFunction(direct, variables.getAt(1).size() % 2 == 1);
         } else if (s.startsWith(NEGATION)) {
             return new NegationExpression(new Variable(s.substring(1)));
         } else {

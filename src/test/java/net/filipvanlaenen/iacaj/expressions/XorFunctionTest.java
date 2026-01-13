@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests on the <code>XorExpression</code> class.
  */
-public class XorExpressionTest {
+public class XorFunctionTest {
     /**
      * Verifies that <code>a ⊻ a</code> is simplified into <code>false</code>.
      */
@@ -87,7 +87,7 @@ public class XorExpressionTest {
      */
     @Test
     public void toStringShouldReturnAXorACorrectly() {
-        Expression e = new XorExpression(createVariableCollection("a", "a"), false);
+        Expression e = new XorFunction(createVariableCollection("a", "a"), false);
         assertEquals("a ⊻ a", e.toString());
     }
 
@@ -96,7 +96,7 @@ public class XorExpressionTest {
      */
     @Test
     public void toStringShouldReturnNotAXorACorrectly() {
-        Expression e = new XorExpression(createVariableCollection("a", "a"), true);
+        Expression e = new XorFunction(createVariableCollection("a", "a"), true);
         assertEquals("¬a ⊻ a", e.toString());
     }
 }
