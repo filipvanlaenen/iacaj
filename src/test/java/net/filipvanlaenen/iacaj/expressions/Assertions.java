@@ -37,6 +37,6 @@ public final class Assertions {
      * @param expected The expected string.
      */
     static void parseSimplifyAndAssertEquals(final String original, final String expected) {
-        assertEquals(Parser.parse(expected), Parser.parse(original).simplify());
+        assertEquals(Parser.parseExpression(expected), Parser.parseExpression(original).simplify());
     }
 }

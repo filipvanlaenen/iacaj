@@ -24,7 +24,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseTrue() {
-        assertEquals(LiteralExpression.TRUE, Parser.parse("true"));
+        assertEquals(LiteralExpression.TRUE, Parser.parseExpression("true"));
     }
 
     /**
@@ -32,7 +32,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseFalse() {
-        assertEquals(LiteralExpression.FALSE, Parser.parse("false"));
+        assertEquals(LiteralExpression.FALSE, Parser.parseExpression("false"));
     }
 
     /**
@@ -40,7 +40,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableA() {
-        assertEquals(new IdentityExpression(VARIABLE_A), Parser.parse("a"));
+        assertEquals(new IdentityExpression(VARIABLE_A), Parser.parseExpression("a"));
     }
 
     /**
@@ -48,7 +48,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableNotA() {
-        assertEquals(new NegationExpression(VARIABLE_A), Parser.parse("¬a"));
+        assertEquals(new NegationExpression(VARIABLE_A), Parser.parseExpression("¬a"));
     }
 
     /**
@@ -57,7 +57,7 @@ public class ParserTest {
     @Test
     public void parseShouldParseVariableAAndB() {
         assertEquals(new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty()),
-                Parser.parse("a ∧ b"));
+                Parser.parseExpression("a ∧ b"));
     }
 
     /**
@@ -66,7 +66,7 @@ public class ParserTest {
     @Test
     public void parseShouldParseVariableAAndNotB() {
         assertEquals(new AndFunction(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_B)),
-                Parser.parse("a ∧ ¬b"));
+                Parser.parseExpression("a ∧ ¬b"));
     }
 
     /**
@@ -75,7 +75,7 @@ public class ParserTest {
     @Test
     public void parseShouldParseVariableAOrNotB() {
         assertEquals(new OrFunction(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_B)),
-                Parser.parse("a ∨ ¬b"));
+                Parser.parseExpression("a ∨ ¬b"));
     }
 
     /**
@@ -83,6 +83,7 @@ public class ParserTest {
      */
     @Test
     public void parseShouldParseVariableAXorNotB() {
-        assertEquals(new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), true), Parser.parse("a ⊻ ¬b"));
+        assertEquals(new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), true),
+                Parser.parseExpression("a ⊻ ¬b"));
     }
 }

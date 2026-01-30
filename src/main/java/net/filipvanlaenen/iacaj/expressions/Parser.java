@@ -3,8 +3,10 @@ package net.filipvanlaenen.iacaj.expressions;
 import static net.filipvanlaenen.iacaj.expressions.Operator.*;
 
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
+import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
+import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
  * Class parsing strings into expressions.
@@ -46,24 +48,24 @@ public final class Parser {
     }
 
     /**
-     * Parses a string into an expression.
+     * Parses an expression string into an expression.
      *
-     * @param s The string to be parsed.
+     * @param expressionString The string to be parsed.
      * @return An expression representing the content of the provided string.
      */
-    public static Expression parse(final String s) {
-        if (s.contentEquals("true")) {
+    public static Expression parseExpression(final String expressionString) {
+        if (expressionString.contentEquals("true")) {
             return LiteralExpression.TRUE;
-        } else if (s.contentEquals("false")) {
+        } else if (expressionString.contentEquals("false")) {
             return LiteralExpression.FALSE;
-        } else if (containsSymbol(s, AND)) {
-            OrderedCollection<ValueCollection<Variable>> variables = extractVariables(s, AND);
+        } else if (containsSymbol(expressionString, AND)) {
+            OrderedCollection<ValueCollection<Variable>> variables = extractVariables(expressionString, AND);
             return new AndFunction(variables.getAt(0), variables.getAt(1));
-        } else if (containsSymbol(s, OR)) {
-            OrderedCollection<ValueCollection<Variable>> variables = extractVariables(s, OR);
+        } else if (containsSymbol(expressionString, OR)) {
+            OrderedCollection<ValueCollection<Variable>> variables = extractVariables(expressionString, OR);
             return new OrFunction(variables.getAt(0), variables.getAt(1));
-        } else if (containsSymbol(s, XOR)) {
-            OrderedCollection<ValueCollection<Variable>> variables = extractVariables(s, XOR);
+        } else if (containsSymbol(expressionString, XOR)) {
+            OrderedCollection<ValueCollection<Variable>> variables = extractVariables(expressionString, XOR);
             // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/99
             ModifiableCollection<Variable> directVariables = ModifiableCollection.of(variables.getAt(0));
             directVariables.addAll(variables.getAt(1));
@@ -71,10 +73,17 @@ public final class Parser {
             Variable[] directArray = directVariables.toArray(new Variable[0]);
             ValueCollection<Variable> direct = ValueCollection.of(directArray);
             return new XorFunction(direct, variables.getAt(1).size() % 2 == 1);
-        } else if (s.startsWith(NOT.getSymbol())) {
-            return new NegationExpression(new Variable(s.substring(1)));
+        } else if (expressionString.startsWith(NOT.getSymbol())) {
+            return new NegationExpression(new Variable(expressionString.substring(1)));
         } else {
-            return new IdentityExpression(new Variable(s));
+            return new IdentityExpression(new Variable(expressionString));
         }
+    }
+
+    public static VectorialFunction parseVectorialFunction(final String vectorialFunctionString) {
+        return new VectorialFunction(vectorialFunctionString.lines().map(line -> line.replaceAll("\\s", ""))
+                .filter(line -> line.contains("=")).map(line -> line.split("="))
+                .collect(Collectors.<String[], Variable, Expression>toMap(parts -> new Variable(parts[0]),
+                        parts -> parseExpression(parts[1]))));
     }
 }
