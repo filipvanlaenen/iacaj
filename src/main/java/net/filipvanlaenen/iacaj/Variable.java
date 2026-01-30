@@ -3,6 +3,7 @@ package net.filipvanlaenen.iacaj;
 /**
  * Class representing a variable.
  */
+@Deprecated
 public class Variable {
     /**
      * The name of the variable.
