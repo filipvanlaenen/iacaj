@@ -7,7 +7,7 @@ import net.filipvanlaenen.kolektoj.Map;
 public class VectorialFunction {
     private final Map<Variable, Expression> functions;
 
-    VectorialFunction(final Map<Variable, Expression> result) {
+    public VectorialFunction(final Map<Variable, Expression> result) {
         functions = Map.of(result);
     }
 
