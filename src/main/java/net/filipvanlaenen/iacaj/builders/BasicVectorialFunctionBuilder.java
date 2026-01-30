@@ -10,13 +10,13 @@ import net.filipvanlaenen.iacaj.expressions.XorFunction;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 
-final class BasicVectorialFunctionBuilder {
+public final class BasicVectorialFunctionBuilder {
     private String inputVectorName = "x";
     private String outputVectorName = "y";
     private Integer outputVectorWidth;
     private Operator operator;
 
-    VectorialFunction build() throws IllegalStateException {
+    public VectorialFunction build() throws IllegalStateException {
         if (operator == null) {
             throw new IllegalStateException("Cannot build a basic vectorial function when the operator isn't set.");
         }
@@ -53,19 +53,19 @@ final class BasicVectorialFunctionBuilder {
         return new VectorialFunction(map);
     }
 
-    void inputVectorName(String inputVectorName) {
+    public void inputVectorName(String inputVectorName) {
         this.inputVectorName = inputVectorName;
     }
 
-    void operator(Operator operator) {
+    public void operator(Operator operator) {
         this.operator = operator;
     }
 
-    void outputVectorName(String outputVectorName) {
+    public void outputVectorName(String outputVectorName) {
         this.outputVectorName = outputVectorName;
     }
 
-    void outputVectorWidth(int width) {
+    public void outputVectorWidth(Integer width) {
         this.outputVectorWidth = width;
     }
 }

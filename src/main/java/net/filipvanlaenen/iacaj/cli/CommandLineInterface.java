@@ -11,14 +11,13 @@ import net.filipvanlaenen.iacaj.AttackResult;
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
+import net.filipvanlaenen.iacaj.builders.BasicVectorialFunctionBuilder;
+import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.producer.AddProducer;
-import net.filipvanlaenen.iacaj.producer.AndProducer;
-import net.filipvanlaenen.iacaj.producer.OrProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.RotateProducer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 import net.filipvanlaenen.iacaj.producer.ShiftProducer;
-import net.filipvanlaenen.iacaj.producer.XorProducer;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
 
@@ -26,6 +25,11 @@ import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
  * Class implementing a command line interface.
  */
 public final class CommandLineInterface {
+    /**
+     * The default word length.
+     */
+    private static final int DEFAULT_WORD_LENGTH = 32;
+
     /**
      * The main entry point for the command line interface.
      *
@@ -119,12 +123,20 @@ public final class CommandLineInterface {
                     i++;
                 }
                 Producer producer = null;
+                BasicVectorialFunctionBuilder builder = new BasicVectorialFunctionBuilder();
+                builder.inputVectorName("i");
+                builder.outputVectorName("o");
+                if (parameters.isEmpty()) {
+                    builder.outputVectorWidth(DEFAULT_WORD_LENGTH);
+                } else {
+                    builder.outputVectorWidth(parameters.getAt(0));
+                }
                 if (function.equals("ADD")) {
                     producer = new AddProducer(parameters);
                 } else if (function.equals("AND")) {
-                    producer = new AndProducer(parameters);
+                    builder.operator(Operator.AND);
                 } else if (function.equals("OR")) {
-                    producer = new OrProducer(parameters);
+                    builder.operator(Operator.OR);
                 } else if (function.equals("ROTATE")) {
                     producer = new RotateProducer(parameters);
                 } else if (function.equals("SHA-256")) {
@@ -132,10 +144,19 @@ public final class CommandLineInterface {
                 } else if (function.equals("SHIFT")) {
                     producer = new ShiftProducer(parameters);
                 } else if (function.equals("XOR")) {
-                    producer = new XorProducer(parameters);
+                    builder.operator(Operator.XOR);
                 }
-                BooleanFunction bf = producer.produce();
-                outputBooleanFunction(bf, fileName);
+                if (producer != null) {
+                    BooleanFunction bf = producer.produce();
+                    outputBooleanFunction(bf, fileName);
+                } else {
+                    String output = builder.build().toString();
+                    if (fileName == null) {
+                        System.out.println(output);
+                    } else {
+                        writeFile(fileName, output);
+                    }
+                }
             }
         },
         /**
