@@ -12,6 +12,7 @@
 - [Resolve a Boolean Function](#resolve-a-boolean-function)
 - [Report on the Complexity of a Boolean Function](#report-on-the-complexity-of-a-boolean-function)
 - [Attack a Boolean Function](#attack-a-boolean-function)
+- [Technical Documentation](#technical-documentation)
 
 ## Getting Started
 
@@ -204,3 +205,7 @@ java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar report ADD32.bf
 ```
 
 ## Attack a Boolean Function
+
+## Technical Documentation
+
+![Expressions](Expressions.png)
