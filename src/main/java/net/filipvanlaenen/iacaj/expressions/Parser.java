@@ -20,23 +20,30 @@ public final class Parser {
     private Parser() {
     }
 
-    private static boolean containsSymbol(final String s, final Operator operator) {
-        return s.contains(operator.getSymbol());
+    /**
+     * Returns whether a string contains the symbol of an operator.
+     *
+     * @param string   The string to be checked.
+     * @param operator The operator.
+     * @return True if the string contains the operator's symbol, and false otherwise.
+     */
+    private static boolean containsSymbol(final String string, final Operator operator) {
+        return string.contains(operator.getSymbol());
     }
 
     /**
      * Extracts direct and negated variables from a string representing an expression with a symbol.
      *
-     * @param s        The string to extract from.
+     * @param string   The string to extract from.
      * @param operator The operator used in the expression.
      * @return An ordered collection of size two, containing the direct variables in the first position and the negated
      *         variables in the second position.
      */
-    private static OrderedCollection<ValueCollection<Variable>> extractVariables(final String s,
+    private static OrderedCollection<ValueCollection<Variable>> extractVariables(final String string,
             final Operator operator) {
         ModifiableCollection<Variable> directVariables = ModifiableCollection.empty();
         ModifiableCollection<Variable> negatedVariables = ModifiableCollection.empty();
-        for (String operand : s.split(operator.getSymbol())) {
+        for (String operand : string.split(operator.getSymbol())) {
             if (operand.contains(NOT.getSymbol())) {
                 negatedVariables.add(new Variable(operand.trim().substring(1)));
             } else {
@@ -82,6 +89,12 @@ public final class Parser {
         }
     }
 
+    /**
+     * Parses a string containing a vectorial Boolean function into a vectorial function.
+     *
+     * @param vectorialFunctionString The string to be parsed.
+     * @return A vectorial function representing the content of the string.
+     */
     public static VectorialFunction parseVectorialFunction(final String vectorialFunctionString) {
         return new VectorialFunction(vectorialFunctionString.lines().map(line -> line.replaceAll("\\s", ""))
                 .filter(line -> line.contains("=")).map(line -> line.split("="))
