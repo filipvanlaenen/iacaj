@@ -3,7 +3,7 @@ package net.filipvanlaenen.iacaj.builders;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
-import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.Map;
 
 public final class RotationFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
     Integer rotateRight;
@@ -22,8 +22,7 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
-        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        map.addAll(buildRotationFunctions(inputVector, outputVector, rotateRight));
+        Map<Variable, Expression> map = buildRotationFunctions(inputVector, outputVector, rotateRight);
         return new VectorialFunction(map);
     }
 

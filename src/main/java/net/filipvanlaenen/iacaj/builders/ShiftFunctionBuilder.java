@@ -3,7 +3,7 @@ package net.filipvanlaenen.iacaj.builders;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
-import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.kolektoj.Map;
 
 public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
     private Integer shiftRight;
@@ -22,8 +22,7 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
-        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        map.addAll(buildShiftFunctions(inputVector, outputVector, shiftRight));
+        Map<Variable, Expression> map = buildShiftFunctions(inputVector, outputVector, shiftRight);
         return new VectorialFunction(map);
     }
 
