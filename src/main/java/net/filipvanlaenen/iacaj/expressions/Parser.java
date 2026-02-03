@@ -1,9 +1,11 @@
 package net.filipvanlaenen.iacaj.expressions;
 
-import static net.filipvanlaenen.iacaj.expressions.Operator.*;
+import static net.filipvanlaenen.iacaj.expressions.Operator.AND;
+import static net.filipvanlaenen.iacaj.expressions.Operator.NOT;
+import static net.filipvanlaenen.iacaj.expressions.Operator.OR;
+import static net.filipvanlaenen.iacaj.expressions.Operator.XOR;
 
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
-import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.kolektoj.collectors.Collectors;
