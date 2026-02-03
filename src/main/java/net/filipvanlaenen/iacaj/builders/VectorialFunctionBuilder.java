@@ -1,13 +1,18 @@
 package net.filipvanlaenen.iacaj.builders;
 
+import net.filipvanlaenen.iacaj.expressions.AndFunction;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.IdentityExpression;
 import net.filipvanlaenen.iacaj.expressions.LiteralExpression;
+import net.filipvanlaenen.iacaj.expressions.Operator;
+import net.filipvanlaenen.iacaj.expressions.OrFunction;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
+import net.filipvanlaenen.iacaj.expressions.XorFunction;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
+import net.filipvanlaenen.kolektoj.ValueCollection;
 
 public abstract class VectorialFunctionBuilder {
     private String inputVectorName = "x";
@@ -31,6 +36,28 @@ public abstract class VectorialFunctionBuilder {
     }
 
     abstract public VectorialFunction build() throws IllegalStateException;
+
+    protected Map<Variable, Expression> buildOperationFunctions(Word inputVectorA, Word inputVectorB, Word outputVector,
+            Operator operator) {
+        int width = outputVector.size();
+        if (width != inputVectorA.size() || width != inputVectorB.size()) {
+            throw new IllegalStateException(
+                    "Input and output vectors should have the same width for an operator operation.");
+        }
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        for (int i = 0; i < width; i++) {
+            Variable ovi = outputVector.getAt(i);
+            ValueCollection<Variable> inputVariables = ValueCollection.of(inputVectorA.getAt(i), inputVectorB.getAt(i));
+            Expression expression = switch (operator) {
+            case AND -> new AndFunction(inputVariables, ValueCollection.empty());
+            case OR -> new OrFunction(inputVariables, ValueCollection.empty());
+            case XOR -> new XorFunction(inputVariables, false);
+            default -> null;
+            };
+            map.add(ovi, expression);
+        }
+        return map;
+    }
 
     protected Map<Variable, Expression> buildRotationFunctions(Word inputVector, Word outputVector, int rotateRight) {
         int width = outputVector.size();
