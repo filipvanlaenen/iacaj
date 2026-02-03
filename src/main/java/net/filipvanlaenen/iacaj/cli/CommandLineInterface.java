@@ -12,12 +12,12 @@ import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
 import net.filipvanlaenen.iacaj.builders.BasicVectorialFunctionBuilder;
+import net.filipvanlaenen.iacaj.builders.RotationFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.ShiftFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.VectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.producer.AddProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
-import net.filipvanlaenen.iacaj.producer.RotateProducer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
@@ -139,7 +139,10 @@ public final class CommandLineInterface {
                     thisBuilder.operator(Operator.OR);
                     builder = thisBuilder;
                 } else if (function.equals("ROTATE")) {
-                    producer = new RotateProducer(parameters);
+                    RotationFunctionBuilder thisBuilder = new RotationFunctionBuilder();
+                    thisBuilder.outputVectorWidth(wordLength);
+                    thisBuilder.rotateRight(parameters.size() > 1 ? parameters.getAt(1) : 0);
+                    builder = thisBuilder;
                 } else if (function.equals("SHA-256")) {
                     producer = new Sha256Producer(parameters);
                 } else if (function.equals("SHIFT")) {

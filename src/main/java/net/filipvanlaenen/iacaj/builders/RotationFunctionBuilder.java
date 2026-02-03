@@ -6,8 +6,8 @@ import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 
-public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
-    private Integer shiftRight;
+public final class RotationFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
+    private Integer rotateRight;
 
     @Override
     public VectorialFunction build() throws IllegalStateException {
@@ -16,24 +16,22 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
         String outputVectorName = getOutputVectorName();
         Integer outputVectorWidth = getOutputVectorWidth();
         if (outputVectorWidth == null) {
-            throw new IllegalStateException("Cannot build a shift function when the output vector width isn't set.");
+            throw new IllegalStateException("Cannot build a rotate function when the output vector width isn't set.");
         }
-        if (shiftRight == null) {
-            throw new IllegalStateException("Cannot build a shift function when the shift right isn't set.");
+        if (rotateRight == null) {
+            throw new IllegalStateException("Cannot build a rotate function when the rotate right isn't set.");
         }
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
         for (int i = 1; i <= outputVectorWidth; i++) {
             Variable ivi = new Variable(inputVectorName + i);
-            int j = i + shiftRight;
-            if (j >= 1 && j <= outputVectorWidth) {
-                Variable ovi = new Variable(outputVectorName + j);
-                map.add(ovi, new IdentityExpression(ivi));
-            }
+            int j = ((i + rotateRight - 1) % outputVectorWidth) + 1;
+            Variable ovi = new Variable(outputVectorName + j);
+            map.add(ovi, new IdentityExpression(ivi));
         }
         return new VectorialFunction(map);
     }
 
-    public void shiftRight(Integer shiftRight) {
-        this.shiftRight = shiftRight;
+    public void rotateRight(Integer rotateRight) {
+        this.rotateRight = rotateRight;
     }
 }
