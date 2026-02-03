@@ -10,32 +10,18 @@ import net.filipvanlaenen.iacaj.expressions.XorFunction;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 
-public final class BasicVectorialFunctionBuilder {
-    private String inputVectorName = "x";
-    private String outputVectorName = "y";
-    private Integer outputVectorWidth;
+public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
     private Operator operator;
 
+    @Override
     public VectorialFunction build() throws IllegalStateException {
+        prebuild();
         if (operator == null) {
             throw new IllegalStateException("Cannot build a basic vectorial function when the operator isn't set.");
         }
-        if (inputVectorName == null) {
-            throw new IllegalStateException(
-                    "Cannot build a vectorial " + operator.name() + " function when the input vector name is null.");
-        }
-        if (outputVectorName == null) {
-            throw new IllegalStateException(
-                    "Cannot build a vectorial " + operator.name() + " function when the output vector name is null.");
-        }
-        if (inputVectorName.equals(outputVectorName)) {
-            throw new IllegalStateException("Cannot build a vectorial " + operator.name()
-                    + " function when the input and output vector names are equal.");
-        }
-        if (outputVectorWidth == null) {
-            throw new IllegalStateException("Cannot build a vectorial " + operator.name()
-                    + " function when the output vector width isn't set.");
-        }
+        String inputVectorName = getInputVectorName();
+        String outputVectorName = getOutputVectorName();
+        Integer outputVectorWidth = getOutputVectorWidth();
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
         for (int i = 1; i <= outputVectorWidth; i++) {
             Variable ovi = new Variable(outputVectorName + i);
@@ -53,19 +39,7 @@ public final class BasicVectorialFunctionBuilder {
         return new VectorialFunction(map);
     }
 
-    public void inputVectorName(String inputVectorName) {
-        this.inputVectorName = inputVectorName;
-    }
-
     public void operator(Operator operator) {
         this.operator = operator;
-    }
-
-    public void outputVectorName(String outputVectorName) {
-        this.outputVectorName = outputVectorName;
-    }
-
-    public void outputVectorWidth(Integer width) {
-        this.outputVectorWidth = width;
     }
 }

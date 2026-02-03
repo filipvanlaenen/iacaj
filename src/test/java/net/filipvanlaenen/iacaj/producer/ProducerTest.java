@@ -69,34 +69,4 @@ public class ProducerTest {
         String expected = sb.toString();
         assertEquals(expected, booleanFunction.toString());
     }
-
-    /**
-     * Verifies that words can be right shifted. Tests the functionality through <code>ShiftProducer</code>.
-     */
-    @Test
-    public void rightShiftWordsShouldRightShiftWords() {
-        Producer producer = new ShiftProducer(OrderedCollection.of(2, 1));
-        BooleanFunction booleanFunction = producer.produce();
-        StringBuilder sb = new StringBuilder();
-        sb.append("v1 = False\n");
-        sb.append("o1 = v1\n");
-        sb.append("o2 = i1");
-        String expected = sb.toString();
-        assertEquals(expected, booleanFunction.toString());
-    }
-
-    /**
-     * Verifies that words can be left shifted. Tests the functionality through <code>ShiftProducer</code>.
-     */
-    @Test
-    public void rightShiftWordsWithNegativeNumberOfPositionsShouldLeftShiftWords() {
-        Producer producer = new ShiftProducer(OrderedCollection.of(2, -1));
-        BooleanFunction booleanFunction = producer.produce();
-        StringBuilder sb = new StringBuilder();
-        sb.append("v1 = False\n");
-        sb.append("o1 = i2\n");
-        sb.append("o2 = v1");
-        String expected = sb.toString();
-        assertEquals(expected, booleanFunction.toString());
-    }
 }

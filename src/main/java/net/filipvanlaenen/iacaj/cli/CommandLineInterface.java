@@ -12,12 +12,13 @@ import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
 import net.filipvanlaenen.iacaj.builders.BasicVectorialFunctionBuilder;
+import net.filipvanlaenen.iacaj.builders.ShiftFunctionBuilder;
+import net.filipvanlaenen.iacaj.builders.VectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.producer.AddProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.RotateProducer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
-import net.filipvanlaenen.iacaj.producer.ShiftProducer;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
 
@@ -123,33 +124,41 @@ public final class CommandLineInterface {
                     i++;
                 }
                 Producer producer = null;
-                BasicVectorialFunctionBuilder builder = new BasicVectorialFunctionBuilder();
-                builder.inputVectorName("i");
-                builder.outputVectorName("o");
-                if (parameters.isEmpty()) {
-                    builder.outputVectorWidth(DEFAULT_WORD_LENGTH);
-                } else {
-                    builder.outputVectorWidth(parameters.getAt(0));
-                }
+                VectorialFunctionBuilder builder = null;
+                int wordLength = parameters.isEmpty() ? DEFAULT_WORD_LENGTH : parameters.getAt(0);
                 if (function.equals("ADD")) {
                     producer = new AddProducer(parameters);
                 } else if (function.equals("AND")) {
-                    builder.operator(Operator.AND);
+                    BasicVectorialFunctionBuilder thisBuilder = new BasicVectorialFunctionBuilder();
+                    thisBuilder.outputVectorWidth(wordLength);
+                    thisBuilder.operator(Operator.AND);
+                    builder = thisBuilder;
                 } else if (function.equals("OR")) {
-                    builder.operator(Operator.OR);
+                    BasicVectorialFunctionBuilder thisBuilder = new BasicVectorialFunctionBuilder();
+                    thisBuilder.outputVectorWidth(wordLength);
+                    thisBuilder.operator(Operator.OR);
+                    builder = thisBuilder;
                 } else if (function.equals("ROTATE")) {
                     producer = new RotateProducer(parameters);
                 } else if (function.equals("SHA-256")) {
                     producer = new Sha256Producer(parameters);
                 } else if (function.equals("SHIFT")) {
-                    producer = new ShiftProducer(parameters);
+                    ShiftFunctionBuilder thisBuilder = new ShiftFunctionBuilder();
+                    thisBuilder.outputVectorWidth(wordLength);
+                    thisBuilder.shiftRight(parameters.size() > 1 ? parameters.getAt(1) : 0);
+                    builder = thisBuilder;
                 } else if (function.equals("XOR")) {
-                    builder.operator(Operator.XOR);
+                    BasicVectorialFunctionBuilder thisBuilder = new BasicVectorialFunctionBuilder();
+                    thisBuilder.outputVectorWidth(wordLength);
+                    thisBuilder.operator(Operator.XOR);
+                    builder = thisBuilder;
                 }
                 if (producer != null) {
                     BooleanFunction bf = producer.produce();
                     outputBooleanFunction(bf, fileName);
                 } else {
+                    builder.inputVectorName("i");
+                    builder.outputVectorName("o");
                     String output = builder.build().toString();
                     if (fileName == null) {
                         System.out.println(output);
