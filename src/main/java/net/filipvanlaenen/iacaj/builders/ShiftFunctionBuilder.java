@@ -1,8 +1,6 @@
 package net.filipvanlaenen.iacaj.builders;
 
 import net.filipvanlaenen.iacaj.expressions.Expression;
-import net.filipvanlaenen.iacaj.expressions.IdentityExpression;
-import net.filipvanlaenen.iacaj.expressions.LiteralExpression;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
@@ -22,17 +20,10 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
         if (shiftRight == null) {
             throw new IllegalStateException("Cannot build a shift function when the shift right isn't set.");
         }
+        Word inputVector = new Word(inputVectorName, outputVectorWidth);
+        Word outputVector = new Word(outputVectorName, outputVectorWidth);
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        for (int i = 1; i <= outputVectorWidth; i++) {
-            Variable ovi = new Variable(outputVectorName + i);
-            int j = i - shiftRight;
-            if (j >= 1 && j <= outputVectorWidth) {
-                Variable ivi = new Variable(inputVectorName + j);
-                map.add(ovi, new IdentityExpression(ivi));
-            } else {
-                map.add(ovi, LiteralExpression.FALSE);
-            }
-        }
+        map.addAll(buildShiftFunctions(inputVector, outputVector, shiftRight));
         return new VectorialFunction(map);
     }
 

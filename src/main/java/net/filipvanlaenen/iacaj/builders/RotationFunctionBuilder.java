@@ -23,7 +23,7 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        map.addAll(createRotation(inputVector, outputVector, rotateRight));
+        map.addAll(buildRotationFunctions(inputVector, outputVector, rotateRight));
         return new VectorialFunction(map);
     }
 
