@@ -5,7 +5,13 @@ import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.kolektoj.Map;
 
+/**
+ * A builder class for the shift function.
+ */
 public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
+    /**
+     * The number of positions to shift to the right.
+     */
     private Integer shiftRight;
 
     @Override
@@ -18,7 +24,7 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
             throw new IllegalStateException("Cannot build a shift function when the output vector width isn't set.");
         }
         if (shiftRight == null) {
-            throw new IllegalStateException("Cannot build a shift function when the shift right isn't set.");
+            throw new IllegalStateException("Cannot build a shift function when the shift left/right isn't set.");
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
@@ -26,7 +32,21 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
         return new VectorialFunction(map);
     }
 
-    public void shiftRight(Integer shiftRight) {
-        this.shiftRight = shiftRight;
+    /**
+     * Sets the number of positions the shift function should move bits to the left.
+     *
+     * @param shiftLeft The number of positions the shift function should move bits to the left.
+     */
+    public void shiftLeft(final Integer shiftLeft) {
+        shiftRight(-shiftLeft);
+    }
+
+    /**
+     * Sets the number of positions the shift function should move bits to the right.
+     *
+     * @param newShiftRight The number of positions the shift function should move bits to the right.
+     */
+    public void shiftRight(final Integer newShiftRight) {
+        this.shiftRight = newShiftRight;
     }
 }

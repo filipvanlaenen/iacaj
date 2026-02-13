@@ -26,6 +26,10 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
         return new VectorialFunction(map);
     }
 
+    public void rotateLeft(Integer rotateLeft) {
+        rotateRight(-rotateLeft);
+    }
+
     public void rotateRight(Integer rotateRight) {
         this.rotateRight = rotateRight;
     }
