@@ -66,24 +66,26 @@ public abstract class VectorialFunctionBuilder {
         Variable ivbn = inputVectorB.getAt(n);
         map.add(outputVector.getAt(n), new XorFunction(ValueCollection.of(ivan, ivbn), false));
         if (width != 1) {
-            Variable carry = new Variable(ivan.name() + "-and-" + ivbn.name());
-            map.add(carry, new AndFunction(ValueCollection.of(ivan, ivbn), ValueCollection.empty()));
             int n1 = width - 2;
-            map.add(outputVector.getAt(n1),
+            Variable ovn1 = outputVector.getAt(n1);
+            Variable carry = new Variable(ovn1.name() + "c");
+            map.add(carry, new AndFunction(ValueCollection.of(ivan, ivbn), ValueCollection.empty()));
+            map.add(ovn1,
                     new XorFunction(ValueCollection.of(inputVectorA.getAt(n1), inputVectorB.getAt(n1), carry), false));
             for (int i = width - THREE; i >= 0; i--) {
                 Variable ivai1 = inputVectorA.getAt(i + 1);
                 Variable ivbi1 = inputVectorB.getAt(i + 1);
-                Variable p1 = new Variable(ivai1.name() + "-xor-" + ivbi1.name());
-                map.add(p1, new XorFunction(ValueCollection.of(ivai1, ivbi1), false));
-                Variable p2 = new Variable(p1.name() + "-and-carry");
-                map.add(p2, new AndFunction(ValueCollection.of(carry, p1), ValueCollection.empty()));
-                Variable p3 = new Variable(ivai1.name() + "-and-" + ivbi1.name());
-                map.add(p3, new AndFunction(ValueCollection.of(ivai1, ivbi1), ValueCollection.empty()));
-                carry = new Variable(p2.name() + "-xor-" + p3.name());
-                map.add(carry, new XorFunction(ValueCollection.of(p2, p3), false));
-                map.add(outputVector.getAt(i), new XorFunction(
-                        ValueCollection.of(inputVectorA.getAt(i), inputVectorB.getAt(i), carry), false));
+                Variable ovi = outputVector.getAt(i);
+                Variable p = new Variable(ovi.name() + "p");
+                map.add(p, new XorFunction(ValueCollection.of(ivai1, ivbi1), false));
+                Variable q = new Variable(ovi.name() + "q");
+                map.add(q, new AndFunction(ValueCollection.of(carry, p), ValueCollection.empty()));
+                Variable r = new Variable(ovi.name() + "r");
+                map.add(r, new AndFunction(ValueCollection.of(ivai1, ivbi1), ValueCollection.empty()));
+                carry = new Variable(ovi.name() + "c");
+                map.add(carry, new XorFunction(ValueCollection.of(q, r), false));
+                map.add(ovi, new XorFunction(ValueCollection.of(inputVectorA.getAt(i), inputVectorB.getAt(i), carry),
+                        false));
             }
         }
         return map;
