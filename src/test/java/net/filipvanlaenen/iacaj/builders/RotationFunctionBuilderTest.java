@@ -39,7 +39,7 @@ public class RotationFunctionBuilderTest {
     }
 
     /**
-     * Verifies that correct production of rotate right operation.
+     * Verifies the correct production of a rotate right operation.
      */
     @Test
     public void buildShouldProduceACorrectRotateRightOperation() {
@@ -54,7 +54,7 @@ public class RotationFunctionBuilderTest {
     }
 
     /**
-     * Verifies that correct production of rotate left operation.
+     * Verifies the correct production of a rotate left operation.
      */
     @Test
     public void buildShouldProduceACorrectRotateLeftOperation() {

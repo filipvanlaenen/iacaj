@@ -5,6 +5,9 @@ import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.kolektoj.Map;
 
+/**
+ * A builder class for the add function.
+ */
 public final class AddFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
     @Override
     public VectorialFunction build() throws IllegalStateException {

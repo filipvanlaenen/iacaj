@@ -39,7 +39,7 @@ public class ShiftFunctionBuilderTest {
     }
 
     /**
-     * Verifies that correct production of shift right operation.
+     * Verifies the correct production of a shift right operation.
      */
     @Test
     public void buildShouldProduceACorrectShiftRightOperation() {
@@ -54,7 +54,7 @@ public class ShiftFunctionBuilderTest {
     }
 
     /**
-     * Verifies that correct production of shift left operation.
+     * Verifies the correct production of a shift left operation.
      */
     @Test
     public void buildShouldProduceACorrectShiftLeftOperation() {
