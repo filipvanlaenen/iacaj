@@ -127,7 +127,6 @@ public final class CommandLineInterface {
                 VectorialFunctionBuilder builder = null;
                 int wordLength = parameters.isEmpty() ? DEFAULT_WORD_LENGTH : parameters.getAt(0);
                 if (function.equals("ADD")) {
-                   // producer = new AddProducer(parameters);
                     AddFunctionBuilder thisBuilder = new AddFunctionBuilder();
                     thisBuilder.outputVectorWidth(wordLength);
                     builder = thisBuilder;

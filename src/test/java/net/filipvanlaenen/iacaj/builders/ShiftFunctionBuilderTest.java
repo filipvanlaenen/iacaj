@@ -7,7 +7,7 @@ public class ShiftFunctionBuilderTest {
     public void foo() {
         ShiftFunctionBuilder builder = new ShiftFunctionBuilder();
         builder.outputVectorWidth(4);
-        builder.shiftRight(-2);
+        builder.shiftRight(2);
         builder.build().toString();
     }
 }

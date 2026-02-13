@@ -134,10 +134,10 @@ public abstract class VectorialFunctionBuilder {
                     "Input and output vector should have the same width for a shift operation.");
         }
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        for (int i = 1; i <= width; i++) {
+        for (int i = 0; i < width; i++) {
             Variable ovi = outputVector.getAt(i);
             int j = i - shiftRight;
-            if (j >= 1 && j <= width) {
+            if (j >= 0 && j < width) {
                 Variable ivi = inputVector.getAt(j);
                 map.add(ovi, new IdentityExpression(ivi));
             } else {
