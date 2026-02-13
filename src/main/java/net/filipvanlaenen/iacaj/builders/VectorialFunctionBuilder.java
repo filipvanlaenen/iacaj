@@ -14,47 +14,110 @@ import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 
+/**
+ * Abstract class for vectorial function builders.
+ */
 public abstract class VectorialFunctionBuilder {
     /**
      * The magic number 3.
      */
     private static final int THREE = 3;
+    /**
+     * The input vector name, default <code>x</code>.
+     */
     private String inputVectorName = "x";
+    /**
+     * The output vector name, default <code>y</code>.
+     */
     private String outputVectorName = "y";
 
+    /**
+     * A class modeling a word in a vectorial function.
+     */
     protected final class Word {
+        /**
+         * The variables of the word.
+         */
         private final OrderedCollection<Variable> variables;
 
-        Word(final String inputVectorName, final Integer outputVectorWidth) {
-            variables =
-                    OrderedCollection.createSequence(i -> new Variable(inputVectorName + (i + 1)), outputVectorWidth);
+        /**
+         * Constructor using a base name and a width.
+         *
+         * @param baseName The base name for the variables in the word.
+         * @param width    The width of the word.
+         */
+        Word(final String baseName, final Integer width) {
+            variables = OrderedCollection.createSequence(i -> new Variable(baseName + (i + 1)), width);
         }
 
+        /**
+         * Constructor using a word and the indexes for a window on that word to create a new word.
+         *
+         * @param word The word to extract the new word from.
+         * @param i    The index of the first variable included in the extracted word.
+         * @param j    The index of the first variable not included in the extracted word.
+         */
         private Word(final Word word, final int i, final int j) {
             variables = OrderedCollection.of(word.variables, i, j);
         }
 
+        /**
+         * Extracts a word representing the first half of this word.
+         *
+         * @return A word representing the first half of this word.
+         */
         Word firstHalf() {
             return new Word(this, 0, variables.size() / 2);
         }
 
+        /**
+         * Returns the variable at provided index.
+         *
+         * @param i The index for which to return the variable.
+         * @return The variable at the provided index in the word.
+         */
         Variable getAt(final int i) {
             return variables.getAt(i);
         }
 
+        /**
+         * Extracts a word representing the second half of this word.
+         *
+         * @return A word representing the second half of this word.
+         */
         Word secondHalf() {
             return new Word(this, variables.size() / 2, variables.size());
         }
 
+        /**
+         * Returns the size of the word.
+         *
+         * @return The size of the word.
+         */
         int size() {
             return variables.size();
         }
     }
 
-    abstract public VectorialFunction build() throws IllegalStateException;
+    /**
+     * Builds the vectorial function.
+     *
+     * @return The vectorial function as specified in the builder.
+     * @throws IllegalStateException Thrown if the builder isn't in a state ready to build.
+     */
+    public abstract VectorialFunction build() throws IllegalStateException;
 
+    /**
+     * Builds a map with variables and Boolean expression adding two words together.
+     *
+     * @param inputVectorA The first word to add.
+     * @param inputVectorB The second word to add.
+     * @param outputVector The resulting word.
+     * @return A map with variables and Boolean expression adding two words together.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
     protected Map<Variable, Expression> buildAdditionFunctions(final Word inputVectorA, final Word inputVectorB,
-            Word outputVector) {
+            final Word outputVector) throws IllegalStateException {
         int width = outputVector.size();
         if (width != inputVectorA.size() || width != inputVectorB.size()) {
             throw new IllegalStateException(
@@ -91,8 +154,18 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
+    /**
+     * Builds a map with variables and Boolean expression combining two words together with an operator.
+     *
+     * @param inputVectorA The first word to combine.
+     * @param inputVectorB The second word to combine.
+     * @param operator     The operator.
+     * @param outputVector The resulting word.
+     * @return A map with variables and Boolean expression combining two words together with an operator.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
     protected Map<Variable, Expression> buildOperationFunctions(final Word inputVectorA, final Word inputVectorB,
-            final Word outputVector, Operator operator) {
+            final Operator operator, final Word outputVector) {
         int width = outputVector.size();
         if (width != inputVectorA.size() || width != inputVectorB.size()) {
             throw new IllegalStateException(
@@ -113,8 +186,17 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    protected Map<Variable, Expression> buildRotationFunctions(final Word inputVector, final Word outputVector,
-            final int rotateRight) {
+    /**
+     * Builds a map with variables and Boolean expression rotating a word into another.
+     *
+     * @param inputVector  The word to rotate.
+     * @param rotateRight  The number of positions to rotate to the right.
+     * @param outputVector The rotated word.
+     * @return A map with variables and Boolean expression rotating a word into another.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
+    protected Map<Variable, Expression> buildRotationFunctions(final Word inputVector, final int rotateRight,
+            final Word outputVector) {
         int width = outputVector.size();
         if (width != inputVector.size()) {
             throw new IllegalStateException(
@@ -130,8 +212,17 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    protected Map<Variable, Expression> buildShiftFunctions(final Word inputVector, final Word outputVector,
-            final int shiftRight) {
+    /**
+     * Builds a map with variables and Boolean expression shifting a word into another.
+     *
+     * @param inputVector  The word to shift.
+     * @param shiftRight   The number of positions to shift to the right.
+     * @param outputVector The shifted word.
+     * @return A map with variables and Boolean expression shifting a word into another.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
+    protected Map<Variable, Expression> buildShiftFunctions(final Word inputVector, final int shiftRight,
+            final Word outputVector) {
         int width = outputVector.size();
         if (width != inputVector.size()) {
             throw new IllegalStateException(
@@ -151,22 +242,47 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
+    /**
+     * Returns the name of the input vector.
+     *
+     * @return The name of the input vector.
+     */
     protected String getInputVectorName() {
         return inputVectorName;
     }
 
+    /**
+     * Returns the name of the output vector.
+     *
+     * @return The name of the output vector.
+     */
     protected String getOutputVectorName() {
         return outputVectorName;
     }
 
+    /**
+     * Sets the input vector name.
+     *
+     * @param newInputVectorName The input vector name.
+     */
     public void inputVectorName(final String newInputVectorName) {
         this.inputVectorName = newInputVectorName;
     }
 
+    /**
+     * Sets the output vector name.
+     *
+     * @param newOutputVectorName The output vector name.
+     */
     public void outputVectorName(final String newOutputVectorName) {
         this.outputVectorName = newOutputVectorName;
     }
 
+    /**
+     * Runs assertions before the build phase is performed, typically verifying the state of the builder.
+     *
+     * @throws IllegalStateException Thrown if the builder isn't in a state ready to build.
+     */
     protected void prebuild() throws IllegalStateException {
         if (inputVectorName == null) {
             throw new IllegalStateException("Cannot build a vectorial function when the input vector name is null.");

@@ -25,7 +25,7 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
-        Map<Variable, Expression> map = buildRotationFunctions(inputVector, outputVector, rotateRight);
+        Map<Variable, Expression> map = buildRotationFunctions(inputVector, rotateRight, outputVector);
         return new VectorialFunction(map);
     }
 

@@ -25,7 +25,7 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
-        Map<Variable, Expression> map = buildShiftFunctions(inputVector, outputVector, shiftRight);
+        Map<Variable, Expression> map = buildShiftFunctions(inputVector, shiftRight, outputVector);
         return new VectorialFunction(map);
     }
 

@@ -28,7 +28,7 @@ public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialF
         Word inputVectorA = inputVector.firstHalf();
         Word inputVectorB = inputVector.secondHalf();
         Word outputVector = new Word(outputVectorName, outputVectorWidth);
-        Map<Variable, Expression> map = buildOperationFunctions(inputVectorA, inputVectorB, outputVector, operator);
+        Map<Variable, Expression> map = buildOperationFunctions(inputVectorA, inputVectorB, operator, outputVector);
         return new VectorialFunction(map);
     }
 

@@ -1,7 +1,7 @@
 package net.filipvanlaenen.iacaj.builders;
 
 /**
- * Abstract class for builders with a variable output vector width.
+ * Abstract class for vectorial function builders with a variable output vector width.
  */
 abstract class VariableWidthVectorialFunctionBuilder extends VectorialFunctionBuilder {
     /**
