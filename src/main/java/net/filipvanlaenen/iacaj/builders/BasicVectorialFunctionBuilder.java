@@ -6,7 +6,13 @@ import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.kolektoj.Map;
 
+/**
+ * A builder class for the basic vectorial functions AND, OR and XOR.
+ */
 public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
+    /**
+     * The operator.
+     */
     private Operator operator;
 
     @Override
@@ -26,7 +32,12 @@ public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialF
         return new VectorialFunction(map);
     }
 
-    public void operator(Operator operator) {
-        this.operator = operator;
+    /**
+     * Sets the operator.
+     *
+     * @param newOperator The operator.
+     */
+    public void operator(final Operator newOperator) {
+        this.operator = newOperator;
     }
 }

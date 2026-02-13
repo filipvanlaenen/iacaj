@@ -22,15 +22,15 @@ public abstract class VectorialFunctionBuilder {
     private String inputVectorName = "x";
     private String outputVectorName = "y";
 
-    protected class Word {
+    protected final class Word {
         private final OrderedCollection<Variable> variables;
 
-        Word(String inputVectorName, Integer outputVectorWidth) {
+        Word(final String inputVectorName, final Integer outputVectorWidth) {
             variables =
                     OrderedCollection.createSequence(i -> new Variable(inputVectorName + (i + 1)), outputVectorWidth);
         }
 
-        private Word(Word word, int i, int j) {
+        private Word(final Word word, final int i, final int j) {
             variables = OrderedCollection.of(word.variables, i, j);
         }
 
@@ -38,7 +38,7 @@ public abstract class VectorialFunctionBuilder {
             return new Word(this, 0, variables.size() / 2);
         }
 
-        Variable getAt(int i) {
+        Variable getAt(final int i) {
             return variables.getAt(i);
         }
 
@@ -53,7 +53,7 @@ public abstract class VectorialFunctionBuilder {
 
     abstract public VectorialFunction build() throws IllegalStateException;
 
-    protected Map<Variable, Expression> buildAdditionFunctions(Word inputVectorA, Word inputVectorB,
+    protected Map<Variable, Expression> buildAdditionFunctions(final Word inputVectorA, final Word inputVectorB,
             Word outputVector) {
         int width = outputVector.size();
         if (width != inputVectorA.size() || width != inputVectorB.size()) {
@@ -91,8 +91,8 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    protected Map<Variable, Expression> buildOperationFunctions(Word inputVectorA, Word inputVectorB, Word outputVector,
-            Operator operator) {
+    protected Map<Variable, Expression> buildOperationFunctions(final Word inputVectorA, final Word inputVectorB,
+            final Word outputVector, Operator operator) {
         int width = outputVector.size();
         if (width != inputVectorA.size() || width != inputVectorB.size()) {
             throw new IllegalStateException(
@@ -113,7 +113,8 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    protected Map<Variable, Expression> buildRotationFunctions(Word inputVector, Word outputVector, int rotateRight) {
+    protected Map<Variable, Expression> buildRotationFunctions(final Word inputVector, final Word outputVector,
+            final int rotateRight) {
         int width = outputVector.size();
         if (width != inputVector.size()) {
             throw new IllegalStateException(
@@ -129,7 +130,8 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    protected Map<Variable, Expression> buildShiftFunctions(Word inputVector, Word outputVector, int shiftRight) {
+    protected Map<Variable, Expression> buildShiftFunctions(final Word inputVector, final Word outputVector,
+            final int shiftRight) {
         int width = outputVector.size();
         if (width != inputVector.size()) {
             throw new IllegalStateException(
@@ -157,12 +159,12 @@ public abstract class VectorialFunctionBuilder {
         return outputVectorName;
     }
 
-    public void inputVectorName(String inputVectorName) {
-        this.inputVectorName = inputVectorName;
+    public void inputVectorName(final String newInputVectorName) {
+        this.inputVectorName = newInputVectorName;
     }
 
-    public void outputVectorName(String outputVectorName) {
-        this.outputVectorName = outputVectorName;
+    public void outputVectorName(final String newOutputVectorName) {
+        this.outputVectorName = newOutputVectorName;
     }
 
     protected void prebuild() throws IllegalStateException {

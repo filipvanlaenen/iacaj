@@ -7,7 +7,7 @@ abstract class VariableWidthVectorialFunctionBuilder extends VectorialFunctionBu
         return outputVectorWidth;
     }
 
-    public void outputVectorWidth(Integer width) {
+    public void outputVectorWidth(final Integer width) {
         this.outputVectorWidth = width;
     }
 

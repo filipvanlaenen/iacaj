@@ -12,9 +12,6 @@ public final class AddFunctionBuilder extends VariableWidthVectorialFunctionBuil
         String inputVectorName = getInputVectorName();
         String outputVectorName = getOutputVectorName();
         Integer outputVectorWidth = getOutputVectorWidth();
-        if (outputVectorWidth == null) {
-            throw new IllegalStateException("Cannot build an add function when the output vector width isn't set.");
-        }
         Word inputVector = new Word(inputVectorName, outputVectorWidth * 2);
         Word inputVectorA = inputVector.firstHalf();
         Word inputVectorB = inputVector.secondHalf();

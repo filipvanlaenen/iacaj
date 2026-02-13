@@ -20,9 +20,6 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
         String inputVectorName = getInputVectorName();
         String outputVectorName = getOutputVectorName();
         Integer outputVectorWidth = getOutputVectorWidth();
-        if (outputVectorWidth == null) {
-            throw new IllegalStateException("Cannot build a rotate function when the output vector width isn't set.");
-        }
         if (rotateRight == null) {
             throw new IllegalStateException("Cannot build a rotate function when the rotate left/right isn't set.");
         }

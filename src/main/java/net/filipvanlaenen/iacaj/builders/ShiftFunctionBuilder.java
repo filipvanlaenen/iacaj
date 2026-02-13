@@ -20,9 +20,6 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
         String inputVectorName = getInputVectorName();
         String outputVectorName = getOutputVectorName();
         Integer outputVectorWidth = getOutputVectorWidth();
-        if (outputVectorWidth == null) {
-            throw new IllegalStateException("Cannot build a shift function when the output vector width isn't set.");
-        }
         if (shiftRight == null) {
             throw new IllegalStateException("Cannot build a shift function when the shift left/right isn't set.");
         }
