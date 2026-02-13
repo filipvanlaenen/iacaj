@@ -31,7 +31,7 @@ public class ShiftFunctionBuilderTest {
      * Verifies that an <code>IllegalStateException</code> if the shift hasn't been set.
      */
     @Test
-    public void buildShouldThrowExceptionWhenShiftIsntSet() {
+    public void buildShouldThrowExceptionWhenShiftLeftRightIsntSet() {
         ShiftFunctionBuilder builder = new ShiftFunctionBuilder();
         builder.outputVectorWidth(2);
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> builder.build());

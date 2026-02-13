@@ -122,7 +122,7 @@ public abstract class VectorialFunctionBuilder {
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
         for (int i = 0; i < width; i++) {
             Variable ivi = inputVector.getAt(i);
-            int j = (i + rotateRight) % width;
+            int j = (i + rotateRight + width) % width;
             Variable ovi = outputVector.getAt(j);
             map.add(ovi, new IdentityExpression(ivi));
         }
