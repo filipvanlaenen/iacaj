@@ -1,14 +1,10 @@
 package net.filipvanlaenen.iacaj.builders;
 
-import net.filipvanlaenen.iacaj.expressions.AndFunction;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Operator;
-import net.filipvanlaenen.iacaj.expressions.OrFunction;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
-import net.filipvanlaenen.iacaj.expressions.XorFunction;
-import net.filipvanlaenen.kolektoj.ModifiableMap;
-import net.filipvanlaenen.kolektoj.ValueCollection;
+import net.filipvanlaenen.kolektoj.Map;
 
 public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
     private Operator operator;
@@ -22,20 +18,11 @@ public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialF
         String inputVectorName = getInputVectorName();
         String outputVectorName = getOutputVectorName();
         Integer outputVectorWidth = getOutputVectorWidth();
-        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        for (int i = 1; i <= outputVectorWidth; i++) {
-            Variable ovi = new Variable(outputVectorName + i);
-            Variable ivai = new Variable(inputVectorName + i);
-            Variable ivbi = new Variable(inputVectorName + (outputVectorWidth + i));
-            ValueCollection<Variable> inputVariables = ValueCollection.of(ivai, ivbi);
-            Expression expression = switch (operator) {
-            case AND -> new AndFunction(inputVariables, ValueCollection.empty());
-            case OR -> new OrFunction(inputVariables, ValueCollection.empty());
-            case XOR -> new XorFunction(inputVariables, false);
-            default -> null;
-            };
-            map.add(ovi, expression);
-        }
+        Word inputVector = new Word(inputVectorName, outputVectorWidth * 2);
+        Word inputVectorA = inputVector.firstHalf();
+        Word inputVectorB = inputVector.secondHalf();
+        Word outputVector = new Word(outputVectorName, outputVectorWidth);
+        Map<Variable, Expression> map = buildOperationFunctions(inputVectorA, inputVectorB, outputVector, operator);
         return new VectorialFunction(map);
     }
 
