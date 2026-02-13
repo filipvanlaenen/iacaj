@@ -15,6 +15,10 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 
 public abstract class VectorialFunctionBuilder {
+    /**
+     * The magic number 3.
+     */
+    private static final int THREE = 3;
     private String inputVectorName = "x";
     private String outputVectorName = "y";
 
@@ -26,8 +30,20 @@ public abstract class VectorialFunctionBuilder {
                     OrderedCollection.createSequence(i -> new Variable(inputVectorName + (i + 1)), outputVectorWidth);
         }
 
+        private Word(Word word, int i, int j) {
+            variables = OrderedCollection.of(word.variables, i, j);
+        }
+
+        Word firstHalf() {
+            return new Word(this, 0, variables.size() / 2);
+        }
+
         Variable getAt(int i) {
             return variables.getAt(i);
+        }
+
+        Word secondHalf() {
+            return new Word(this, variables.size() / 2, variables.size());
         }
 
         int size() {
@@ -36,6 +52,42 @@ public abstract class VectorialFunctionBuilder {
     }
 
     abstract public VectorialFunction build() throws IllegalStateException;
+
+    protected Map<Variable, Expression> buildAdditionFunctions(Word inputVectorA, Word inputVectorB,
+            Word outputVector) {
+        int width = outputVector.size();
+        if (width != inputVectorA.size() || width != inputVectorB.size()) {
+            throw new IllegalStateException(
+                    "Input and output vectors should have the same width for an addition operation.");
+        }
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        int n = width - 1;
+        Variable ivan = inputVectorA.getAt(n);
+        Variable ivbn = inputVectorB.getAt(n);
+        map.add(outputVector.getAt(n), new XorFunction(ValueCollection.of(ivan, ivbn), false));
+        if (width != 1) {
+            Variable carry = new Variable(ivan.name() + "-and-" + ivbn.name());
+            map.add(carry, new AndFunction(ValueCollection.of(ivan, ivbn), ValueCollection.empty()));
+            int n1 = width - 2;
+            map.add(outputVector.getAt(n1),
+                    new XorFunction(ValueCollection.of(inputVectorA.getAt(n1), inputVectorB.getAt(n1), carry), false));
+            for (int i = width - THREE; i >= 0; i--) {
+                Variable ivai1 = inputVectorA.getAt(i + 1);
+                Variable ivbi1 = inputVectorB.getAt(i + 1);
+                Variable p1 = new Variable(ivai1.name() + "-xor-" + ivbi1.name());
+                map.add(p1, new XorFunction(ValueCollection.of(ivai1, ivbi1), false));
+                Variable p2 = new Variable(p1.name() + "-and-carry");
+                map.add(p2, new AndFunction(ValueCollection.of(carry, p1), ValueCollection.empty()));
+                Variable p3 = new Variable(ivai1.name() + "-and-" + ivbi1.name());
+                map.add(p3, new AndFunction(ValueCollection.of(ivai1, ivbi1), ValueCollection.empty()));
+                carry = new Variable(p2.name() + "-xor-" + p3.name());
+                map.add(carry, new XorFunction(ValueCollection.of(p2, p3), false));
+                map.add(outputVector.getAt(i), new XorFunction(
+                        ValueCollection.of(inputVectorA.getAt(i), inputVectorB.getAt(i), carry), false));
+            }
+        }
+        return map;
+    }
 
     protected Map<Variable, Expression> buildOperationFunctions(Word inputVectorA, Word inputVectorB, Word outputVector,
             Operator operator) {

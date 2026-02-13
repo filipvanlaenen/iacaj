@@ -11,12 +11,12 @@ import net.filipvanlaenen.iacaj.AttackResult;
 import net.filipvanlaenen.iacaj.BooleanFunction;
 import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
+import net.filipvanlaenen.iacaj.builders.AddFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.BasicVectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.RotationFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.ShiftFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.VectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.expressions.Operator;
-import net.filipvanlaenen.iacaj.producer.AddProducer;
 import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
@@ -127,7 +127,10 @@ public final class CommandLineInterface {
                 VectorialFunctionBuilder builder = null;
                 int wordLength = parameters.isEmpty() ? DEFAULT_WORD_LENGTH : parameters.getAt(0);
                 if (function.equals("ADD")) {
-                    producer = new AddProducer(parameters);
+                   // producer = new AddProducer(parameters);
+                    AddFunctionBuilder thisBuilder = new AddFunctionBuilder();
+                    thisBuilder.outputVectorWidth(wordLength);
+                    builder = thisBuilder;
                 } else if (function.equals("AND")) {
                     BasicVectorialFunctionBuilder thisBuilder = new BasicVectorialFunctionBuilder();
                     thisBuilder.outputVectorWidth(wordLength);
