@@ -13,6 +13,7 @@ import net.filipvanlaenen.iacaj.ComplexityReport;
 import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
 import net.filipvanlaenen.iacaj.builders.AddFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.BasicVectorialFunctionBuilder;
+import net.filipvanlaenen.iacaj.builders.Md5FunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.RotationFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.ShiftFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.VectorialFunctionBuilder;
@@ -21,6 +22,7 @@ import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
+import net.filipvanlaenen.nombrajkolektoj.integers.ModifiableOrderedIntegerCollection;
 
 /**
  * Class implementing a command line interface.
@@ -58,6 +60,7 @@ public final class CommandLineInterface {
         System.out.println("  produce <function> <numeric-parameter>* [<file-name>]");
         System.out.println("    produce ADD [<word-length>] [<file-name>]");
         System.out.println("    produce AND [<word-length>] [<file-name>]");
+        System.out.println("    produce MD5 [<no-of-rounds>] [<file-name>]");
         System.out.println("    produce OR [<word-length>] [<file-name>]");
         System.out.println("    produce ROTATE [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce SHA-256 [<no-of-rounds>] [<file-name>]");
@@ -110,7 +113,7 @@ public final class CommandLineInterface {
             @Override
             void execute(final String[] args) throws IOException {
                 String function = args[1];
-                ModifiableOrderedCollection<Integer> parameters = new ModifiableOrderedArrayCollection<Integer>();
+                ModifiableOrderedIntegerCollection parameters = ModifiableOrderedIntegerCollection.empty();
                 String fileName = null;
                 int i = 2;
                 while (i < args.length) {
@@ -134,6 +137,12 @@ public final class CommandLineInterface {
                     BasicVectorialFunctionBuilder thisBuilder = new BasicVectorialFunctionBuilder();
                     thisBuilder.outputVectorWidth(wordLength);
                     thisBuilder.operator(Operator.AND);
+                    builder = thisBuilder;
+                } else if (function.equals("MD5")) {
+                    Md5FunctionBuilder thisBuilder = new Md5FunctionBuilder();
+                    if (!parameters.isEmpty()) {
+                        thisBuilder.setNumberOfRounds(parameters.getAt(0));
+                    }
                     builder = thisBuilder;
                 } else if (function.equals("OR")) {
                     BasicVectorialFunctionBuilder thisBuilder = new BasicVectorialFunctionBuilder();

@@ -4,6 +4,7 @@ import net.filipvanlaenen.iacaj.expressions.AndFunction;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.IdentityExpression;
 import net.filipvanlaenen.iacaj.expressions.LiteralExpression;
+import net.filipvanlaenen.iacaj.expressions.NegationExpression;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.expressions.OrFunction;
 import net.filipvanlaenen.iacaj.expressions.Variable;
@@ -80,6 +81,10 @@ public abstract class VectorialFunctionBuilder {
             return variables.getAt(i);
         }
 
+        Word getSlice(final int fromIndex, final int toIndex) {
+            return new Word(this, fromIndex, toIndex);
+        }
+
         /**
          * Extracts a word representing the second half of this word.
          *
@@ -154,27 +159,80 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    /**
-     * Builds a map with variables and Boolean expression combining two words together with an operator.
-     *
-     * @param inputVectorA The first word to combine.
-     * @param inputVectorB The second word to combine.
-     * @param operator     The operator.
-     * @param outputVector The resulting word.
-     * @return A map with variables and Boolean expression combining two words together with an operator.
-     * @throws IllegalStateException Thrown if the words don't have the same size.
-     */
-    protected Map<Variable, Expression> buildOperationFunctions(final Word inputVectorA, final Word inputVectorB,
-            final Operator operator, final Word outputVector) {
+    protected Map<Variable, Expression> buildAssignmentFunctions(final Word resultVector, final Long value) {
+        int width = resultVector.size();
+        long remainder = value;
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        for (int i = width - 1; i >= 0; i--) {
+            Variable ri = resultVector.getAt(i);
+            if (remainder % 2 == 0) {
+                map.add(ri, LiteralExpression.FALSE);
+            } else {
+                map.add(ri, LiteralExpression.TRUE);
+            }
+            remainder = remainder / 2;
+        }
+        return map;
+    }
+
+    protected Map<Variable, Expression> buildIdentityFunctions(final Word inputVector, final Word outputVector) {
         int width = outputVector.size();
-        if (width != inputVectorA.size() || width != inputVectorB.size()) {
+        if (width != inputVector.size()) {
             throw new IllegalStateException(
-                    "Input and output vectors should have the same width for an operator operation.");
+                    "Input and output vector should have the same width for a reassignment operation.");
         }
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
         for (int i = 0; i < width; i++) {
             Variable ovi = outputVector.getAt(i);
-            ValueCollection<Variable> inputVariables = ValueCollection.of(inputVectorA.getAt(i), inputVectorB.getAt(i));
+            Variable ivi = inputVector.getAt(i);
+            map.add(ovi, new IdentityExpression(ivi));
+        }
+        return map;
+    }
+
+    protected Map<Variable, Expression> buildNegationFunctions(final Word inputVector, final Word outputVector) {
+        int width = outputVector.size();
+        if (width != inputVector.size()) {
+            throw new IllegalStateException(
+                    "Input and output vector should have the same width for a reassignment operation.");
+        }
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        for (int i = 0; i < width; i++) {
+            Variable ovi = outputVector.getAt(i);
+            Variable ivi = inputVector.getAt(i);
+            map.add(ovi, new NegationExpression(ivi));
+        }
+        return map;
+    }
+
+    /**
+     * Builds a map with variables and Boolean expression combining two words together with an operator.
+     * 
+     * @param operator     The operator.
+     * @param outputVector The resulting word.
+     * @param inputVectorA The first word to combine.
+     * @param inputVectorB The second word to combine.
+     *
+     * @return A map with variables and Boolean expression combining two words together with an operator.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
+    protected Map<Variable, Expression> buildOperationFunctions(final Operator operator, final Word outputVector,
+            final Word... inputVectors) {
+        int width = outputVector.size();
+        for (Word inputVector : inputVectors) {
+            if (width != inputVector.size()) {
+                throw new IllegalStateException(
+                        "Input and output vectors should have the same width for an operator operation.");
+            }
+        }
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        for (int i = 0; i < width; i++) {
+            Variable ovi = outputVector.getAt(i);
+            Variable[] inputVariablesArray = new Variable[inputVectors.length];
+            for (int j = 0; j < inputVectors.length; j++) {
+                inputVariablesArray[j] = inputVectors[j].getAt(i);
+            }
+            ValueCollection<Variable> inputVariables = ValueCollection.of(inputVariablesArray);
             Expression expression = switch (operator) {
             case AND -> new AndFunction(inputVariables, ValueCollection.empty());
             case OR -> new OrFunction(inputVariables, ValueCollection.empty());
@@ -292,7 +350,7 @@ public abstract class VectorialFunctionBuilder {
         }
         if (inputVectorName.equals(outputVectorName)) {
             throw new IllegalStateException(
-                    "Cannot build a vectorial  function when the input and output vector names are equal.");
+                    "Cannot build a vectorial function when the input and output vector names are equal.");
         }
     }
 }
