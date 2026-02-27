@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.iacaj.expressions.Word;
+
 /**
  * Unit tests on the <code>AddFunctionBuilder</code> class.
  */
@@ -34,5 +36,17 @@ public class AddFunctionBuilderTest {
                 || actual.contains("y1 = y1c ⊻ x1 ⊻ x3\n") || actual.contains("y1 = y1c ⊻ x3 ⊻ x1\n"));
         assertTrue(actual.contains("y1c = x2 ∧ x4\n") || actual.contains("y1c = x4 ∧ x2\n"));
         assertTrue(actual.contains("y2 = x2 ⊻ x4\n") || actual.contains("y2 = x4 ⊻ x2\n"));
+    }
+
+    /**
+     * Verifies that <code>getOutputVector</code> returns the correct output vector.
+     */
+    @Test
+    public void getOutputVectorShouldReturnCorrectOutputVector() {
+        AddFunctionBuilder builder = new AddFunctionBuilder();
+        builder.outputVectorWidth(2);
+        builder.build();
+        Word outputVector = builder.getOutputVector();
+        assertEquals(2, outputVector.size());
     }
 }

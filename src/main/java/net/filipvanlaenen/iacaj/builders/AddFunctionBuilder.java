@@ -10,6 +10,9 @@ import net.filipvanlaenen.kolektoj.Map;
  * A builder class for the add function.
  */
 public final class AddFunctionBuilder extends VariableWidthVectorialFunctionBuilder {
+    /**
+     * The output vector.
+     */
     private Word outputVector;
 
     @Override
