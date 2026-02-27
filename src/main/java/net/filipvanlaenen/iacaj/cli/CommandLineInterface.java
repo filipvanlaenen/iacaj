@@ -18,10 +18,9 @@ import net.filipvanlaenen.iacaj.builders.RotationFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.ShiftFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.VectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.expressions.Operator;
+import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.iacaj.producer.Producer;
 import net.filipvanlaenen.iacaj.producer.Sha256Producer;
-import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
-import net.filipvanlaenen.kolektoj.array.ModifiableOrderedArrayCollection;
 import net.filipvanlaenen.nombrajkolektoj.integers.ModifiableOrderedIntegerCollection;
 
 /**
@@ -173,7 +172,9 @@ public final class CommandLineInterface {
                 } else {
                     builder.inputVectorName("i");
                     builder.outputVectorName("o");
-                    String output = builder.build().toString();
+                    VectorialFunction vectorialFunction = builder.build();
+                    vectorialFunction = vectorialFunction.simplify(builder.getOutputVector());
+                    String output = vectorialFunction.toString();
                     if (fileName == null) {
                         System.out.println(output);
                     } else {

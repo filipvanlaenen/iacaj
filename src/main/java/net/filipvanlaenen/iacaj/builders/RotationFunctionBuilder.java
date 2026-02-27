@@ -3,6 +3,7 @@ package net.filipvanlaenen.iacaj.builders;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
+import net.filipvanlaenen.iacaj.expressions.Word;
 import net.filipvanlaenen.kolektoj.Map;
 
 /**
@@ -13,6 +14,7 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
      * The number of positions to rotate to the right.
      */
     private Integer rotateRight;
+    private Word outputVector;
 
     @Override
     public VectorialFunction build() throws IllegalStateException {
@@ -24,9 +26,14 @@ public final class RotationFunctionBuilder extends VariableWidthVectorialFunctio
             throw new IllegalStateException("Cannot build a rotate function when the rotate left/right isn't set.");
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
-        Word outputVector = new Word(outputVectorName, outputVectorWidth);
+        outputVector = new Word(outputVectorName, outputVectorWidth);
         Map<Variable, Expression> map = buildRotationFunctions(inputVector, rotateRight, outputVector);
         return new VectorialFunction(map);
+    }
+
+    @Override
+    public Word getOutputVector() {
+        return outputVector;
     }
 
     /**

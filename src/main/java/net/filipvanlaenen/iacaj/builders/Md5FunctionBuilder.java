@@ -4,6 +4,7 @@ import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
+import net.filipvanlaenen.iacaj.expressions.Word;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.nombrajkolektoj.integers.OrderedIntegerCollection;
 import net.filipvanlaenen.nombrajkolektoj.longs.OrderedLongCollection;
@@ -16,6 +17,9 @@ import net.filipvanlaenen.nombrajkolektoj.longs.OrderedLongCollection;
  *      algorithm.
  */
 public class Md5FunctionBuilder extends VectorialFunctionBuilder {
+    private Integer numberOfRounds = 64;
+    private Word outputVector;
+
     @Override
     public VectorialFunction build() throws IllegalStateException {
         super.prebuild();
@@ -96,7 +100,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
 
         // Main loop:
         // for i from 0 to 63 do
-        for (int i = 0; i <= 63; i++) {
+        for (int i = 0; i <= 63 && i < numberOfRounds; i++) {
             String round = String.format("%02d", i + 1);
             int g = 0;
             // var int F, g
@@ -110,7 +114,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
                 map.addAll(buildNegationFunctions(b, fb));
                 Word fc = new Word("fc" + round, 32);
                 map.addAll(buildOperationFunctions(Operator.AND, fc, fb, d));
-                map.addAll(buildOperationFunctions(Operator.AND, fz, fa, fc));
+                map.addAll(buildOperationFunctions(Operator.OR, fz, fa, fc));
                 // g := i
                 g = i;
             }
@@ -123,7 +127,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
                 map.addAll(buildNegationFunctions(d, fb));
                 Word fc = new Word("fc" + round, 32);
                 map.addAll(buildOperationFunctions(Operator.AND, fc, fb, c));
-                map.addAll(buildOperationFunctions(Operator.AND, fz, fa, fc));
+                map.addAll(buildOperationFunctions(Operator.OR, fz, fa, fc));
                 // g := (5×i + 1) mod 16
                 g = (5 * i + 1) % 16;
             }
@@ -190,7 +194,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
         map.addAll(buildAdditionFunctions(d00, d, d0z));
 
         // var char digest[16] := a0 append b0 append c0 append d0
-        Word outputVector = new Word(getOutputVectorName(), 128);
+        outputVector = new Word(getOutputVectorName(), 128);
         map.addAll(buildIdentityFunctions(a0z, outputVector.getSlice(0, 32)));
         map.addAll(buildIdentityFunctions(b0z, outputVector.getSlice(32, 64)));
         map.addAll(buildIdentityFunctions(c0z, outputVector.getSlice(64, 96)));
@@ -199,6 +203,12 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
         return new VectorialFunction(map);
     }
 
+    @Override
+    public Word getOutputVector() {
+        return outputVector;
+    }
+
     public void setNumberOfRounds(Integer numberOfRounds) {
+        this.numberOfRounds = numberOfRounds;
     }
 }

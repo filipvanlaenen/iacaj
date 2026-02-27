@@ -3,6 +3,8 @@ package net.filipvanlaenen.iacaj.expressions;
 import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.Map.Entry;
 import net.filipvanlaenen.kolektoj.collectors.Collectors;
+import net.filipvanlaenen.kolektoj.Collection;
+import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 import net.filipvanlaenen.nombrajkolektoj.integers.UpdatableIntegerMap;
@@ -15,6 +17,11 @@ import net.filipvanlaenen.nombrajkolektoj.integers.UpdatableIntegerMap;
  */
 public record XorFunction(ValueCollection<Variable> variables, boolean negated) implements Function {
     private static final String XOR_WITH_SPACES = " " + Operator.XOR + " ";
+
+    @Override
+    public Collection<Variable> getVariables() {
+        return variables;
+    }
 
     @Override
     public Expression simplify() {
@@ -31,6 +38,10 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
                 newVariables.remove(o.key());
             }
         }
+        return createExpression(newVariables);
+    }
+
+    private Expression createExpression(ModifiableCollection<Variable> newVariables) {
         if (newVariables.isEmpty()) {
             return negated ? LiteralExpression.TRUE : LiteralExpression.FALSE;
         } else if (newVariables.size() == 1) {
@@ -41,6 +52,23 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
             Variable[] direct = newVariables.toArray(new Variable[0]);
             return new XorFunction(ValueCollection.of(direct), negated);
         }
+    }
+
+    @Override
+    public Expression simplify(final Map<Variable, Expression> variableToExpressionMap) {
+        ModifiableCollection<Variable> newVariables = ModifiableCollection.empty();
+        boolean newNegated = negated;
+        for (Variable variable : variables) {
+            if (variableToExpressionMap.containsKey(variable)) {
+                Expression expression = variableToExpressionMap.get(variable);
+                if (LiteralExpression.TRUE == expression) {
+                    newNegated = !newNegated;
+                } else if (LiteralExpression.FALSE != expression) {
+                    newVariables.add(variable);
+                }
+            }
+        }
+        return createExpression(newVariables);
     }
 
     @Override

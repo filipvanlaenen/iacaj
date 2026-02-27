@@ -3,6 +3,7 @@ package net.filipvanlaenen.iacaj.builders;
 import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
+import net.filipvanlaenen.iacaj.expressions.Word;
 import net.filipvanlaenen.kolektoj.Map;
 
 /**
@@ -13,6 +14,7 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
      * The number of positions to shift to the right.
      */
     private Integer shiftRight;
+    private Word outputVector;
 
     @Override
     public VectorialFunction build() throws IllegalStateException {
@@ -24,9 +26,14 @@ public final class ShiftFunctionBuilder extends VariableWidthVectorialFunctionBu
             throw new IllegalStateException("Cannot build a shift function when the shift left/right isn't set.");
         }
         Word inputVector = new Word(inputVectorName, outputVectorWidth);
-        Word outputVector = new Word(outputVectorName, outputVectorWidth);
+        outputVector = new Word(outputVectorName, outputVectorWidth);
         Map<Variable, Expression> map = buildShiftFunctions(inputVector, shiftRight, outputVector);
         return new VectorialFunction(map);
+    }
+
+    @Override
+    public Word getOutputVector() {
+        return outputVector;
     }
 
     /**

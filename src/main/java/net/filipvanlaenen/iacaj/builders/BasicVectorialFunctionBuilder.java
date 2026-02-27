@@ -4,6 +4,7 @@ import net.filipvanlaenen.iacaj.expressions.Expression;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
+import net.filipvanlaenen.iacaj.expressions.Word;
 import net.filipvanlaenen.kolektoj.Map;
 
 /**
@@ -14,6 +15,7 @@ public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialF
      * The operator.
      */
     private Operator operator;
+    private Word outputVector;
 
     @Override
     public VectorialFunction build() throws IllegalStateException {
@@ -27,9 +29,14 @@ public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialF
         Word inputVector = new Word(inputVectorName, outputVectorWidth * 2);
         Word inputVectorA = inputVector.firstHalf();
         Word inputVectorB = inputVector.secondHalf();
-        Word outputVector = new Word(outputVectorName, outputVectorWidth);
+        outputVector = new Word(outputVectorName, outputVectorWidth);
         Map<Variable, Expression> map = buildOperationFunctions(operator, outputVector, inputVectorA, inputVectorB);
         return new VectorialFunction(map);
+    }
+
+    @Override
+    public Word getOutputVector() {
+        return outputVector;
     }
 
     /**

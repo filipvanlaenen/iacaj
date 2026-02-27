@@ -9,10 +9,10 @@ import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.expressions.OrFunction;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
+import net.filipvanlaenen.iacaj.expressions.Word;
 import net.filipvanlaenen.iacaj.expressions.XorFunction;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
-import net.filipvanlaenen.kolektoj.OrderedCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
 
 /**
@@ -31,78 +31,6 @@ public abstract class VectorialFunctionBuilder {
      * The output vector name, default <code>y</code>.
      */
     private String outputVectorName = "y";
-
-    /**
-     * A class modeling a word in a vectorial function.
-     */
-    protected final class Word {
-        /**
-         * The variables of the word.
-         */
-        private final OrderedCollection<Variable> variables;
-
-        /**
-         * Constructor using a base name and a width.
-         *
-         * @param baseName The base name for the variables in the word.
-         * @param width    The width of the word.
-         */
-        Word(final String baseName, final Integer width) {
-            variables = OrderedCollection.createSequence(i -> new Variable(baseName + (i + 1)), width);
-        }
-
-        /**
-         * Constructor using a word and the indexes for a window on that word to create a new word.
-         *
-         * @param word The word to extract the new word from.
-         * @param i    The index of the first variable included in the extracted word.
-         * @param j    The index of the first variable not included in the extracted word.
-         */
-        private Word(final Word word, final int i, final int j) {
-            variables = OrderedCollection.of(word.variables, i, j);
-        }
-
-        /**
-         * Extracts a word representing the first half of this word.
-         *
-         * @return A word representing the first half of this word.
-         */
-        Word firstHalf() {
-            return new Word(this, 0, variables.size() / 2);
-        }
-
-        /**
-         * Returns the variable at provided index.
-         *
-         * @param i The index for which to return the variable.
-         * @return The variable at the provided index in the word.
-         */
-        Variable getAt(final int i) {
-            return variables.getAt(i);
-        }
-
-        Word getSlice(final int fromIndex, final int toIndex) {
-            return new Word(this, fromIndex, toIndex);
-        }
-
-        /**
-         * Extracts a word representing the second half of this word.
-         *
-         * @return A word representing the second half of this word.
-         */
-        Word secondHalf() {
-            return new Word(this, variables.size() / 2, variables.size());
-        }
-
-        /**
-         * Returns the size of the word.
-         *
-         * @return The size of the word.
-         */
-        int size() {
-            return variables.size();
-        }
-    }
 
     /**
      * Builds the vectorial function.
@@ -308,6 +236,8 @@ public abstract class VectorialFunctionBuilder {
     protected String getInputVectorName() {
         return inputVectorName;
     }
+
+    public abstract Word getOutputVector();
 
     /**
      * Returns the name of the output vector.
