@@ -15,6 +15,9 @@ public final class BasicVectorialFunctionBuilder extends VariableWidthVectorialF
      * The operator.
      */
     private Operator operator;
+    /**
+     * The output vector.
+     */
     private Word outputVector;
 
     @Override

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.expressions.Operator;
+import net.filipvanlaenen.iacaj.expressions.Word;
 
 /**
  * Unit tests on the <code>BasicVectorialFunctionBuilder</code> class.
@@ -53,5 +54,18 @@ public class BasicVectorialFunctionBuilderTest {
         assertTrue(actual.contains("y2 = x2 ∧ x6\n") || actual.contains("y2 = x6 ∧ x2\n"));
         assertTrue(actual.contains("y3 = x3 ∧ x7\n") || actual.contains("y3 = x7 ∧ x3\n"));
         assertTrue(actual.contains("y4 = x4 ∧ x8\n") || actual.contains("y4 = x8 ∧ x4\n"));
+    }
+
+    /**
+     * Verifies that <code>getOutputVector</code> returns the correct output vector.
+     */
+    @Test
+    public void getOutputVectorShouldReturnCorrectOutputVector() {
+        BasicVectorialFunctionBuilder builder = new BasicVectorialFunctionBuilder();
+        builder.outputVectorWidth(2);
+        builder.operator(Operator.AND);
+        builder.build();
+        Word outputVector = builder.getOutputVector();
+        assertEquals(2, outputVector.size());
     }
 }
