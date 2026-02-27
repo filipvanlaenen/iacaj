@@ -22,7 +22,7 @@ public record IdentityExpression(Variable variable) implements Expression {
     @Override
     public Expression simplify(final Map<Variable, Expression> variableToExpressionMap) {
         if (variableToExpressionMap.containsKey(variable)) {
-            return variableToExpressionMap.get(variable);
+            return variableToExpressionMap.get(variable).simplify(variableToExpressionMap);
         } else {
             return this;
         }

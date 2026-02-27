@@ -38,19 +38,19 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
                 newVariables.remove(o.key());
             }
         }
-        return createExpression(newVariables);
+        return createExpression(newVariables, negated);
     }
 
-    private Expression createExpression(ModifiableCollection<Variable> newVariables) {
+    private Expression createExpression(ModifiableCollection<Variable> newVariables, boolean newNegated) {
         if (newVariables.isEmpty()) {
-            return negated ? LiteralExpression.TRUE : LiteralExpression.FALSE;
+            return newNegated ? LiteralExpression.TRUE : LiteralExpression.FALSE;
         } else if (newVariables.size() == 1) {
             Variable v = newVariables.get();
-            return negated ? new NegationExpression(v) : new IdentityExpression(v);
+            return newNegated ? new NegationExpression(v) : new IdentityExpression(v);
         } else {
             // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
             Variable[] direct = newVariables.toArray(new Variable[0]);
-            return new XorFunction(ValueCollection.of(direct), negated);
+            return new XorFunction(ValueCollection.of(direct), newNegated);
         }
     }
 
@@ -68,7 +68,7 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
                 }
             }
         }
-        return createExpression(newVariables);
+        return createExpression(newVariables, newNegated);
     }
 
     @Override

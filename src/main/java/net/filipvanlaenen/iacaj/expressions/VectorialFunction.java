@@ -35,9 +35,10 @@ public final class VectorialFunction {
     private void recursivelyAdd(ModifiableMap<Variable, Expression> map, Variable variable,
             Map<Variable, Expression> oldMap) {
         if (!map.containsKey(variable) && oldMap.containsKey(variable)) {
-            Expression expression = oldMap.get(variable).simplify(oldMap);
-            map.add(variable, expression);
-            for (Variable v : expression.getVariables()) {
+            Expression expression1 = oldMap.get(variable).simplify();
+            Expression expression3 = expression1.simplify(oldMap);
+            map.add(variable, expression3);
+            for (Variable v : expression3.getVariables()) {
                 recursivelyAdd(map, v, oldMap);
             }
         }

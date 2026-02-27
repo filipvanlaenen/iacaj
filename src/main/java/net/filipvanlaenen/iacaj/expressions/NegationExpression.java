@@ -28,9 +28,23 @@ public record NegationExpression(Variable variable) implements Expression {
             } else if (LiteralExpression.FALSE == expression) {
                 return LiteralExpression.TRUE;
             } else if (expression instanceof IdentityExpression) {
-                return new NegationExpression(((IdentityExpression) expression).variable());
+                return new NegationExpression(((IdentityExpression) expression).variable())
+                        .simplify(variableToExpressionMap);
             } else if (expression instanceof NegationExpression) {
-                return new IdentityExpression(((NegationExpression) expression).variable());
+                return new IdentityExpression(((NegationExpression) expression).variable())
+                        .simplify(variableToExpressionMap);
+            } else if (expression instanceof AndFunction) {
+                AndFunction andFunction = (AndFunction) expression;
+                return new OrFunction(andFunction.negatedVariables(), andFunction.directVariables())
+                        .simplify(variableToExpressionMap);
+            } else if (expression instanceof OrFunction) {
+                OrFunction orFunction = (OrFunction) expression;
+                return new AndFunction(orFunction.negatedVariables(), orFunction.directVariables())
+                        .simplify(variableToExpressionMap);
+            } else if (expression instanceof XorFunction) {
+                XorFunction xorFunction = (XorFunction) expression;
+                return new XorFunction(xorFunction.variables(), !xorFunction.negated())
+                        .simplify(variableToExpressionMap);
             }
         }
         return this;

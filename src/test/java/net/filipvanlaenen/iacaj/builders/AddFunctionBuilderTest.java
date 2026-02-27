@@ -6,7 +6,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import net.filipvanlaenen.iacaj.expressions.Expression;
+import net.filipvanlaenen.iacaj.expressions.LiteralExpression;
+import net.filipvanlaenen.iacaj.expressions.Variable;
+import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.iacaj.expressions.Word;
+import net.filipvanlaenen.kolektoj.ModifiableMap;
 
 /**
  * Unit tests on the <code>AddFunctionBuilder</code> class.
@@ -48,5 +53,64 @@ public class AddFunctionBuilderTest {
         builder.build();
         Word outputVector = builder.getOutputVector();
         assertEquals(2, outputVector.size());
+    }
+
+    /**
+     * Unit test verifying that <code>0x01 + 0x02 = 0x03</code>.
+     */
+    @Test
+    public void adding1And2ShouldProduce3() {
+        AddFunctionBuilder builder = new AddFunctionBuilder();
+        builder.outputVectorWidth(8);
+        builder.inputVectorName("i");
+        builder.outputVectorName("o");
+        builder.build();
+        VectorialFunction addFunction = builder.build();
+        Word inputVector = new Word("i", 16);
+        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
+        message.add(inputVector.getAt(7), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(14), LiteralExpression.TRUE);
+        for (int i = 0; i < 16; i++) {
+            if (!message.containsKey(inputVector.getAt(i))) {
+                message.add(inputVector.getAt(i), LiteralExpression.FALSE);
+            }
+        }
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
+        VectorialFunction result = addFunctionWithInputVector.simplify(builder.getOutputVector());
+        String output = result.toString();
+        assertTrue(output.contains("o6 = false"));
+        assertTrue(output.contains("o7 = true"));
+        assertTrue(output.contains("o8 = true"));
+    }
+
+    /**
+     * Unit test verifying that <code>0x04 + 0x05 = 0x09</code>.
+     */
+    @Test
+    public void adding4And5ShouldProduce9() {
+        AddFunctionBuilder builder = new AddFunctionBuilder();
+        builder.outputVectorWidth(8);
+        builder.inputVectorName("i");
+        builder.outputVectorName("o");
+        builder.build();
+        VectorialFunction addFunction = builder.build();
+        Word inputVector = new Word("i", 16);
+        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
+        message.add(inputVector.getAt(5), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(13), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(15), LiteralExpression.TRUE);
+        for (int i = 0; i < 16; i++) {
+            if (!message.containsKey(inputVector.getAt(i))) {
+                message.add(inputVector.getAt(i), LiteralExpression.FALSE);
+            }
+        }
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
+        VectorialFunction result = addFunctionWithInputVector.simplify(builder.getOutputVector());
+        String output = result.toString();
+        assertTrue(output.contains("o4 = false"));
+        assertTrue(output.contains("o5 = true"));
+        assertTrue(output.contains("o6 = false"));
+        assertTrue(output.contains("o7 = false"));
+        assertTrue(output.contains("o8 = true"));
     }
 }
