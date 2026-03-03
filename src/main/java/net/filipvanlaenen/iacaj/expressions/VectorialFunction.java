@@ -4,6 +4,7 @@ import java.util.stream.Collectors;
 
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
+import net.filipvanlaenen.laconic.Laconic;
 
 /**
  * Class representing vectorial Boolean functions. A vectorial Boolean function is a set of Boolean expressions mapped
@@ -48,7 +49,7 @@ public final class VectorialFunction {
         Map<Variable, Expression> map = variableToExpressionMap;
         boolean simplified = true;
         while (simplified) {
-            System.out.println("Simplifying a vectorial Boolean function of dimension " + map.size() + "...");
+            Laconic.LOGGER.logProgress("Simplifying a vectorial Boolean function of dimension %d...", map.size());
             ModifiableMap<Variable, Expression> newMap = ModifiableMap.empty();
             for (Variable variable : outputVector.getVariables()) {
                 recursivelyAdd(newMap, variable, map);
@@ -56,6 +57,7 @@ public final class VectorialFunction {
             simplified = newMap.size() < map.size();
             map = newMap;
         }
+        Laconic.LOGGER.logProgress("The vectorial Boolean function was simplified to a dimension of %d.", map.size());
         return new VectorialFunction(map);
     }
 

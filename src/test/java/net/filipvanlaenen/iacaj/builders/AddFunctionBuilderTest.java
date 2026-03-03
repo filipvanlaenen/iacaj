@@ -81,6 +81,7 @@ public class AddFunctionBuilderTest {
         assertTrue(output.contains("o6 = false"));
         assertTrue(output.contains("o7 = true"));
         assertTrue(output.contains("o8 = true"));
+
     }
 
     /**
@@ -110,6 +111,39 @@ public class AddFunctionBuilderTest {
         assertTrue(output.contains("o4 = false"));
         assertTrue(output.contains("o5 = true"));
         assertTrue(output.contains("o6 = false"));
+        assertTrue(output.contains("o7 = false"));
+        assertTrue(output.contains("o8 = true"));
+    }
+
+    /**
+     * Unit test verifying that <code>0x06 + 0x07 = 0x0d</code>.
+     */
+    @Test
+    public void adding6And7ShouldProduceD() {
+        AddFunctionBuilder builder = new AddFunctionBuilder();
+        builder.outputVectorWidth(8);
+        builder.inputVectorName("i");
+        builder.outputVectorName("o");
+        builder.build();
+        VectorialFunction addFunction = builder.build();
+        Word inputVector = new Word("i", 16);
+        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
+        message.add(inputVector.getAt(5), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(6), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(13), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(14), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(15), LiteralExpression.TRUE);
+        for (int i = 0; i < 16; i++) {
+            if (!message.containsKey(inputVector.getAt(i))) {
+                message.add(inputVector.getAt(i), LiteralExpression.FALSE);
+            }
+        }
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
+        VectorialFunction result = addFunctionWithInputVector.simplify(builder.getOutputVector());
+        String output = result.toString();
+        assertTrue(output.contains("o4 = false"));
+        assertTrue(output.contains("o5 = true"));
+        assertTrue(output.contains("o6 = true"));
         assertTrue(output.contains("o7 = false"));
         assertTrue(output.contains("o8 = true"));
     }
