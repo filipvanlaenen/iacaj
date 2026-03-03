@@ -66,6 +66,8 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
                 } else if (LiteralExpression.FALSE != expression) {
                     newVariables.add(variable);
                 }
+            } else {
+                newVariables.add(variable);
             }
         }
         return createExpression(newVariables, newNegated);

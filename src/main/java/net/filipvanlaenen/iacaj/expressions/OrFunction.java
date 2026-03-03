@@ -72,6 +72,8 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                 } else if (LiteralExpression.FALSE != expression) {
                     newDirectVariables.add(directVariable);
                 }
+            } else {
+                newDirectVariables.add(directVariable);
             }
         }
         ModifiableCollection<Variable> newNegatedVariables = ModifiableCollection.empty();
@@ -83,6 +85,8 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                 } else if (LiteralExpression.TRUE != expression) {
                     newNegatedVariables.add(negatedVariable);
                 }
+            } else {
+                newNegatedVariables.add(negatedVariable);
             }
         }
         if (newDirectVariables.size() + newNegatedVariables.size() == 0) {
