@@ -172,7 +172,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
             map.addAll(buildIdentityFunctions(b, c));
             // B := B + leftrotate(F, s[i])
             Word fr = new Word("fr" + round, 32);
-            map.addAll(buildRotationFunctions(f, s.getAt(i), fr));
+            map.addAll(buildRotationFunctions(f, -s.getAt(i), fr));
             Word bNew = new Word("b" + round, 32);
             map.addAll(buildAdditionFunctions(b, fr, bNew));
             b = bNew;
