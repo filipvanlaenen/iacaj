@@ -120,20 +120,66 @@ public class AddFunctionBuilderTest {
      */
     @Test
     public void adding6And7ShouldProduceD() {
+        assertAddition(0xefcdab89l, 0xb5523babl, 0xa51fe734l);
+        System.out.println("..................");
+        assertAddition(0xefcdab89l, 0xa521e734l, 0x94ef92bdl);
+        System.out.println("..................");
+    }
+
+    private void assertAddition(long a, long b, long r) {
+        Word inputVector = new Word("i", 64);
+        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
+        message.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector.firstHalf(), a));
+        message.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector.secondHalf(), b));
         AddFunctionBuilder builder = new AddFunctionBuilder();
-        builder.outputVectorWidth(8);
+        builder.outputVectorWidth(32);
         builder.inputVectorName("i");
         builder.outputVectorName("o");
         builder.build();
         VectorialFunction addFunction = builder.build();
-        Word inputVector = new Word("i", 16);
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
+        Word outputVector = builder.getOutputVector();
+        VectorialFunction result = addFunctionWithInputVector.simplify(outputVector);
+        String output = result.toString();
+        ModifiableMap<Variable, Expression> expected = ModifiableMap.empty();
+        expected.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, r));
+        VectorialFunction e = new VectorialFunction(expected);
+        System.out.println(output);
+        assertTrue(e.containsSame(result));
+    }
+
+    /**
+     * Unit test verifying that <code>0xcdab + 0x543b = 0x21e6</code>.
+     */
+    @Test
+    public void addingCdabAnd543bShouldProduce21e6() {
+        AddFunctionBuilder builder = new AddFunctionBuilder();
+        builder.outputVectorWidth(16);
+        builder.inputVectorName("i");
+        builder.outputVectorName("o");
+        builder.build();
+        VectorialFunction addFunction = builder.build();
+        Word inputVector = new Word("i", 32);
         ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
+        message.add(inputVector.getAt(0), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(2), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(4), LiteralExpression.TRUE);
         message.add(inputVector.getAt(5), LiteralExpression.TRUE);
-        message.add(inputVector.getAt(6), LiteralExpression.TRUE);
-        message.add(inputVector.getAt(13), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(7), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(8), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(10), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(12), LiteralExpression.TRUE);
         message.add(inputVector.getAt(14), LiteralExpression.TRUE);
         message.add(inputVector.getAt(15), LiteralExpression.TRUE);
-        for (int i = 0; i < 16; i++) {
+        message.add(inputVector.getAt(17), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(19), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(21), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(26), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(27), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(28), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(30), LiteralExpression.TRUE);
+        message.add(inputVector.getAt(31), LiteralExpression.TRUE);
+        for (int i = 0; i < 32; i++) {
             if (!message.containsKey(inputVector.getAt(i))) {
                 message.add(inputVector.getAt(i), LiteralExpression.FALSE);
             }
@@ -141,6 +187,7 @@ public class AddFunctionBuilderTest {
         VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
         VectorialFunction result = addFunctionWithInputVector.simplify(builder.getOutputVector());
         String output = result.toString();
+        System.out.println(output);
         assertTrue(output.contains("o4 = false"));
         assertTrue(output.contains("o5 = true"));
         assertTrue(output.contains("o6 = true"));

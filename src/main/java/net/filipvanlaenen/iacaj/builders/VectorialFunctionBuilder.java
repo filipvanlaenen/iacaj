@@ -87,7 +87,7 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
-    protected Map<Variable, Expression> buildAssignmentFunctions(final Word resultVector, final Long value) {
+    protected static Map<Variable, Expression> buildAssignmentFunctions(final Word resultVector, final Long value) {
         int width = resultVector.size();
         long remainder = value;
         ModifiableMap<Variable, Expression> map = ModifiableMap.empty();

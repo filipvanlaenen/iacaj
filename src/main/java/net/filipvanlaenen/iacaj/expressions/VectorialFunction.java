@@ -1,5 +1,6 @@
 package net.filipvanlaenen.iacaj.expressions;
 
+import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
 import net.filipvanlaenen.kolektoj.Map;
@@ -65,5 +66,9 @@ public final class VectorialFunction {
     public String toString() {
         return variableToExpressionMap.stream().map(entry -> entry.key() + " = " + entry.value())
                 .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    public boolean containsSame(VectorialFunction result) {
+        return variableToExpressionMap.containsSame(result.variableToExpressionMap);
     }
 }

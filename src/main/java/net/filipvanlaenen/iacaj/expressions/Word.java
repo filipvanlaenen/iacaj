@@ -1,5 +1,6 @@
 package net.filipvanlaenen.iacaj.expressions;
 
+import net.filipvanlaenen.kolektoj.ModifiableOrderedCollection;
 import net.filipvanlaenen.kolektoj.OrderedCollection;
 
 /**
@@ -30,6 +31,13 @@ public final class Word {
      */
     private Word(final Word word, final int i, final int j) {
         variables = OrderedCollection.of(word.variables, i, j);
+    }
+
+    public Word(Word word1, Word word2) {
+        ModifiableOrderedCollection<Variable> v = ModifiableOrderedCollection.empty();
+        v.addAll(word1.getVariables());
+        v.addAll(word2.getVariables());
+        variables = OrderedCollection.of(v);
     }
 
     /**
