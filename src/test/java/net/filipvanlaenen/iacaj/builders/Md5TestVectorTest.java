@@ -1,22 +1,22 @@
 package net.filipvanlaenen.iacaj.builders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.Test;
 
 /**
- * 
+ * Fake unit tests demonstrating the test vectors for variations on MD-5.
  *
  * @see <a href="https://rosettacode.org/wiki/MD5/Implementation#Java">MD5/Implementation – Rosetta Code</a>
  */
-class MD5 {
-
+class Md5TestVectorTest {
     private static final int INIT_A = 0x67452301;
     private static final int INIT_B = (int) 0xEFCDAB89L;
     private static final int INIT_C = (int) 0x98BADCFEL;
     private static final int INIT_D = 0x10325476;
-
     private static final int[] SHIFT_AMTS = {7, 12, 17, 22, 5, 9, 14, 20, 4, 11, 16, 23, 6, 10, 15, 21};
-
     private static final int[] TABLE_T = new int[64];
+
     static {
         for (int i = 0; i < 64; i++)
             TABLE_T[i] = (int) (long) ((1L << 32) * Math.abs(Math.sin(i + 1)));
@@ -28,7 +28,6 @@ class MD5 {
         int totalLen = numBlocks << 6;
         byte[] paddingBytes = new byte[totalLen - messageLenBytes];
         paddingBytes[0] = (byte) 0x80;
-
         long messageLenBits = (long) messageLenBytes << 3;
         for (int i = 0; i < 8; i++) {
             paddingBytes[paddingBytes.length - 8 + i] = (byte) messageLenBits;
@@ -96,15 +95,24 @@ class MD5 {
     public static String toHexString(byte[] b) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < b.length; i++) {
-            sb.append(String.format("%02X", b[i] & 0xFF));
+            sb.append(String.format("%02x", b[i] & 0xFF));
         }
         return sb.toString();
     }
 
+    /**
+     * Fake test demonstrating the test vector for MD-5 with one round.
+     */
     @Test
-    public void main() {
-        for (int i = 1; i <= 64; i++) {
-            System.out.println(i + ": 0x" + toHexString(computeMD5("".getBytes(), i)));
-        }
+    public void testVectorForOneRoundMd5() {
+        assertEquals("77777777fdd2ed94878888887431eda8", toHexString(computeMD5("".getBytes(), 1)));
+    }
+
+    /**
+     * Fake test demonstrating the test vector for MD-5 with two rounds.
+     */
+    @Test
+    public void testVectorForTwoRoundMd5() {
+        assertEquals("ffffffff663e63e57204db3dffffffff", toHexString(computeMD5("".getBytes(), 2)));
     }
 }

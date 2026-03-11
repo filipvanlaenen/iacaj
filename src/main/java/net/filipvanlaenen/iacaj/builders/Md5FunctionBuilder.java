@@ -1,10 +1,12 @@
 package net.filipvanlaenen.iacaj.builders;
 
 import net.filipvanlaenen.iacaj.expressions.Expression;
+import net.filipvanlaenen.iacaj.expressions.IdentityExpression;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.iacaj.expressions.Word;
+import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableMap;
 import net.filipvanlaenen.nombrajkolektoj.integers.OrderedIntegerCollection;
 import net.filipvanlaenen.nombrajkolektoj.longs.OrderedLongCollection;
@@ -74,11 +76,21 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
         Long c0 = 0x98BADCFEL;
         Long d0 = 0x10325476L;
 
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+
         // Process the first 512-bit chunk of the message:
         // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15
-        Word inputVector = new Word(getInputVectorName(), 512);
-
-        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        Word outerInputVector = new Word(getInputVectorName(), 512);
+        Word innerInputVector = new Word("ii", 512);
+        for (int j = 0; j < 16; j++) {
+            for (int i = 0; i < 4; i++) {
+                for (int h = 0; h < 8; h++) {
+                    int ii = h + 8 * (3 - i) + 32 * j;
+                    int oi = h + 8 * i + 32 * j;
+                    map.add(innerInputVector.getAt(ii), new IdentityExpression(outerInputVector.getAt(oi)));
+                }
+            }
+        }
 
         // Initialize hash value for this chunk:
         // var int A := a0
@@ -159,7 +171,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
             Word fx = new Word("fx" + round, 32, false);
             map.addAll(buildAdditionFunctions(fy, ki, fx));
             Word f = new Word("f" + round, 32, false);
-            map.addAll(buildAdditionFunctions(fx, inputVector.getSlice(g * 32, (g + 1) * 32), f));
+            map.addAll(buildAdditionFunctions(fx, innerInputVector.getSlice(g * 32, (g + 1) * 32), f));
 
             // A := D
             a = new Word("a" + round, 32, false);
@@ -195,12 +207,22 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
 
         // var char digest[16] := a0 append b0 append c0 append d0
         outputVector = new Word(getOutputVectorName(), 128);
-        map.addAll(buildIdentityFunctions(a0z, outputVector.getSlice(0, 32)));
-        map.addAll(buildIdentityFunctions(b0z, outputVector.getSlice(32, 64)));
-        map.addAll(buildIdentityFunctions(c0z, outputVector.getSlice(64, 96)));
-        map.addAll(buildIdentityFunctions(d0z, outputVector.getSlice(96, 128)));
+        map.addAll(addOutputChunk(outputVector, a0z, 0));
+        map.addAll(addOutputChunk(outputVector, b0z, 1));
+        map.addAll(addOutputChunk(outputVector, c0z, 2));
+        map.addAll(addOutputChunk(outputVector, d0z, 3));
 
         return new VectorialFunction(map);
+    }
+
+    private Map<Variable, Expression> addOutputChunk(Word ov, Word c, int pos) {
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 8; j++) {
+                map.add(ov.getAt(32 * pos + 8 * i + j), new IdentityExpression(c.getAt(8 * (3 - i) + j)));
+            }
+        }
+        return map;
     }
 
     @Override

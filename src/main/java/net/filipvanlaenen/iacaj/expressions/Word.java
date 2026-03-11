@@ -29,8 +29,14 @@ public final class Word {
      * @param width    The width of the word.
      */
     public Word(final String baseName, final Integer width, final boolean bigEndian) {
-        variables =
-                OrderedCollection.createSequence(i -> new Variable(baseName + (bigEndian ? i + 1 : width - i)), width);
+        variables = OrderedCollection.createSequence(i -> {
+            if (bigEndian) {
+                return new Variable(baseName + (i + 1));
+            } else {
+                int b = 8 * ((width - i - 1) / 8);
+                return new Variable(baseName + (b + i % 8 + 1));
+            }
+        }, width);
     }
 
     /**
