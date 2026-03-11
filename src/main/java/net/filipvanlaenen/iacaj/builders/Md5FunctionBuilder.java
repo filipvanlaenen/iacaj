@@ -82,19 +82,19 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
 
         // Initialize hash value for this chunk:
         // var int A := a0
-        Word a00 = new Word("a00", 32);
+        Word a00 = new Word("a00", 32, false);
         map.addAll(buildAssignmentFunctions(a00, a0));
         Word a = a00;
         // var int B := b0
-        Word b00 = new Word("b00", 32);
+        Word b00 = new Word("b00", 32, false);
         map.addAll(buildAssignmentFunctions(b00, b0));
         Word b = b00;
         // var int C := c0
-        Word c00 = new Word("c00", 32);
+        Word c00 = new Word("c00", 32, false);
         map.addAll(buildAssignmentFunctions(c00, c0));
         Word c = c00;
         // var int D := d0
-        Word d00 = new Word("d00", 32);
+        Word d00 = new Word("d00", 32, false);
         map.addAll(buildAssignmentFunctions(d00, d0));
         Word d = d00;
 
@@ -105,14 +105,14 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
             int g = 0;
             // var int F, g
             // if 0 ≤ i ≤ 15 then
-            Word fz = new Word("fz" + round, 32);
+            Word fz = new Word("fz" + round, 32, false);
             if (0 <= i && i <= 15) {
                 // F := (B and C) or ((not B) and D)
-                Word fa = new Word("fa" + round, 32);
+                Word fa = new Word("fa" + round, 32, false);
                 map.addAll(buildOperationFunctions(Operator.AND, fa, b, c));
-                Word fb = new Word("fb" + round, 32);
+                Word fb = new Word("fb" + round, 32, false);
                 map.addAll(buildNegationFunctions(b, fb));
-                Word fc = new Word("fc" + round, 32);
+                Word fc = new Word("fc" + round, 32, false);
                 map.addAll(buildOperationFunctions(Operator.AND, fc, fb, d));
                 map.addAll(buildOperationFunctions(Operator.OR, fz, fa, fc));
                 // g := i
@@ -121,11 +121,11 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
             // else if 16 ≤ i ≤ 31 then
             else if (16 <= i && i <= 31) {
                 // F := (D and B) or ((not D) and C)
-                Word fa = new Word("fa" + round, 32);
+                Word fa = new Word("fa" + round, 32, false);
                 map.addAll(buildOperationFunctions(Operator.AND, fa, d, b));
-                Word fb = new Word("fb" + round, 32);
+                Word fb = new Word("fb" + round, 32, false);
                 map.addAll(buildNegationFunctions(d, fb));
-                Word fc = new Word("fc" + round, 32);
+                Word fc = new Word("fc" + round, 32, false);
                 map.addAll(buildOperationFunctions(Operator.AND, fc, fb, c));
                 map.addAll(buildOperationFunctions(Operator.OR, fz, fa, fc));
                 // g := (5×i + 1) mod 16
@@ -141,9 +141,9 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
             // else if 48 ≤ i ≤ 63 then
             else if (48 <= i && i <= 63) {
                 // F := C xor (B or (not D))
-                Word fa = new Word("fa" + round, 32);
+                Word fa = new Word("fa" + round, 32, false);
                 map.addAll(buildNegationFunctions(d, fa));
-                Word fb = new Word("fb" + round, 32);
+                Word fb = new Word("fb" + round, 32, false);
                 map.addAll(buildOperationFunctions(Operator.OR, fb, b, fa));
                 map.addAll(buildOperationFunctions(Operator.XOR, fz, c, fb));
                 // g := (7×i) mod 16
@@ -152,28 +152,28 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
 
             // Be wary of the below definitions of a,b,c,d
             // F := F + A + K[i] + M[g] // M[g] must be a 32-bit block
-            Word fy = new Word("fy" + round, 32);
+            Word fy = new Word("fy" + round, 32, false);
             map.addAll(buildAdditionFunctions(fz, a, fy));
-            Word ki = new Word("k" + round, 32);
+            Word ki = new Word("k" + round, 32, false);
             map.addAll(buildAssignmentFunctions(ki, k.getAt(i)));
-            Word fx = new Word("fx" + round, 32);
+            Word fx = new Word("fx" + round, 32, false);
             map.addAll(buildAdditionFunctions(fy, ki, fx));
-            Word f = new Word("f" + round, 32);
+            Word f = new Word("f" + round, 32, false);
             map.addAll(buildAdditionFunctions(fx, inputVector.getSlice(g * 32, (g + 1) * 32), f));
 
             // A := D
-            a = new Word("a" + round, 32);
+            a = new Word("a" + round, 32, false);
             map.addAll(buildIdentityFunctions(d, a));
             // D := C
-            d = new Word("d" + round, 32);
+            d = new Word("d" + round, 32, false);
             map.addAll(buildIdentityFunctions(c, d));
             // C := B
-            c = new Word("c" + round, 32);
+            c = new Word("c" + round, 32, false);
             map.addAll(buildIdentityFunctions(b, c));
             // B := B + leftrotate(F, s[i])
-            Word fr = new Word("fr" + round, 32);
+            Word fr = new Word("fr" + round, 32, false);
             map.addAll(buildRotationFunctions(f, -s.getAt(i), fr));
-            Word bNew = new Word("b" + round, 32);
+            Word bNew = new Word("b" + round, 32, false);
             map.addAll(buildAdditionFunctions(b, fr, bNew));
             b = bNew;
         }
@@ -181,16 +181,16 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
 
         // Add this chunk's hash to result so far:
         // a0 := a0 + A
-        Word a0z = new Word("a0z", 32);
+        Word a0z = new Word("a0z", 32, false);
         map.addAll(buildAdditionFunctions(a00, a, a0z));
         // b0 := b0 + B
-        Word b0z = new Word("b0z", 32);
+        Word b0z = new Word("b0z", 32, false);
         map.addAll(buildAdditionFunctions(b00, b, b0z));
         // c0 := c0 + C
-        Word c0z = new Word("c0z", 32);
+        Word c0z = new Word("c0z", 32, false);
         map.addAll(buildAdditionFunctions(c00, c, c0z));
         // d0 := d0 + D
-        Word d0z = new Word("d0z", 32);
+        Word d0z = new Word("d0z", 32, false);
         map.addAll(buildAdditionFunctions(d00, d, d0z));
 
         // var char digest[16] := a0 append b0 append c0 append d0

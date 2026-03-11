@@ -19,7 +19,18 @@ public final class Word {
      * @param width    The width of the word.
      */
     public Word(final String baseName, final Integer width) {
-        variables = OrderedCollection.createSequence(i -> new Variable(baseName + (i + 1)), width);
+        this(baseName, width, true);
+    }
+
+    /**
+     * Constructor using a base name and a width.
+     *
+     * @param baseName The base name for the variables in the word.
+     * @param width    The width of the word.
+     */
+    public Word(final String baseName, final Integer width, final boolean bigEndian) {
+        variables =
+                OrderedCollection.createSequence(i -> new Variable(baseName + (bigEndian ? i + 1 : width - i)), width);
     }
 
     /**

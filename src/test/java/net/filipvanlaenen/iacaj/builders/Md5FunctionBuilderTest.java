@@ -35,7 +35,7 @@ public class Md5FunctionBuilderTest {
     }
 
     /**
-     * Unit test verifying that <code>MD5[0]("") = 7777777794ed92bd88888887a8ed3174</code>.
+     * Unit test verifying that <code>MD5[0]("") = 0x77777777fdd2ed94878888887431eda8</code>.
      */
     @Test
     public void md5With1RoundEmptyTestVector() {
@@ -62,25 +62,25 @@ public class Md5FunctionBuilderTest {
         VectorialFunction e = new VectorialFunction(expected);
         assertTrue(e.containsSame(resultA));
 
+        VectorialFunction resultB = vf.simplify(outputVector.getSlice(32, 64));
+        ModifiableMap<Variable, Expression> expectedB = ModifiableMap.empty();
+        expectedB.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector.getSlice(32, 64), 0xfdd2ed94l));
+        VectorialFunction eb = new VectorialFunction(expectedB);
+        System.out.println(eb.toString());
+        System.out.println(resultB.toString());
+        assertTrue(eb.containsSame(resultB));
+
         VectorialFunction resultC = vf.simplify(outputVector.getSlice(64, 96));
         ModifiableMap<Variable, Expression> expectedC = ModifiableMap.empty();
-        expectedC.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector.getSlice(64, 96), 0x88888887L));
+        expectedC.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector.getSlice(64, 96), 0x87888888L));
         VectorialFunction ec = new VectorialFunction(expectedC);
         assertTrue(ec.containsSame(resultC));
 
         VectorialFunction resultD = vf.simplify(outputVector.getSlice(96, 128));
         ModifiableMap<Variable, Expression> expectedD = ModifiableMap.empty();
         expectedD
-                .addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector.getSlice(96, 128), 0xa8ed3174L));
+                .addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector.getSlice(96, 128), 0x7431eda8L));
         VectorialFunction ed = new VectorialFunction(expectedD);
         assertTrue(ed.containsSame(resultD));
-
-        VectorialFunction resultB = vf.simplify(outputVector.getSlice(32, 64));
-        ModifiableMap<Variable, Expression> expectedB = ModifiableMap.empty();
-        expectedB.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector.getSlice(32, 64), 0x94ed92bdl));
-        VectorialFunction eb = new VectorialFunction(expectedB);
-        System.out.println(eb.toString());
-        System.out.println(resultB.toString());
-        assertTrue(eb.containsSame(resultB));
     }
 }
