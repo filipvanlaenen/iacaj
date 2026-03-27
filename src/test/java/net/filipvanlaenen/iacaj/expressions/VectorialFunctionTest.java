@@ -65,6 +65,71 @@ public class VectorialFunctionTest {
      * Verifies the following test case:
      *
      * <pre>
+     * c = ¬a ∧ a ∧ b ⇒ c = false
+     * </pre>
+     */
+    @Test
+    public void simplificationOfAndWithNegatedAndOtherVariable() {
+        VectorialFunction original = new VectorialFunction(Map.of(VARIABLE_C,
+                new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.FALSE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * b = ¬a ∧ a     ⇒ b = false
+     * </pre>
+     */
+    @Test
+    public void simplificationOfAndWithNegatedVariable() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_B, new AndFunction(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, LiteralExpression.FALSE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * c = a ∧ a ∧ b  ⇒ c = a ∧ b
+     * </pre>
+     */
+    @Test
+    public void simplificationOfAndWithSameAndOtherVariable() {
+        VectorialFunction original = new VectorialFunction(Map.of(VARIABLE_C,
+                new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C,
+                new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * b = a ∧ a      ⇒ b = a
+     * </pre>
+     */
+    @Test
+    public void simplificationOfAndWithSameVariable() {
+        VectorialFunction original = new VectorialFunction(Map.of(VARIABLE_B,
+                new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_A), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, new IdentityExpression(VARIABLE_A)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
      * c = a ∧ b
      * d = c     ⇒ d = a ∧ b
      * </pre>

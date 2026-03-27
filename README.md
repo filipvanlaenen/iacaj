@@ -254,15 +254,11 @@ b = a ∧ a      ⇒ b = a
 
 b = ¬a ∧ a     ⇒ b = false
 
-c = a ∧ a ∧ b  ⇒ c = b
+c = a ∧ a ∧ b  ⇒ c = a ∧ b
 
 c = ¬a ∧ a ∧ b ⇒ c = false
 
 a = false
-b = false
-c = a ∧ b      ⇒ c = false
-
-a = true
 b = false
 c = a ∧ b      ⇒ c = false
 
