@@ -1,6 +1,5 @@
 package net.filipvanlaenen.iacaj.expressions;
 
-import java.util.function.BooleanSupplier;
 import java.util.stream.Collectors;
 
 import net.filipvanlaenen.kolektoj.Map;

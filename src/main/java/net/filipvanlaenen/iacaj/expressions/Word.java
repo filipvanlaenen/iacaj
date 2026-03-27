@@ -39,6 +39,10 @@ public final class Word {
         }, width);
     }
 
+    public Word(final Variable... variables) {
+        this.variables = OrderedCollection.of(variables);
+    }
+
     /**
      * Constructor using a word and the indexes for a window on that word to create a new word.
      *
