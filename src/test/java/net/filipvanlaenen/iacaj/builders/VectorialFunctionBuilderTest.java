@@ -1,5 +1,6 @@
 package net.filipvanlaenen.iacaj.builders;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -16,6 +17,17 @@ import net.filipvanlaenen.kolektoj.ModifiableMap;
  */
 public class VectorialFunctionBuilderTest {
     /**
+     * Unit test verifying that the getter method <code>getOutputVectorName</code> is wired correctly to the setter
+     * method <code>outputVectorName</code>.
+     */
+    @Test
+    public void getOutputVectorNameShouldBeWiredCorrectlyToOutputVectorName() {
+        AddFunctionBuilder builder = new AddFunctionBuilder();
+        builder.outputVectorName("o");
+        assertEquals("o", builder.getOutputVectorName());
+    }
+
+    /**
      * Builds a vectorial function, adds an input vector, simplifies and asserts that the result equals the expected
      * output vector.
      *
@@ -24,7 +36,7 @@ public class VectorialFunctionBuilderTest {
      * @param inputValue        The input vector as a Long value.
      * @param outputValue       The output vector as a Long value.
      */
-    public void buildSimplifyAndAssert(final VectorialFunctionBuilder builder, final int inputVectorLength,
+    private void buildSimplifyAndAssert(final VectorialFunctionBuilder builder, final int inputVectorLength,
             final Long inputValue, final Long outputValue) {
         builder.inputVectorName("i");
         builder.outputVectorName("o");
