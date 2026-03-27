@@ -19,8 +19,6 @@ import net.filipvanlaenen.iacaj.builders.ShiftFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.VectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.expressions.Operator;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
-import net.filipvanlaenen.iacaj.producer.Producer;
-import net.filipvanlaenen.iacaj.producer.Sha256Producer;
 import net.filipvanlaenen.nombrajkolektoj.integers.ModifiableOrderedIntegerCollection;
 
 /**
@@ -62,7 +60,6 @@ public final class CommandLineInterface {
         System.out.println("    produce MD5 [<no-of-rounds>] [<file-name>]");
         System.out.println("    produce OR [<word-length>] [<file-name>]");
         System.out.println("    produce ROTATE [<word-length> [<number-of-positions>]] [<file-name>]");
-        System.out.println("    produce SHA-256 [<no-of-rounds>] [<file-name>]");
         System.out.println("    produce SHIFT [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce XOR [<word-length>] [<file-name>]");
         System.out.println("  report <file-name> [<file-name>]");
@@ -125,7 +122,6 @@ public final class CommandLineInterface {
                     }
                     i++;
                 }
-                Producer producer = null;
                 VectorialFunctionBuilder builder = null;
                 int wordLength = parameters.isEmpty() ? DEFAULT_WORD_LENGTH : parameters.getAt(0);
                 if (function.equals("ADD")) {
@@ -153,8 +149,6 @@ public final class CommandLineInterface {
                     thisBuilder.outputVectorWidth(wordLength);
                     thisBuilder.rotateRight(parameters.size() > 1 ? parameters.getAt(1) : 0);
                     builder = thisBuilder;
-                } else if (function.equals("SHA-256")) {
-                    producer = new Sha256Producer(parameters);
                 } else if (function.equals("SHIFT")) {
                     ShiftFunctionBuilder thisBuilder = new ShiftFunctionBuilder();
                     thisBuilder.outputVectorWidth(wordLength);
@@ -166,20 +160,15 @@ public final class CommandLineInterface {
                     thisBuilder.operator(Operator.XOR);
                     builder = thisBuilder;
                 }
-                if (producer != null) {
-                    BooleanFunction bf = producer.produce();
-                    outputBooleanFunction(bf, fileName);
+                builder.inputVectorName("i");
+                builder.outputVectorName("o");
+                VectorialFunction vectorialFunction = builder.build();
+                vectorialFunction = vectorialFunction.simplify(builder.getOutputVector());
+                String output = vectorialFunction.toString();
+                if (fileName == null) {
+                    System.out.println(output);
                 } else {
-                    builder.inputVectorName("i");
-                    builder.outputVectorName("o");
-                    VectorialFunction vectorialFunction = builder.build();
-                    vectorialFunction = vectorialFunction.simplify(builder.getOutputVector());
-                    String output = vectorialFunction.toString();
-                    if (fileName == null) {
-                        System.out.println(output);
-                    } else {
-                        writeFile(fileName, output);
-                    }
+                    writeFile(fileName, output);
                 }
             }
         },
