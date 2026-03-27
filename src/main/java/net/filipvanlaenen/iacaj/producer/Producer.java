@@ -8,6 +8,7 @@ import net.filipvanlaenen.kolektoj.OrderedCollection;
 /**
  * Abstract superclass for producers of Boolean functions.
  */
+@Deprecated
 public abstract class Producer {
     /**
      * The default word length.

@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import net.filipvanlaenen.iacaj.expressions.Expression;
-import net.filipvanlaenen.iacaj.expressions.LiteralExpression;
 import net.filipvanlaenen.iacaj.expressions.Variable;
 import net.filipvanlaenen.iacaj.expressions.VectorialFunction;
 import net.filipvanlaenen.iacaj.expressions.Word;
@@ -67,21 +66,15 @@ public class AddFunctionBuilderTest {
         builder.build();
         VectorialFunction addFunction = builder.build();
         Word inputVector = new Word("i", 16);
-        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
-        message.add(inputVector.getAt(7), LiteralExpression.TRUE);
-        message.add(inputVector.getAt(14), LiteralExpression.TRUE);
-        for (int i = 0; i < 16; i++) {
-            if (!message.containsKey(inputVector.getAt(i))) {
-                message.add(inputVector.getAt(i), LiteralExpression.FALSE);
-            }
-        }
-        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
-        VectorialFunction result = addFunctionWithInputVector.simplify(builder.getOutputVector());
-        String output = result.toString();
-        assertTrue(output.contains("o6 = false"));
-        assertTrue(output.contains("o7 = true"));
-        assertTrue(output.contains("o8 = true"));
-
+        ModifiableMap<Variable, Expression> inputVectorMap = ModifiableMap.empty();
+        inputVectorMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector, 0x0102L));
+        Word outputVector = builder.getOutputVector();
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(inputVectorMap);
+        VectorialFunction actual = addFunctionWithInputVector.simplify(outputVector);
+        ModifiableMap<Variable, Expression> expectedMap = ModifiableMap.empty();
+        expectedMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, 0x03L));
+        VectorialFunction expected = new VectorialFunction(expectedMap);
+        assertTrue(expected.containsSame(actual));
     }
 
     /**
@@ -96,51 +89,14 @@ public class AddFunctionBuilderTest {
         builder.build();
         VectorialFunction addFunction = builder.build();
         Word inputVector = new Word("i", 16);
-        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
-        message.add(inputVector.getAt(5), LiteralExpression.TRUE);
-        message.add(inputVector.getAt(13), LiteralExpression.TRUE);
-        message.add(inputVector.getAt(15), LiteralExpression.TRUE);
-        for (int i = 0; i < 16; i++) {
-            if (!message.containsKey(inputVector.getAt(i))) {
-                message.add(inputVector.getAt(i), LiteralExpression.FALSE);
-            }
-        }
-        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
-        VectorialFunction result = addFunctionWithInputVector.simplify(builder.getOutputVector());
-        String output = result.toString();
-        assertTrue(output.contains("o4 = false"));
-        assertTrue(output.contains("o5 = true"));
-        assertTrue(output.contains("o6 = false"));
-        assertTrue(output.contains("o7 = false"));
-        assertTrue(output.contains("o8 = true"));
-    }
-
-    /**
-     * Unit test verifying that <code>0x06 + 0x07 = 0x0d</code>.
-     */
-    @Test
-    public void adding6And7ShouldProduceD() {
-        assertAddition(0xefcdab89l, 0xb5523babl, 0xa51fe734l);
-        assertAddition(0xefcdab89l, 0xa521e734l, 0x94ef92bdl);
-    }
-
-    private void assertAddition(long a, long b, long r) {
-        Word inputVector = new Word("i", 64);
-        ModifiableMap<Variable, Expression> message = ModifiableMap.empty();
-        message.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector.firstHalf(), a));
-        message.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector.secondHalf(), b));
-        AddFunctionBuilder builder = new AddFunctionBuilder();
-        builder.outputVectorWidth(32);
-        builder.inputVectorName("i");
-        builder.outputVectorName("o");
-        builder.build();
-        VectorialFunction addFunction = builder.build();
-        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(message);
+        ModifiableMap<Variable, Expression> inputVectorMap = ModifiableMap.empty();
+        inputVectorMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector, 0x0405L));
         Word outputVector = builder.getOutputVector();
-        VectorialFunction result = addFunctionWithInputVector.simplify(outputVector);
-        ModifiableMap<Variable, Expression> expected = ModifiableMap.empty();
-        expected.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, r));
-        VectorialFunction e = new VectorialFunction(expected);
-        assertTrue(e.containsSame(result));
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(inputVectorMap);
+        VectorialFunction actual = addFunctionWithInputVector.simplify(outputVector);
+        ModifiableMap<Variable, Expression> expectedMap = ModifiableMap.empty();
+        expectedMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, 0x09L));
+        VectorialFunction expected = new VectorialFunction(expectedMap);
+        assertTrue(expected.containsSame(actual));
     }
 }

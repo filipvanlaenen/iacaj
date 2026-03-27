@@ -87,6 +87,13 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
+    /**
+     * Builds a map assigning a long value to a word.
+     *
+     * @param resultVector The word to which the number should be assigned.
+     * @param value        The number to assign.
+     * @return A map assigning a long value to a word.
+     */
     protected static Map<Variable, Expression> buildAssignmentFunctions(final Word resultVector, final Long value) {
         int width = resultVector.size();
         long remainder = value;
@@ -103,6 +110,16 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
+    /**
+     * Builds a map with variables and Boolean expressions implementing an identity operation between the input and the
+     * output vector.
+     *
+     * @param inputVector  The word representing the input vector.
+     * @param outputVector The word representing the output vector.
+     * @return A map with variables and Boolean expressions implementing an identity operation between the input and the
+     *         output vector.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
     protected Map<Variable, Expression> buildIdentityFunctions(final Word inputVector, final Word outputVector) {
         int width = outputVector.size();
         if (width != inputVector.size()) {
@@ -118,6 +135,16 @@ public abstract class VectorialFunctionBuilder {
         return map;
     }
 
+    /**
+     * Builds a map with variables and Boolean expressions implementing a negation operation between the input and the
+     * output vector.
+     *
+     * @param inputVector  The word representing the input vector.
+     * @param outputVector The word representing the output vector.
+     * @return A map with variables and Boolean expressions implementing a negation operation between the input and the
+     *         output vector.
+     * @throws IllegalStateException Thrown if the words don't have the same size.
+     */
     protected Map<Variable, Expression> buildNegationFunctions(final Word inputVector, final Word outputVector) {
         int width = outputVector.size();
         if (width != inputVector.size()) {
@@ -134,14 +161,13 @@ public abstract class VectorialFunctionBuilder {
     }
 
     /**
-     * Builds a map with variables and Boolean expression combining two words together with an operator.
-     * 
+     * Builds a map with variables and Boolean expressions combining words together with an operator.
+     *
      * @param operator     The operator.
      * @param outputVector The resulting word.
-     * @param inputVectorA The first word to combine.
-     * @param inputVectorB The second word to combine.
+     * @param inputVectors The words to combine.
      *
-     * @return A map with variables and Boolean expression combining two words together with an operator.
+     * @return A map with variables and Boolean expression combining words together with an operator.
      * @throws IllegalStateException Thrown if the words don't have the same size.
      */
     protected Map<Variable, Expression> buildOperationFunctions(final Operator operator, final Word outputVector,
@@ -237,6 +263,11 @@ public abstract class VectorialFunctionBuilder {
         return inputVectorName;
     }
 
+    /**
+     * Returns the name of the output vector.
+     *
+     * @return The name of the output vector.
+     */
     public abstract Word getOutputVector();
 
     /**
