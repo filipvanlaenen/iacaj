@@ -187,24 +187,64 @@ the word length.
 
 ## Resolve a Boolean Function
 
-The resolver uses the following logical rules to resolve a vectorial boolean function:
+The resolver uses the logical rules to resolve a vectorial boolean function as described in the sections below.
+
+### Literals
 
 ```
 a = false ⇒ a = false
 
 a = true  ⇒ a = true
+```
 
+### Identity
+
+```
 a = true
 b = a     ⇒ b = true
 
 a = false
 b = a     ⇒ b = false
 
+b = a   
+c = b     ⇒ c = a
+
+b = ¬a   
+c = b     ⇒ c = ¬a
+
+c = a ∧ b
+d = c     ⇒ d = a ∧ b
+
+c = a ∨ b
+d = c     ⇒ d = a ∨ b
+
+c = a ⊻ b
+d = c     ⇒ d = a ⊻ b
+```
+
+### Negation
+
+```
 a = true
 b = ¬a    ⇒ b = false
 
 a = false
 b = ¬a    ⇒ b = true
+
+b = a   
+c = ¬b    ⇒ c = ¬a
+
+b = ¬a   
+c = ¬b    ⇒ c = a
+
+c = a ∧ b
+d = ¬c    ⇒ d = ¬a ∨ ¬b
+
+c = a ∨ b
+d = ¬c    ⇒ d = ¬a ∧ ¬b
+
+c = a ⊻ b
+d = ¬c    ⇒ d = ¬(a ⊻ b)
 ```
 
 ## Report on the Complexity of a Boolean Function
