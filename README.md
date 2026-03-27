@@ -4,9 +4,9 @@
 - [Produce a Boolean Function](#produce-a-boolean-function)
   - [ADD](#add)
   - [AND](#and)
+  - [MD5](#md5)
   - [OR](#or)
   - [ROTATE](#rotate)
-  - [SHA-256](#sha-256)
   - [SHIFT](#shift)
   - [XOR](#xor)
 - [Resolve a Boolean Function](#resolve-a-boolean-function)
@@ -55,9 +55,9 @@ produced:
 
 - [ADD](#add)
 - [AND](#and)
+- [MD5](#md5)
 - [OR](#or)
 - [ROTATE](#rotate)
-- [SHA-256](#sha-256)
 - [SHIFT](#shift)
 - [XOR](#xor)
 
@@ -93,6 +93,28 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. 
 
+### MD5
+
+To produce a full version of the MD5 hash function, and have it printed out on the command line, use the following
+command:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5
+```
+
+For a reduced version of the hash function, add the number of rounds as the second argument, e.g. 32:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32
+```
+
+If you specify a file name at the end, the Boolean function will be written to that file:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 MD5.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32 MD5-R32.bf
+```
+
 ### OR
 
 The following commands produce Boolean functions ORing the first half of the input parameters with the second half:
@@ -127,28 +149,6 @@ java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce ROTATE 4 -1
 If no parameters are provided, a word length of 32 is used and the output is printed out on the command line. If a file
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. A second numeric parameter will be used as the number of positions to rotate the input parameters.
-
-### SHA-256
-
-To produce a full version of the SHA-256 hash function, and have it printed out on the command line, use the following
-command:
-
-```
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256
-```
-
-For a reduced version of the hash function, add the number of rounds as the second argument, e.g. 32:
-
-```
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32
-```
-
-If you specify a file name at the end, the Boolean function will be written to that file:
-
-```
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 SHA-256.bf
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce SHA-256 32 SHA-256-R32.bf
-```
 
 ### SHIFT
 
@@ -187,22 +187,7 @@ the word length.
 
 ## Resolve a Boolean Function
 
-The following commands read a Boolean function from an input file and try to resolve it:
-
-```
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar resolve ADD32.bf
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar resolve ADD32.bf ADD32-resolved.bf
-```
-
-If no output file name is provided, the result is printed out on the command line.
-
 ## Report on the Complexity of a Boolean Function
-
-The following command reads a Boolean function from an input file and reports on its complexity:
-
-```
-java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar report ADD32.bf
-```
 
 ## Attack a Boolean Function
 
