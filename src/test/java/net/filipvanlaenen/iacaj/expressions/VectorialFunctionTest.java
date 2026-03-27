@@ -213,4 +213,129 @@ public class VectorialFunctionTest {
         VectorialFunction actual = expected.simplify(new Word(VARIABLE_A));
         assertTrue(actual.containsSame(expected));
     }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * c = a ∧ b
+     * d = ¬c     ⇒ d = ¬a ∨ ¬b
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithAnd() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new AndFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty()),
+                        VARIABLE_D, new NegationExpression(VARIABLE_C)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_D));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_D,
+                new OrFunction(ValueCollection.empty(), ValueCollection.of(VARIABLE_A, VARIABLE_B))));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * a = false
+     * b = ¬a     ⇒ b = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithFalse() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_A, LiteralExpression.FALSE, VARIABLE_B, new NegationExpression(VARIABLE_A)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * b = ¬a   
+     * c = ¬b     ⇒ c = a
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithNegatedVariable() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_B, new NegationExpression(VARIABLE_A), VARIABLE_C, new NegationExpression(VARIABLE_B)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, new IdentityExpression(VARIABLE_A)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * c = a ∨ b
+     * d = ¬c     ⇒ d = ¬a ∧ ¬b
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithOr() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty()),
+                        VARIABLE_D, new NegationExpression(VARIABLE_C)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_D));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_D,
+                new AndFunction(ValueCollection.empty(), ValueCollection.of(VARIABLE_A, VARIABLE_B))));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * a = true
+     * b = ¬a     ⇒ b = false
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithTrue() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_A, LiteralExpression.TRUE, VARIABLE_B, new NegationExpression(VARIABLE_A)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, LiteralExpression.FALSE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * b = a   
+     * c = ¬b     ⇒ c = ¬a
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithVariable() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_B, new IdentityExpression(VARIABLE_A), VARIABLE_C, new NegationExpression(VARIABLE_B)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, new NegationExpression(VARIABLE_A)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies the following test case:
+     *
+     * <pre>
+     * c = a ⊻ b
+     * d = ¬c     ⇒ d = ¬a ⊻ b
+     * </pre>
+     */
+    @Test
+    public void simplificationOfNegationWithXor() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), false), VARIABLE_D,
+                        new NegationExpression(VARIABLE_C)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_D));
+        VectorialFunction expected = new VectorialFunction(
+                Map.of(VARIABLE_D, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), true)));
+        assertTrue(actual.containsSame(expected));
+    }
 }
