@@ -6,11 +6,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.regex.Pattern;
 
-import net.filipvanlaenen.iacaj.Attack;
-import net.filipvanlaenen.iacaj.AttackResult;
-import net.filipvanlaenen.iacaj.BooleanFunction;
-import net.filipvanlaenen.iacaj.ComplexityReport;
-import net.filipvanlaenen.iacaj.NoCollisionFoundYet;
 import net.filipvanlaenen.iacaj.builders.AddFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.BasicVectorialFunctionBuilder;
 import net.filipvanlaenen.iacaj.builders.Md5FunctionBuilder;
@@ -53,7 +48,6 @@ public final class CommandLineInterface {
      */
     private static void printUsage() {
         System.out.println("Usage:");
-        System.out.println("  attack <file-name> [<file-name>]");
         System.out.println("  produce <function> <numeric-parameter>* [<file-name>]");
         System.out.println("    produce ADD [<word-length>] [<file-name>]");
         System.out.println("    produce AND [<word-length>] [<file-name>]");
@@ -62,8 +56,6 @@ public final class CommandLineInterface {
         System.out.println("    produce ROTATE [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce SHIFT [<word-length> [<number-of-positions>]] [<file-name>]");
         System.out.println("    produce XOR [<word-length>] [<file-name>]");
-        System.out.println("  report <file-name> [<file-name>]");
-        System.out.println("  resolve <file-name> [<file-name>]");
     }
 
     /**
@@ -76,31 +68,6 @@ public final class CommandLineInterface {
      * Enumeration with the available commands.
      */
     enum Command {
-        /**
-         * Command to read in a Boolean function from a file and find a collision.
-         */
-        Attack {
-            @Override
-            void execute(final String[] args) throws IOException {
-                String inputFileName = args[1];
-                String outputFileName = null;
-                if (args.length > 2) {
-                    outputFileName = args[2];
-                }
-                BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
-                Attack attack = new Attack(bf);
-                AttackResult attackResult = attack.perform();
-                while (attackResult instanceof NoCollisionFoundYet) {
-                    System.out.println(attackResult.toString());
-                    attackResult = attack.perform();
-                }
-                if (outputFileName == null) {
-                    System.out.println(attackResult.toString());
-                } else {
-                    writeFile(outputFileName, attackResult.toString());
-                }
-            }
-        },
         /**
          * Command to produce a specific hash function, possibly with a specified number of rounds, and export it to a
          * file.
@@ -171,42 +138,6 @@ public final class CommandLineInterface {
                     writeFile(fileName, output);
                 }
             }
-        },
-        /**
-         * Command to read in a Boolean function from a file and produce a report on its complexity.
-         */
-        Report {
-            @Override
-            void execute(final String[] args) throws IOException {
-                String inputFileName = args[1];
-                String outputFileName = null;
-                if (args.length > 2) {
-                    outputFileName = args[2];
-                }
-                BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
-                ComplexityReport complexityReport = new ComplexityReport(bf);
-                if (outputFileName == null) {
-                    System.out.println(complexityReport.toString());
-                } else {
-                    writeFile(outputFileName, complexityReport.toYaml());
-                }
-            }
-        },
-        /**
-         * Command to read in a Boolean function from a file, resolve it, and export it to a file.
-         */
-        Resolve {
-            @Override
-            void execute(final String[] args) throws IOException {
-                String inputFileName = args[1];
-                String outputFileName = null;
-                if (args.length > 2) {
-                    outputFileName = args[2];
-                }
-                BooleanFunction bf = BooleanFunction.parse(readFile(inputFileName));
-                bf.resolve();
-                outputBooleanFunction(bf, outputFileName);
-            }
         };
 
         /**
@@ -218,36 +149,6 @@ public final class CommandLineInterface {
         abstract void execute(String[] args) throws IOException;
 
         /**
-         * Outputs a Boolean function. If the file name is <code>null</code>, then the Boolean function is written to
-         * <code>stdout</code>. Otherwise, the Boolean function is written to a file, with the format depending on the
-         * extension of the file name.
-         *
-         * @param bf       The Boolean function.
-         * @param fileName The name of the file, can be <code>null</code>.
-         * @throws IOException Thrown if an exception occurs related to IO.
-         */
-        private static void outputBooleanFunction(final BooleanFunction bf, final String fileName) throws IOException {
-            if (fileName == null) {
-                System.out.println(bf);
-            } else if (fileName.endsWith(".java")) {
-                writeFile(fileName, bf.toJavaString());
-            } else {
-                writeFile(fileName, bf.toString());
-            }
-        }
-
-        /**
-         * Utility method to read a file into an array of strings.
-         *
-         * @param fileName The name of the file to read from.
-         * @return The content of the file, as an array of strings.
-         * @throws IOException Thrown if an exception occurs related to IO.
-         */
-        private static String[] readFile(final String fileName) throws IOException {
-            return Files.readAllLines(Paths.get(fileName), StandardCharsets.UTF_8).toArray(new String[] {});
-        }
-
-        /**
          * Utility method to write a string to a file.
          *
          * @param fileName The name for the file.
@@ -257,6 +158,5 @@ public final class CommandLineInterface {
         private static void writeFile(final String fileName, final String content) throws IOException {
             Files.writeString(Paths.get(fileName), content, StandardCharsets.UTF_8);
         }
-
     }
 }
