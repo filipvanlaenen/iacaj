@@ -244,7 +244,105 @@ c = a ∨ b
 d = ¬c    ⇒ d = ¬a ∧ ¬b
 
 c = a ⊻ b
-d = ¬c    ⇒ d = ¬(a ⊻ b)
+d = ¬c    ⇒ d = ¬a ⊻ b
+```
+
+### And
+
+```
+b = a ∧ a      ⇒ b = a
+
+b = ¬a ∧ a     ⇒ b = false
+
+c = a ∧ a ∧ b  ⇒ c = b
+
+c = ¬a ∧ a ∧ b ⇒ c = false
+
+a = false
+b = false
+c = a ∧ b      ⇒ c = false
+
+a = true
+b = false
+c = a ∧ b      ⇒ c = false
+
+a = false
+b = true
+c = a ∧ b      ⇒ c = false
+
+a = true
+b = true
+c = a ∧ b      ⇒ c = true
+
+a = false
+b = false
+c = ¬a ∧ b     ⇒ c = false
+
+a = true
+b = false
+c = ¬a ∧ b     ⇒ c = false
+
+a = false
+b = true
+c = ¬a ∧ b     ⇒ c = true
+
+a = true
+b = true
+c = ¬a ∧ b     ⇒ c = false
+
+a = false
+c = a ∧ b      ⇒ c = false
+
+a = true
+c = a ∧ b      ⇒ c = b
+
+a = false
+c = ¬a ∧ b     ⇒ c = b
+
+a = true
+c = ¬a ∧ b     ⇒ c = false
+
+a = false
+c = a ∧ ¬b     ⇒ c = false
+
+a = true
+c = a ∧ ¬b     ⇒ c = ¬b
+
+a = false
+c = ¬a ∧ ¬b    ⇒ c = ¬b
+
+a = true
+c = ¬a ∧ ¬b    ⇒ c = false
+
+c = a ∧ b
+e = c ∧ d      ⇒ e = a ∧ b ∧ d
+
+c = a ∨ b
+e = ¬c ∧ d     ⇒ e = ¬a ∧ ¬b ∧ d
+
+c = a ∨ b
+d = a ∧ c      ⇒ d = a
+
+c = ¬a ∨ b
+d = a ∧ c      ⇒ d = a ∧ b
+
+c = a ∨ b
+d = ¬a ∧ c     ⇒ d = ¬a ∧ b
+
+c = ¬a ∨ b
+d = ¬a ∧ c     ⇒ d = ¬a
+
+c = a ∨ b
+e = a ∧ c ∧ d   ⇒ d = a ∧ d
+
+c = ¬a ∨ b
+e = a ∧ c ∧ d  ⇒ d = a ∧ b ∧ d
+
+c = a ∨ b
+e = ¬a ∧ c ∧ d ⇒ d = ¬a ∧ b ∧ d
+
+c = ¬a ∨ b
+e = ¬a ∧ c ∧ d ⇒ d = ¬a ∧ d
 ```
 
 ## Report on the Complexity of a Boolean Function
