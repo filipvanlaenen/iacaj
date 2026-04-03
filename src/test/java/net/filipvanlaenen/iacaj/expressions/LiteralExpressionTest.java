@@ -50,7 +50,7 @@ public class LiteralExpressionTest {
     }
 
     /**
-     * Verifies a functional test of the simplify as described below.
+     * Verifies a functional test on the simplify method as described below.
      *
      * <pre>
      * a = false ⇒ a = false
@@ -64,7 +64,7 @@ public class LiteralExpressionTest {
     }
 
     /**
-     * Verifies a functional test of the simplify as described below.
+     * Verifies a functional test on the simplify method as described below.
      *
      * <pre>
      * a = true ⇒ a = true
