@@ -108,11 +108,18 @@ For a reduced version of the hash function, add the number of rounds as the seco
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32
 ```
 
+Adding a third paramerer will also restrict the number of output bits:
+
+```
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32 16
+```
+
 If you specify a file name at the end, the Boolean function will be written to that file:
 
 ```
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 MD5.bf
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32 MD5-R32.bf
+java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32 16 MD5-R32-16.bf
 ```
 
 ### OR

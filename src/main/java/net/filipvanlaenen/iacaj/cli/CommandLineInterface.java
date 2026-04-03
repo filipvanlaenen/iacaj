@@ -48,14 +48,22 @@ public final class CommandLineInterface {
      */
     private static void printUsage() {
         System.out.println("Usage:");
+        // TODO: System.out.println(" attack <function> <numeric-parameter>* [<file-name>]");
         System.out.println("  produce <function> <numeric-parameter>* [<file-name>]");
-        System.out.println("    produce ADD [<word-length>] [<file-name>]");
-        System.out.println("    produce AND [<word-length>] [<file-name>]");
-        System.out.println("    produce MD5 [<no-of-rounds>] [<file-name>]");
-        System.out.println("    produce OR [<word-length>] [<file-name>]");
-        System.out.println("    produce ROTATE [<word-length> [<number-of-positions>]] [<file-name>]");
-        System.out.println("    produce SHIFT [<word-length> [<number-of-positions>]] [<file-name>]");
-        System.out.println("    produce XOR [<word-length>] [<file-name>]");
+        // TODO: System.out.println(" report <function> <numeric-parameter>* [<file-name>]");
+        System.out.println("with the following combinations of functions and numeric parameters:");
+        System.out.println("    ADD [<word-length>]");
+        System.out.println("    AND [<word-length>]");
+        System.out.println("    MD5 [<number-of-rounds> [<number-of-output-bits]]");
+        System.out.println("    OR [<word-length>]");
+        System.out.println("    ROTATE [<word-length> [<number-of-positions>]]");
+        // System.out.println(" SHA-1 [<number-of-rounds> [<number-of-output-bits]]");
+        // System.out.println(" SHA-224 [<number-of-rounds> [<number-of-output-bits]]");
+        // System.out.println(" SHA-256 [<number-of-rounds> [<number-of-output-bits]]");
+        // System.out.println(" SHA-384 [<number-of-rounds> [<number-of-output-bits]]");
+        // System.out.println(" SHA-512 [<number-of-rounds> [<number-of-output-bits]]");
+        System.out.println("    SHIFT [<word-length> [<number-of-positions>]]");
+        System.out.println("    XOR [<word-length>]");
     }
 
     /**
@@ -104,6 +112,9 @@ public final class CommandLineInterface {
                     Md5FunctionBuilder thisBuilder = new Md5FunctionBuilder();
                     if (!parameters.isEmpty()) {
                         thisBuilder.setNumberOfRounds(parameters.getAt(0));
+                        if (parameters.size() > 1) {
+                            thisBuilder.setNumberOfOutputBits(parameters.getAt(1));
+                        }
                     }
                     builder = thisBuilder;
                 } else if (function.equals("OR")) {

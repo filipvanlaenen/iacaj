@@ -19,8 +19,39 @@ import net.filipvanlaenen.nombrajkolektoj.longs.OrderedLongCollection;
  *      algorithm.
  */
 public class Md5FunctionBuilder extends VectorialFunctionBuilder {
-    private Integer numberOfRounds = 64;
+    /**
+     * The number of output bits, 128 by default.
+     */
+    private int numberOfOutputBits = 128;
+    /**
+     * The number of rounds, 64 by default.
+     */
+    private int numberOfRounds = 64;
+    /**
+     * The output vector.
+     */
     private Word outputVector;
+
+    /**
+     * Adds a chunk of the result to the output vector.
+     *
+     * @param chunk    The chunk of the result to be added to the output vector.
+     * @param position The position of the chunk in the output vector.
+     * @return A map with the variables and expressions to be added to the vectorial Boolean function.
+     */
+    private Map<Variable, Expression> addOutputChunk(final Word chunk, final int position) {
+        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 8; j++) {
+                int ovi = 32 * position + 8 * i + j;
+                if (ovi < numberOfOutputBits) {
+                    int ci = 8 * (3 - i) + j;
+                    map.add(outputVector.getAt(ovi), new IdentityExpression(chunk.getAt(ci)));
+                }
+            }
+        }
+        return map;
+    }
 
     @Override
     public VectorialFunction build() throws IllegalStateException {
@@ -206,23 +237,13 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
         map.addAll(buildAdditionFunctions(d00, d, d0z));
 
         // var char digest[16] := a0 append b0 append c0 append d0
-        outputVector = new Word(getOutputVectorName(), 128);
-        map.addAll(addOutputChunk(outputVector, a0z, 0));
-        map.addAll(addOutputChunk(outputVector, b0z, 1));
-        map.addAll(addOutputChunk(outputVector, c0z, 2));
-        map.addAll(addOutputChunk(outputVector, d0z, 3));
+        outputVector = new Word(getOutputVectorName(), numberOfOutputBits);
+        map.addAll(addOutputChunk(a0z, 0));
+        map.addAll(addOutputChunk(b0z, 1));
+        map.addAll(addOutputChunk(c0z, 2));
+        map.addAll(addOutputChunk(d0z, 3));
 
         return new VectorialFunction(map);
-    }
-
-    private Map<Variable, Expression> addOutputChunk(Word ov, Word c, int pos) {
-        ModifiableMap<Variable, Expression> map = ModifiableMap.empty();
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 8; j++) {
-                map.add(ov.getAt(32 * pos + 8 * i + j), new IdentityExpression(c.getAt(8 * (3 - i) + j)));
-            }
-        }
-        return map;
     }
 
     @Override
@@ -230,7 +251,21 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
         return outputVector;
     }
 
-    public void setNumberOfRounds(Integer numberOfRounds) {
+    /**
+     * Sets the number of output bits.
+     *
+     * @param numberOfOutputBits The number of output bits.
+     */
+    public void setNumberOfOutputBits(final Integer numberOfOutputBits) {
+        this.numberOfOutputBits = numberOfOutputBits;
+    }
+
+    /**
+     * Sets the number of rounds.
+     *
+     * @param numberOfRounds The number of rounds.
+     */
+    public void setNumberOfRounds(final Integer numberOfRounds) {
         this.numberOfRounds = numberOfRounds;
     }
 }
