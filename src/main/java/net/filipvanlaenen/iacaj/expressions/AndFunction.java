@@ -1,6 +1,7 @@
 package net.filipvanlaenen.iacaj.expressions;
 
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
@@ -15,38 +16,35 @@ import net.filipvanlaenen.kolektoj.collectors.Collectors;
  */
 public record AndFunction(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
         implements Function {
+    /**
+     * The and operator with spaces.
+     */
     private static final String AND_WITH_SPACES = " " + Operator.AND + " ";
+    /**
+     * The negated and operator with spaces.
+     */
     private static final String AND_NOT_WITH_SPACES = AND_WITH_SPACES + Operator.NOT;
 
     @Override
     public Collection<Variable> getVariables() {
-        // TODO
-        ModifiableCollection<Variable> variables = ModifiableCollection.of(directVariables);
-        variables.addAll(negatedVariables);
-        return Collection.of(variables);
+        return Collection.unionOf(directVariables, negatedVariables);
     }
 
     @Override
     public Expression simplify() {
-        // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
-        ModifiableCollection<Variable> newDirectVariables =
-                ModifiableCollection.of(ElementCardinality.DISTINCT_ELEMENTS);
-        newDirectVariables.addAll(directVariables);
-        ModifiableCollection<Variable> newNegatedVariables =
-                ModifiableCollection.of(ElementCardinality.DISTINCT_ELEMENTS);
-        newNegatedVariables.addAll(negatedVariables);
-        // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/110
-        ModifiableCollection<Variable> commonVariables = ModifiableCollection.of(newDirectVariables);
-        commonVariables.retainAll(newNegatedVariables);
+        Collection<Variable> distinctDirectVariables = Collection.of(DISTINCT_ELEMENTS, directVariables);
+        Collection<Variable> distinctNegatedVariables = Collection.of(DISTINCT_ELEMENTS, negatedVariables);
+        Collection<Variable> commonVariables =
+                Collection.intersectionOf(distinctDirectVariables, distinctNegatedVariables);
         if (commonVariables.isEmpty()) {
-            return createExpression(newDirectVariables, newNegatedVariables);
+            return createExpression(distinctDirectVariables, distinctNegatedVariables);
         } else {
             return LiteralExpression.FALSE;
         }
     }
 
-    private Expression createExpression(ModifiableCollection<Variable> newDirectVariables,
-            ModifiableCollection<Variable> newNegatedVariables) {
+    private Expression createExpression(final Collection<Variable> newDirectVariables,
+            final Collection<Variable> newNegatedVariables) {
         if (newDirectVariables.size() + newNegatedVariables.size() == 1) {
             if (newDirectVariables.isEmpty()) {
                 return new NegationExpression(newNegatedVariables.get());
@@ -54,10 +52,7 @@ public record AndFunction(ValueCollection<Variable> directVariables, ValueCollec
                 return new IdentityExpression(newDirectVariables.get());
             }
         } else {
-            // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
-            Variable[] direct = newDirectVariables.toArray(new Variable[0]);
-            Variable[] negated = newNegatedVariables.toArray(new Variable[0]);
-            return new AndFunction(ValueCollection.of(direct), ValueCollection.of(negated));
+            return new AndFunction(ValueCollection.of(newDirectVariables), ValueCollection.of(newNegatedVariables));
         }
     }
 
