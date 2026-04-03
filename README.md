@@ -15,6 +15,7 @@
   - [Resolve Negation](#resolve-negation)
   - [Resolve And](#resolve-and)
   - [Resolve Or](#resolve-or)
+  - [Resolve Xor](#resolve-xor)
 - [Report on the Complexity of a Boolean Function](#report-on-the-complexity-of-a-boolean-function)
 - [Attack a Boolean Function](#attack-a-boolean-function)
 - [Technical Documentation](#technical-documentation)
@@ -206,6 +207,7 @@ The resolver uses the logical rules to resolve a vectorial boolean function as d
 - [Resolve Negation](#resolve-negation)
 - [Resolve And](#resolve-and)
 - [Resolve Or](#resolve-or)
+- [Resolve Xor](#resolve-xor)
 
 ### Resolve Literals
 
@@ -475,6 +477,78 @@ e = ¬a ∨ c ∨ d ⇒ d = ¬a ∨ b ∨ d
 
 c = ¬a ∧ b
 e = ¬a ∨ c ∨ d ⇒ d = ¬a ∨ d
+```
+
+### Resolve Xor
+
+```
+b = a ⊻ a      ⇒ b = false
+
+b = ¬a ⊻ a     ⇒ b = true
+
+c = a ⊻ a ⊻ b  ⇒ c = ¬b
+
+c = ¬a ⊻ a ⊻ b ⇒ c = b
+
+a = false
+b = false
+c = a ⊻ b      ⇒ c = true
+
+a = false
+b = true
+c = a ⊻ b      ⇒ c = true
+
+a = true
+b = true
+c = a ⊻ b      ⇒ c = false
+
+a = false
+b = false
+c = ¬a ⊻ b     ⇒ c = true
+
+a = true
+b = false
+c = ¬a ⊻ b     ⇒ c = false
+
+a = true
+b = true
+c = ¬a ⊻ b     ⇒ c = true
+
+a = false
+c = a ⊻ b      ⇒ c = b
+
+a = true
+c = a ⊻ b      ⇒ c = ¬b
+
+a = false
+c = ¬a ⊻ b     ⇒ c = ¬b
+
+a = true
+c = ¬a ⊻ b     ⇒ c = b
+
+b = a
+d = b ⊻ c      ⇒ d = a ⊻ c
+
+b = ¬a
+d = b ⊻ c      ⇒ d = ¬a ⊻ c
+
+b = a
+d = ¬b ⊻ c     ⇒ d = ¬a ⊻ c
+
+b = ¬a
+d = ¬b ⊻ c     ⇒ d = a ⊻ c
+
+c = a ⊻ b
+e = c ⊻ d      ⇒ e = a ⊻ b ⊻ d
+
+c = a ⊻ b
+e = ¬c ⊻ d     ⇒ e = ¬a ⊻ b ⊻ d
+
+c = ¬a ⊻ b
+e = c ⊻ d     ⇒ e = ¬a ⊻ b ⊻ d
+
+c = ¬a ⊻ b
+e = ¬c ⊻ d     ⇒ e = a ⊻ b ⊻ d
 ```
 
 ## Report on the Complexity of a Boolean Function
