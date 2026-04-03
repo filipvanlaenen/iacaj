@@ -2,14 +2,19 @@
 
 - [Getting Started](#getting-started)
 - [Produce a Boolean Function](#produce-a-boolean-function)
-  - [ADD](#add)
-  - [AND](#and)
-  - [MD5](#md5)
-  - [OR](#or)
-  - [ROTATE](#rotate)
-  - [SHIFT](#shift)
-  - [XOR](#xor)
+  - [Produce ADD](#produce-add)
+  - [Produce AND](#produce-and)
+  - [Produce MD5](#produce-md5)
+  - [Produce OR](#produce-or)
+  - [Produce ROTATE](#produce-rotate)
+  - [Produce SHIFT](#produce-shift)
+  - [Produce XOR](#produce-xor)
 - [Resolve a Boolean Function](#resolve-a-boolean-function)
+  - [Resolve Literals](#resolve-literals)
+  - [Resolve Identity](#resolve-identity)
+  - [Resolve Negation](#resolve-negation)
+  - [Resolve And](#resolve-and)
+  - [Resolve Or](#resolve-or)
 - [Report on the Complexity of a Boolean Function](#report-on-the-complexity-of-a-boolean-function)
 - [Attack a Boolean Function](#attack-a-boolean-function)
 - [Technical Documentation](#technical-documentation)
@@ -53,15 +58,15 @@ Use the `produce` command to produce a Boolean function for a cryptographic hash
 Boolean functions. The trivial functions are added for testing purposes. Currently, the following functions can be
 produced:
 
-- [ADD](#add)
-- [AND](#and)
-- [MD5](#md5)
-- [OR](#or)
-- [ROTATE](#rotate)
-- [SHIFT](#shift)
-- [XOR](#xor)
+- [Produce ADD](#produce-add)
+- [Produce AND](#produce-and)
+- [Produce MD5](#produce-md5)
+- [Produce OR](#produce-or)
+- [Produce ROTATE](#produce-rotate)
+- [Produce SHIFT](#produce-shift)
+- [Produce XOR](#produce-xor)
 
-### ADD
+### Produce ADD
 
 The following commands produce Boolean functions ADDing the first half of the input parameters with the second half:
 
@@ -77,7 +82,7 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. 
 
-### AND
+### Produce AND
 
 The following commands produce Boolean functions ANDing the first half of the input parameters with the second half:
 
@@ -93,7 +98,7 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. 
 
-### MD5
+### Produce MD5
 
 To produce a full version of the MD5 hash function, and have it printed out on the command line, use the following
 command:
@@ -122,7 +127,7 @@ java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32 MD5-R32.bf
 java -jar iacaj-1.0-SNAPSHOT-jar-with-dependencies.jar produce MD5 32 16 MD5-R32-16.bf
 ```
 
-### OR
+### Produce OR
 
 The following commands produce Boolean functions ORing the first half of the input parameters with the second half:
 
@@ -138,7 +143,7 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. 
 
-### ROTATE
+### Produce ROTATE
 
 The following commands produce Boolean functions rotating the input parameters to the right:
 
@@ -157,7 +162,7 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. A second numeric parameter will be used as the number of positions to rotate the input parameters.
 
-### SHIFT
+### Produce SHIFT
 
 The following commands produce Boolean functions shifting the input parameters to the right:
 
@@ -176,7 +181,7 @@ If no parameters are provided, a word length of 32 is used and the output is pri
 name is provided, the result will be written to the file. If a numeric parameter is provided first, it will be used as
 the word length. A second numeric parameter will be used as the number of positions to shift the input parameters.
 
-### XOR
+### Produce XOR
 
 The following commands produce Boolean functions XORing the first half of the input parameters with the second half:
 
@@ -194,9 +199,15 @@ the word length.
 
 ## Resolve a Boolean Function
 
-The resolver uses the logical rules to resolve a vectorial boolean function as described in the sections below.
+The resolver uses the logical rules to resolve a vectorial boolean function as described in the sections below:
 
-### Literals
+- [Resolve Literals](#resolve-literals)
+- [Resolve Identity](#resolve-identity)
+- [Resolve Negation](#resolve-negation)
+- [Resolve And](#resolve-and)
+- [Resolve Or](#resolve-or)
+
+### Resolve Literals
 
 ```
 a = false ⇒ a = false
@@ -204,7 +215,7 @@ a = false ⇒ a = false
 a = true  ⇒ a = true
 ```
 
-### Identity
+### Resolve Identity
 
 ```
 a = true
@@ -229,7 +240,7 @@ c = a ⊻ b
 d = c     ⇒ d = a ⊻ b
 ```
 
-### Negation
+### Resolve Negation
 
 ```
 a = true
@@ -254,7 +265,7 @@ c = a ⊻ b
 d = ¬c    ⇒ d = ¬a ⊻ b
 ```
 
-### And
+### Resolve And
 
 ```
 b = a ∧ a      ⇒ b = a
@@ -358,6 +369,112 @@ e = ¬a ∧ c ∧ d ⇒ d = ¬a ∧ b ∧ d
 
 c = ¬a ∨ b
 e = ¬a ∧ c ∧ d ⇒ d = ¬a ∧ d
+```
+
+### Resolve Or
+
+```
+b = a ∨ a      ⇒ b = a
+
+b = ¬a ∨ a     ⇒ b = true
+
+c = a ∨ a ∨ b  ⇒ c = a ∨ b
+
+c = ¬a ∨ a ∨ b ⇒ c = true
+
+a = false
+b = false
+c = a ∨ b      ⇒ c = false
+
+a = false
+b = true
+c = a ∨ b      ⇒ c = true
+
+a = true
+b = true
+c = a ∨ b      ⇒ c = true
+
+a = false
+b = false
+c = ¬a ∨ b     ⇒ c = true
+
+a = true
+b = false
+c = ¬a ∨ b     ⇒ c = false
+
+a = false
+b = true
+c = ¬a ∨ b     ⇒ c = true
+
+a = true
+b = true
+c = ¬a ∨ b     ⇒ c = true
+
+a = false
+c = a ∨ b      ⇒ c = b
+
+a = true
+c = a ∨ b      ⇒ c = true
+
+a = false
+c = ¬a ∨ b     ⇒ c = true
+
+a = true
+c = ¬a ∨ b     ⇒ c = b
+
+a = false
+c = a ∨ ¬b     ⇒ c = ¬b
+
+a = true
+c = a ∨ ¬b     ⇒ c = true
+
+a = false
+c = ¬a ∨ ¬b    ⇒ c = true
+
+a = true
+c = ¬a ∨ ¬b    ⇒ c = ¬b
+
+b = a
+d = b ∨ c      ⇒ d = a ∨ c
+
+b = ¬a
+d = b ∨ c      ⇒ d = ¬a ∨ c
+
+b = a
+d = ¬b ∨ c     ⇒ d = ¬a ∨ c
+
+b = ¬a
+d = ¬b ∨ c     ⇒ d = a ∨ c
+
+c = a ∨ b
+e = c ∨ d      ⇒ e = a ∨ b ∨ d
+
+c = a ∧ b
+e = ¬c ∨ d     ⇒ e = ¬a ∨ ¬b ∨ d
+
+c = a ∧ b
+d = a ∨ c      ⇒ d = a
+
+c = ¬a ∧ b
+d = a ∨ c      ⇒ d = a ∨ b
+
+c = a ∧ b
+d = ¬a ∨ c     ⇒ d = ¬a ∨ b
+
+c = ¬a ∧ b
+d = ¬a ∨ c     ⇒ d = ¬a
+
+c = a ∧ b
+e = a ∨ c ∨ d   ⇒ d = a ∨ d
+
+c = ¬a ∧ b
+e = a ∨ c ∨ d  ⇒ d = a ∨ b ∨ d
+
+c = a ∧ b
+e = ¬a ∨ c ∨ d ⇒ d = ¬a ∨ b ∨ d
+
+c = ¬a ∧ b
+e = ¬a ∨ c ∨ d ⇒ d = ¬a ∨ d
 ```
 
 ## Report on the Complexity of a Boolean Function
