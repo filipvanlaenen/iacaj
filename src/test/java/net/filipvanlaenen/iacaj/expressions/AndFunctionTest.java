@@ -419,6 +419,25 @@ public class AndFunctionTest {
      * Verifies a functional test on the simplify method as described below.
      *
      * <pre>
+     * c = a ∨ b
+     * e = ¬c ∧ d     ⇒ e = ¬a ∧ ¬b ∧ d
+     * </pre>
+     */
+    @Test
+    public void simplificationOfAndWithNegatedOr() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty()),
+                        VARIABLE_E, new AndFunction(ValueCollection.of(VARIABLE_D), ValueCollection.of(VARIABLE_C))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_E));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_E,
+                new AndFunction(ValueCollection.of(VARIABLE_D), ValueCollection.of(VARIABLE_A, VARIABLE_B))));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
      * b = ¬a
      * d = ¬b ∧ c      ⇒ d = a ∧ c
      * </pre>
