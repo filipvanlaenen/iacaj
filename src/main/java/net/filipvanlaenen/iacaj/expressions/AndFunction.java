@@ -77,6 +77,9 @@ public record AndFunction(ValueCollection<Variable> directVariables, ValueCollec
                     newDirectVariables.add(identityExpression.variable());
                 } else if (expression instanceof NegationExpression negationExpression) {
                     newNegatedVariables.add(negationExpression.variable());
+                } else if (expression instanceof AndFunction andFunction) {
+                    newDirectVariables.addAll(andFunction.directVariables());
+                    newNegatedVariables.addAll(andFunction.negatedVariables());
                 } else if (LiteralExpression.TRUE != expression) {
                     newDirectVariables.add(directVariable);
                 }
