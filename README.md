@@ -384,29 +384,29 @@ e = ¬a ∧ d       ⇒ e = ¬a
 ‡ c = ¬a ∨ ¬b
 ‡ d = a ∧ c        ⇒ d = a ∧ ¬b
 
-‡ d = ¬a ∨ b ∨ c   ⇒ f = b ∨ c
+‡ d = ¬a ∨ b ∨ c   ⇒ °f = b ∨ c
 ‡ e = a ∧ d        ⇒ e = a ∧ f
 
-‡ d = ¬a ∨ ¬b ∨ ¬c ⇒ f = ¬b ∨ ¬c
+‡ d = ¬a ∨ ¬b ∨ ¬c ⇒ °f = ¬b ∨ ¬c
 ‡ e = a ∧ d        ⇒ e = a ∧ f
 
-‡ d = ¬a ∨ b ∨ ¬c  ⇒ f = b ∨ ¬c
+‡ d = ¬a ∨ b ∨ ¬c  ⇒ °f = b ∨ ¬c
 ‡ e = a ∧ d        ⇒ e = a ∧ f
 
 ‡ c = a ∨ b
-‡ d = ¬a ∧ c        ⇒ d = ¬a ∧ b
+‡ d = ¬a ∧ c       ⇒ d = ¬a ∧ b
 
 ‡ c = a ∨ ¬b
-‡ d = ¬a ∧ c        ⇒ d = ¬a ∧ ¬b
+‡ d = ¬a ∧ c       ⇒ d = ¬a ∧ ¬b
 
-‡ d = a ∨ b ∨ c   ⇒ f = b ∨ c
-‡ e = ¬a ∧ d        ⇒ e  = ¬a ∧ f
+‡ d = a ∨ b ∨ c    ⇒ °f = b ∨ c
+‡ e = ¬a ∧ d       ⇒ e  = ¬a ∧ f
 
-‡ d = a ∨ ¬b ∨ ¬c ⇒ f = ¬b ∨ ¬c
-‡ e = ¬a ∧ d        ⇒ e  = ¬a ∧ f
+‡ d = a ∨ ¬b ∨ ¬c  ⇒ °f = ¬b ∨ ¬c
+‡ e = ¬a ∧ d       ⇒ e  = ¬a ∧ f
 
-‡ d = a ∨ b ∨ ¬c  ⇒ f = b ∨ ¬c
-‡ e = ¬a ∧ d        ⇒ e  = ¬a ∧ f
+‡ d = a ∨ b ∨ ¬c   ⇒ °f = b ∨ ¬c
+‡ e = ¬a ∧ d       ⇒ e  = ¬a ∧ f
 
 d = ¬a ∧ b ∧ c
 e = a ∧ ¬d       ⇒ e = a
@@ -427,34 +427,34 @@ d = a ∧ b ∧ ¬c
 e = ¬a ∧ ¬d      ⇒ e = ¬a
 
 ‡ c = a ∧ b
-‡ d = a ∧ ¬c        ⇒ d = a ∧ ¬b
+‡ d = a ∧ ¬c       ⇒ d = a ∧ ¬b
 
 ‡ c = a ∧ ¬b
-‡ d = a ∧ ¬c        ⇒ d = a ∧ b
+‡ d = a ∧ ¬c       ⇒ d = a ∧ b
 
-‡ d = a ∧ b ∧ c   ⇒ f = b ∧ c
-‡ e = a ∧ ¬d        ⇒ e = a ∧ ¬f
+‡ d = a ∧ b ∧ c    ⇒ °f = b ∧ c
+‡ e = a ∧ ¬d       ⇒ e = a ∧ ¬f
 
-‡ d = a ∧ ¬b ∧ ¬c ⇒ f = ¬b ∧ ¬c
-‡ e = a ∧ ¬d        ⇒ e = a ∧ ¬f
+‡ d = a ∧ ¬b ∧ ¬c  ⇒ °f = ¬b ∧ ¬c
+‡ e = a ∧ ¬d       ⇒ e = a ∧ ¬f
 
-‡ d = a ∧ b ∧ ¬c  ⇒ f = b ∨ ¬c
-‡ e = a ∧ ¬d        ⇒ e = a ∧ ¬f
+‡ d = a ∧ b ∧ ¬c   ⇒ °f = b ∨ ¬c
+‡ e = a ∧ ¬d       ⇒ e = a ∧ ¬f
 
 ‡ c = ¬a ∧ b
-‡ d = ¬a ∧ ¬c        ⇒ d = ¬a ∧ ¬b
+‡ d = ¬a ∧ ¬c      ⇒ d = ¬a ∧ ¬b
 
 ‡ c = ¬a ∧ ¬b
-‡ d = ¬a ∧ ¬c        ⇒ d = ¬a ∧ b
+‡ d = ¬a ∧ ¬c      ⇒ d = ¬a ∧ b
 
-‡ d = ¬a ∧ b ∧ c   ⇒ f = b ∧ c
-‡ e = ¬a ∧ ¬d        ⇒ e  = ¬a ∧ ¬f
+‡ d = ¬a ∧ b ∧ c   ⇒ °f = b ∧ c
+‡ e = ¬a ∧ ¬d      ⇒ e  = ¬a ∧ ¬f
 
-‡ d = ¬a ∧ ¬b ∧ ¬c ⇒ f = ¬b ∧ ¬c
-‡ e = ¬a ∧ ¬d        ⇒ e  = ¬a ∧ ¬f
+‡ d = ¬a ∧ ¬b ∧ ¬c ⇒ °f = ¬b ∧ ¬c
+‡ e = ¬a ∧ ¬d      ⇒ e  = ¬a ∧ ¬f
 
-‡ d = ¬a ∧ b ∧ ¬c  ⇒ f = b ∧ ¬c
-‡ e = ¬a ∧ ¬d        ⇒ e  = ¬a ∧ ¬f
+‡ d = ¬a ∧ b ∧ ¬c  ⇒ °f = b ∧ ¬c
+‡ e = ¬a ∧ ¬d      ⇒ e  = ¬a ∧ ¬f
 ```
 
 ### Resolve Or
@@ -645,7 +645,7 @@ c = a ⊻ b
 e = ¬c ⊻ d     ⇒ e = ¬a ⊻ b ⊻ d
 
 c = ¬a ⊻ b
-e = c ⊻ d     ⇒ e = ¬a ⊻ b ⊻ d
+e = c ⊻ d      ⇒ e = ¬a ⊻ b ⊻ d
 
 c = ¬a ⊻ b
 e = ¬c ⊻ d     ⇒ e = a ⊻ b ⊻ d
