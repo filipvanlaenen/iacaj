@@ -80,6 +80,18 @@ public record AndFunction(ValueCollection<Variable> directVariables, ValueCollec
                 } else if (expression instanceof AndFunction andFunction) {
                     newDirectVariables.addAll(andFunction.directVariables());
                     newNegatedVariables.addAll(andFunction.negatedVariables());
+                } else if (expression instanceof OrFunction orFunction) {
+                    // TODO: Refactor when https://github.com/filipvanlaenen/kolektoj/issues/113 is implemented
+                    ModifiableCollection<Variable> intersectionOfDirectVariables =
+                            ModifiableCollection.of(directVariables);
+                    intersectionOfDirectVariables.retainAll(orFunction.directVariables());
+                    // TODO: Refactor when https://github.com/filipvanlaenen/kolektoj/issues/113 is implemented
+                    ModifiableCollection<Variable> intersectionOfNegatedVariables =
+                            ModifiableCollection.of(negatedVariables);
+                    intersectionOfNegatedVariables.retainAll(orFunction.negatedVariables());
+                    if (intersectionOfDirectVariables.isEmpty() && intersectionOfNegatedVariables.isEmpty()) {
+                        newDirectVariables.add(directVariable);
+                    }
                 } else if (LiteralExpression.TRUE != expression) {
                     newDirectVariables.add(directVariable);
                 }
@@ -96,6 +108,18 @@ public record AndFunction(ValueCollection<Variable> directVariables, ValueCollec
                     newNegatedVariables.add(identityExpression.variable());
                 } else if (expression instanceof NegationExpression negationExpression) {
                     newDirectVariables.add(negationExpression.variable());
+                } else if (expression instanceof AndFunction andFunction) {
+                    // TODO: Refactor when https://github.com/filipvanlaenen/kolektoj/issues/113 is implemented
+                    ModifiableCollection<Variable> intersectionOfDirectVariables =
+                            ModifiableCollection.of(directVariables);
+                    intersectionOfDirectVariables.retainAll(andFunction.negatedVariables());
+                    // TODO: Refactor when https://github.com/filipvanlaenen/kolektoj/issues/113 is implemented
+                    ModifiableCollection<Variable> intersectionOfNegatedVariables =
+                            ModifiableCollection.of(negatedVariables);
+                    intersectionOfNegatedVariables.retainAll(andFunction.directVariables());
+                    if (intersectionOfDirectVariables.isEmpty() && intersectionOfNegatedVariables.isEmpty()) {
+                        newNegatedVariables.add(negatedVariable);
+                    }
                 } else if (expression instanceof OrFunction orFunction) {
                     newDirectVariables.addAll(orFunction.negatedVariables());
                     newNegatedVariables.addAll(orFunction.directVariables());

@@ -83,7 +83,7 @@ class Md5TestVectorTest {
         byte[] md5 = new byte[16];
         int count = 0;
         for (int i = 0; i < 4; i++) {
-            int n = (i == 0) ? a : ((i == 1) ? b : ((i == 2) ? c : d));
+            int n = (i == 0) ? a : (i == 1) ? b : (i == 2) ? c : d;
             for (int j = 0; j < 4; j++) {
                 md5[count++] = (byte) n;
                 n >>>= 8;

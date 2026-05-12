@@ -270,119 +270,191 @@ d = ¬c    ⇒ d = ¬a ⊻ b
 ### Resolve And
 
 ```
-b = a ∧ a      ⇒ b = a
+b = a ∧ a        ⇒ b = a
 
-b = ¬a ∧ a     ⇒ b = false
+b = ¬a ∧ a       ⇒ b = false
 
-c = a ∧ a ∧ b  ⇒ c = a ∧ b
+c = a ∧ a ∧ b    ⇒ c = a ∧ b
 
-c = ¬a ∧ a ∧ b ⇒ c = false
-
-a = false
-b = false
-c = a ∧ b      ⇒ c = false
-
-a = false
-b = true
-c = a ∧ b      ⇒ c = false
-
-a = true
-b = true
-c = a ∧ b      ⇒ c = true
+c = ¬a ∧ a ∧ b   ⇒ c = false
 
 a = false
 b = false
-c = ¬a ∧ b     ⇒ c = false
+c = a ∧ b        ⇒ c = false
+
+a = false
+b = true
+c = a ∧ b        ⇒ c = false
+
+a = true
+b = true
+c = a ∧ b        ⇒ c = true
+
+a = false
+b = false
+c = ¬a ∧ b       ⇒ c = false
 
 a = true
 b = false
-c = ¬a ∧ b     ⇒ c = false
+c = ¬a ∧ b       ⇒ c = false
 
 a = false
 b = true
-c = ¬a ∧ b     ⇒ c = true
+c = ¬a ∧ b       ⇒ c = true
 
 a = true
 b = true
-c = ¬a ∧ b     ⇒ c = false
+c = ¬a ∧ b       ⇒ c = false
 
 a = false
-c = a ∧ b      ⇒ c = false
+c = a ∧ b        ⇒ c = false
 
 a = true
-c = a ∧ b      ⇒ c = b
+c = a ∧ b        ⇒ c = b
 
 a = false
-c = ¬a ∧ b     ⇒ c = b
+c = ¬a ∧ b       ⇒ c = b
 
 a = true
-c = ¬a ∧ b     ⇒ c = false
+c = ¬a ∧ b       ⇒ c = false
 
 a = false
-c = a ∧ ¬b     ⇒ c = false
+c = a ∧ ¬b       ⇒ c = false
 
 a = true
-c = a ∧ ¬b     ⇒ c = ¬b
+c = a ∧ ¬b       ⇒ c = ¬b
 
 a = false
-c = ¬a ∧ ¬b    ⇒ c = ¬b
+c = ¬a ∧ ¬b      ⇒ c = ¬b
 
 a = true
-c = ¬a ∧ ¬b    ⇒ c = false
+c = ¬a ∧ ¬b      ⇒ c = false
 
 b = a
-d = b ∧ c      ⇒ d = a ∧ c
+d = b ∧ c        ⇒ d = a ∧ c
 
 b = ¬a
-d = b ∧ c      ⇒ d = ¬a ∧ c
+d = b ∧ c        ⇒ d = ¬a ∧ c
 
 b = a
-d = ¬b ∧ c     ⇒ d = ¬a ∧ c
+d = ¬b ∧ c       ⇒ d = ¬a ∧ c
 
 b = ¬a
-d = ¬b ∧ c     ⇒ d = a ∧ c
+d = ¬b ∧ c       ⇒ d = a ∧ c
 
 c = a ∧ b
-e = c ∧ d      ⇒ e = a ∧ b ∧ d
+e = c ∧ d        ⇒ e = a ∧ b ∧ d
 
 c = a ∧ ¬b
-e = c ∧ d      ⇒ e = a ∧ ¬b ∧ d
+e = c ∧ d        ⇒ e = a ∧ ¬b ∧ d
 
 c = a ∧ b
-d = c ∧ b      ⇒ d = a ∧ b
+d = c ∧ b        ⇒ d = a ∧ b
 
 c = a ∧ ¬b
-d = c ∧ b      ⇒ d = false
+d = c ∧ b        ⇒ d = false
 
 c = a ∧ b
-d = c ∧ ¬b      ⇒ d = false
+d = c ∧ ¬b       ⇒ d = false
 
 c = a ∨ b
-e = ¬c ∧ d     ⇒ e = ¬a ∧ ¬b ∧ d
+e = ¬c ∧ d       ⇒ e = ¬a ∧ ¬b ∧ d
 
-c = a ∨ b
-d = a ∧ c      ⇒ d = a
+d = a ∨ b ∨ c
+e = a ∧ d        ⇒ e = a
 
-c = ¬a ∨ b
-d = a ∧ c      ⇒ d = a ∧ b
+d = a ∨ ¬b ∨ ¬c
+e = a ∧ d        ⇒ e = a
 
-c = a ∨ b
-d = ¬a ∧ c     ⇒ d = ¬a ∧ b
+d = a ∨ b ∨ ¬c
+e = a ∧ d        ⇒ e = a
 
-c = ¬a ∨ b
-d = ¬a ∧ c     ⇒ d = ¬a
+d = ¬a ∨ b ∨ c
+e = ¬a ∧ d       ⇒ e = ¬a
 
-c = a ∨ b
-e = a ∧ c ∧ d   ⇒ d = a ∧ d
+d = ¬a ∨ ¬b ∨ ¬c
+e = ¬a ∧ d       ⇒ e = ¬a
 
-c = ¬a ∨ b
-e = a ∧ c ∧ d  ⇒ d = a ∧ b ∧ d
+d = ¬a ∨ b ∨ ¬c
+e = ¬a ∧ d       ⇒ e = ¬a
 
-c = a ∨ b
-e = ¬a ∧ c ∧ d ⇒ d = ¬a ∧ b ∧ d
+‡ c = ¬a ∨ b
+‡ d = a ∧ c        ⇒ d = a ∧ b
 
-c = ¬a ∨ b
-e = ¬a ∧ c ∧ d ⇒ d = ¬a ∧ d
+‡ c = ¬a ∨ ¬b
+‡ d = a ∧ c        ⇒ d = a ∧ ¬b
+
+‡ d = ¬a ∨ b ∨ c   ⇒ f = b ∨ c
+‡ e = a ∧ d        ⇒ e = a ∧ f
+
+‡ d = ¬a ∨ ¬b ∨ ¬c ⇒ f = ¬b ∨ ¬c
+‡ e = a ∧ d        ⇒ e = a ∧ f
+
+‡ d = ¬a ∨ b ∨ ¬c  ⇒ f = b ∨ ¬c
+‡ e = a ∧ d        ⇒ e = a ∧ f
+
+‡ c = a ∨ b
+‡ d = ¬a ∧ c        ⇒ d = ¬a ∧ b
+
+‡ c = a ∨ ¬b
+‡ d = ¬a ∧ c        ⇒ d = ¬a ∧ ¬b
+
+‡ d = a ∨ b ∨ c   ⇒ f = b ∨ c
+‡ e = ¬a ∧ d        ⇒ e  = ¬a ∧ f
+
+‡ d = a ∨ ¬b ∨ ¬c ⇒ f = ¬b ∨ ¬c
+‡ e = ¬a ∧ d        ⇒ e  = ¬a ∧ f
+
+‡ d = a ∨ b ∨ ¬c  ⇒ f = b ∨ ¬c
+‡ e = ¬a ∧ d        ⇒ e  = ¬a ∧ f
+
+d = ¬a ∧ b ∧ c
+e = a ∧ ¬d       ⇒ e = a
+
+d = ¬a ∧ ¬b ∧ ¬c
+e = a ∧ ¬d       ⇒ e = a
+
+d = ¬a ∧ b ∧ ¬c
+e = a ∧ ¬d       ⇒ e = a
+
+d = a ∧ b ∧ c
+e = ¬a ∧ ¬d      ⇒ e = ¬a
+
+d = a ∧ ¬b ∧ ¬c
+e = ¬a ∧ ¬d      ⇒ e = ¬a
+
+d = a ∧ b ∧ ¬c
+e = ¬a ∧ ¬d      ⇒ e = ¬a
+
+‡ c = a ∧ b
+‡ d = a ∧ ¬c        ⇒ d = a ∧ ¬b
+
+‡ c = a ∧ ¬b
+‡ d = a ∧ ¬c        ⇒ d = a ∧ ¬b
+
+‡ d = a ∧ b ∧ c   ⇒ f = b ∧ c
+‡ e = a ∧ ¬d        ⇒ e = a ∧ f
+
+‡ d = a ∧ ¬b ∧ ¬c ⇒ f = ¬b ∨ ¬c
+‡ e = a ∧ ¬d        ⇒ e = a ∧ f
+
+‡ d = a ∧ b ∧ ¬c  ⇒ f = b ∨ ¬c
+‡ e = a ∧ ¬d        ⇒ e = a ∧ f
+
+‡ c = ¬a ∧ b
+‡ d = ¬a ∧ ¬c        ⇒ d = ¬a ∧ b
+
+‡ c = ¬a ∧ ¬b
+‡ d = ¬a ∧ ¬c        ⇒ d = ¬a ∧ ¬b
+
+‡ d = ¬a ∧ b ∧ c   ⇒ f = b ∨ c
+‡ e = ¬a ∧ ¬d        ⇒ e  = ¬a ∧ f
+
+‡ d = ¬a ∧ ¬b ∧ ¬c ⇒ f = ¬b ∨ ¬c
+‡ e = ¬a ∧ ¬d        ⇒ e  = ¬a ∧ f
+
+‡ d = ¬a ∧ b ∧ ¬c  ⇒ f = b ∨ ¬c
+‡ e = ¬a ∧ ¬d        ⇒ e  = ¬a ∧ f
 ```
 
 ### Resolve Or

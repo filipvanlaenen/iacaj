@@ -190,7 +190,7 @@ public class Md5FunctionBuilder extends VectorialFunctionBuilder {
                 map.addAll(buildOperationFunctions(Operator.OR, fb, b, fa));
                 map.addAll(buildOperationFunctions(Operator.XOR, fz, c, fb));
                 // g := (7×i) mod 16
-                g = (7 * i) % 16;
+                g = 7 * i % 16;
             }
 
             // Be wary of the below definitions of a,b,c,d
