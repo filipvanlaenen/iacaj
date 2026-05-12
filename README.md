@@ -460,119 +460,121 @@ e = ¬a ∧ ¬d      ⇒ e = ¬a
 ### Resolve Or
 
 ```
-b = a ∨ a      ⇒ b = a
+b = a ∨ a        ⇒ b = a
 
-b = ¬a ∨ a     ⇒ b = true
+b = ¬a ∨ a       ⇒ b = true
 
-c = a ∨ a ∨ b  ⇒ c = a ∨ b
+c = a ∨ a ∨ b    ⇒ c = a ∨ b
 
-c = ¬a ∨ a ∨ b ⇒ c = true
+c = ¬a ∨ a ∨ b   ⇒ c = true
+	
+a = false
+b = false
+c = a ∨ b        ⇒ c = false
+
+a = false
+b = true
+c = a ∨ b        ⇒ c = true
+
+a = true
+b = true
+c = a ∨ b        ⇒ c = true
 
 a = false
 b = false
-c = a ∨ b      ⇒ c = false
-
-a = false
-b = true
-c = a ∨ b      ⇒ c = true
-
-a = true
-b = true
-c = a ∨ b      ⇒ c = true
-
-a = false
-b = false
-c = ¬a ∨ b     ⇒ c = true
+c = ¬a ∨ b       ⇒ c = true
 
 a = true
 b = false
-c = ¬a ∨ b     ⇒ c = false
+c = ¬a ∨ b       ⇒ c = false
 
 a = false
 b = true
-c = ¬a ∨ b     ⇒ c = true
+c = ¬a ∨ b       ⇒ c = true
 
 a = true
 b = true
-c = ¬a ∨ b     ⇒ c = true
+c = ¬a ∨ b       ⇒ c = true
+
+
 
 a = false
-c = a ∨ b      ⇒ c = b
+c = a ∨ b        ⇒ c = b
 
 a = true
-c = a ∨ b      ⇒ c = true
+c = a ∨ b        ⇒ c = true
 
 a = false
-c = ¬a ∨ b     ⇒ c = true
+c = ¬a ∨ b       ⇒ c = true
 
 a = true
-c = ¬a ∨ b     ⇒ c = b
+c = ¬a ∨ b       ⇒ c = b
 
 a = false
-c = a ∨ ¬b     ⇒ c = ¬b
+c = a ∨ ¬b       ⇒ c = ¬b
 
 a = true
-c = a ∨ ¬b     ⇒ c = true
+c = a ∨ ¬b       ⇒ c = true
 
 a = false
-c = ¬a ∨ ¬b    ⇒ c = true
+c = ¬a ∨ ¬b      ⇒ c = true
 
 a = true
-c = ¬a ∨ ¬b    ⇒ c = ¬b
+c = ¬a ∨ ¬b      ⇒ c = ¬b
 
 b = a
-d = b ∨ c      ⇒ d = a ∨ c
+d = b ∨ c        ⇒ d = a ∨ c
 
 b = ¬a
-d = b ∨ c      ⇒ d = ¬a ∨ c
+d = b ∨ c        ⇒ d = ¬a ∨ c
 
 b = a
-d = ¬b ∨ c     ⇒ d = ¬a ∨ c
+d = ¬b ∨ c       ⇒ d = ¬a ∨ c
 
 b = ¬a
-d = ¬b ∨ c     ⇒ d = a ∨ c
+d = ¬b ∨ c       ⇒ d = a ∨ c
 
 c = a ∨ b
-e = c ∨ d      ⇒ e = a ∨ b ∨ d
+e = c ∨ d        ⇒ e = a ∨ b ∨ d
 
 c = a ∨ ¬b
-e = c ∨ d      ⇒ e = a ∨ ¬b ∨ d
+e = c ∨ d        ⇒ e = a ∨ ¬b ∨ d
 
 c = a ∨ b
-d = c ∨ b      ⇒ d = a ∨ b
+d = c ∨ b        ⇒ d = a ∨ b
 
 c = a ∨ ¬b
-d = c ∨ b      ⇒ d = true
+d = c ∨ b        ⇒ d = true
 
 c = a ∨ b
-d = c ∨ ¬b      ⇒ d = true
+d = c ∨ ¬b       ⇒ d = true
 
 c = a ∧ b
-e = ¬c ∨ d     ⇒ e = ¬a ∨ ¬b ∨ d
+e = ¬c ∨ d       ⇒ e = ¬a ∨ ¬b ∨ d
 
 c = a ∧ b
-d = a ∨ c      ⇒ d = a
+d = a ∨ c        ⇒ d = a
 
 c = ¬a ∧ b
-d = a ∨ c      ⇒ d = a ∨ b
+d = a ∨ c        ⇒ d = a ∨ b
 
 c = a ∧ b
-d = ¬a ∨ c     ⇒ d = ¬a ∨ b
+d = ¬a ∨ c       ⇒ d = ¬a ∨ b
 
 c = ¬a ∧ b
-d = ¬a ∨ c     ⇒ d = ¬a
+d = ¬a ∨ c       ⇒ d = ¬a
 
 c = a ∧ b
-e = a ∨ c ∨ d   ⇒ d = a ∨ d
+e = a ∨ c ∨ d    ⇒ d = a ∨ d
 
 c = ¬a ∧ b
-e = a ∨ c ∨ d  ⇒ d = a ∨ b ∨ d
+e = a ∨ c ∨ d    ⇒ d = a ∨ b ∨ d
 
 c = a ∧ b
-e = ¬a ∨ c ∨ d ⇒ d = ¬a ∨ b ∨ d
+e = ¬a ∨ c ∨ d   ⇒ d = ¬a ∨ b ∨ d
 
 c = ¬a ∧ b
-e = ¬a ∨ c ∨ d ⇒ d = ¬a ∨ d
+e = ¬a ∨ c ∨ d   ⇒ d = ¬a ∨ d
 ```
 
 ### Resolve Xor

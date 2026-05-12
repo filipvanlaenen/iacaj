@@ -3,13 +3,228 @@ package net.filipvanlaenen.iacaj.expressions;
 import static net.filipvanlaenen.iacaj.expressions.Assertions.createVariableCollection;
 import static net.filipvanlaenen.iacaj.expressions.Assertions.parseSimplifyAndAssertEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
+
+import net.filipvanlaenen.kolektoj.Map;
+import net.filipvanlaenen.kolektoj.ValueCollection;
 
 /**
  * Unit tests on the <code>OrExpression</code> class.
  */
 public class OrFunctionTest {
+    /**
+     * The variable a.
+     */
+    private static final Variable VARIABLE_A = new Variable("a");
+    /**
+     * The variable b.
+     */
+    private static final Variable VARIABLE_B = new Variable("b");
+    /**
+     * The variable c.
+     */
+    private static final Variable VARIABLE_C = new Variable("c");
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = false
+     * b = false
+     * c = a ∨ b        ⇒ c = false
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithFalseAndFalse() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_A, LiteralExpression.FALSE, VARIABLE_B, LiteralExpression.FALSE, VARIABLE_C,
+                        new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.FALSE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = false
+     * b = true
+     * c = a ∨ b        ⇒ c = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithFalseAndTrue() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_A, LiteralExpression.FALSE, VARIABLE_B, LiteralExpression.TRUE, VARIABLE_C,
+                        new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * c = ¬a ∨ a ∨ b   ⇒ c = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithNegatedAndOtherVariable() {
+        VectorialFunction original = new VectorialFunction(Map.of(VARIABLE_C,
+                new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = false
+     * b = false
+     * c = ¬a ∨ b       ⇒ c = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithNegatedFalseAndFalse() {
+        VectorialFunction original =
+                new VectorialFunction(Map.of(VARIABLE_A, LiteralExpression.FALSE, VARIABLE_B, LiteralExpression.FALSE,
+                        VARIABLE_C, new OrFunction(ValueCollection.of(VARIABLE_B), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = false
+     * b = true
+     * c = ¬a ∨ b       ⇒ c = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithNegatedFalseAndTrue() {
+        VectorialFunction original =
+                new VectorialFunction(Map.of(VARIABLE_A, LiteralExpression.FALSE, VARIABLE_B, LiteralExpression.TRUE,
+                        VARIABLE_C, new OrFunction(ValueCollection.of(VARIABLE_B), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = true
+     * b = false
+     * c = ¬a ∨ b       ⇒ c = false
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithNegatedTrueAndFalse() {
+        VectorialFunction original =
+                new VectorialFunction(Map.of(VARIABLE_A, LiteralExpression.TRUE, VARIABLE_B, LiteralExpression.FALSE,
+                        VARIABLE_C, new OrFunction(ValueCollection.of(VARIABLE_B), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.FALSE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = true
+     * b = true
+     * c = ¬a ∨ b       ⇒ c = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithNegatedTrueAndTrue() {
+        VectorialFunction original =
+                new VectorialFunction(Map.of(VARIABLE_A, LiteralExpression.TRUE, VARIABLE_B, LiteralExpression.TRUE,
+                        VARIABLE_C, new OrFunction(ValueCollection.of(VARIABLE_B), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * b = ¬a ∨ a       ⇒ b = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithNegatedVariable() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_B, new OrFunction(ValueCollection.of(VARIABLE_A), ValueCollection.of(VARIABLE_A))));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * c = a ∨ a ∨ b    ⇒ c = a ∨ b
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithSameAndOtherVariable() {
+        VectorialFunction original = new VectorialFunction(Map.of(VARIABLE_C,
+                new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C,
+                new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * b = a ∨ a        ⇒ b = a
+     * </pre>
+     */
+    @Test
+    public void simplificationOfOrWithSameVariable() {
+        VectorialFunction original = new VectorialFunction(Map.of(VARIABLE_B,
+                new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_A), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, new IdentityExpression(VARIABLE_A)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * a = true
+     * b = true
+     * c = a ∨ b        ⇒ c = true
+     * </pre>
+     */
+    @Test
+    public void simplificationOfAndWithTrueAndTrue() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_A, LiteralExpression.TRUE, VARIABLE_B, LiteralExpression.TRUE, VARIABLE_C,
+                        new OrFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), ValueCollection.empty())));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_C));
+        VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_C, LiteralExpression.TRUE));
+        assertTrue(actual.containsSame(expected));
+    }
+
     /**
      * Verifies that <code>a ∨ a</code> is simplified into <code>a</code>.
      */
