@@ -28,7 +28,7 @@ public class Md5FunctionBuilderTest {
         for (int i = 1; i < 512; i++) {
             message.add(inputVector.getAt(i), LiteralExpression.FALSE);
         }
-        VectorialFunction vf = md5.extendWih(message);
+        VectorialFunction vf = md5.extendWith(message);
         Word outputVector = builder.getOutputVector();
 
         VectorialFunction resultA = vf.simplify(outputVector.getSlice(0, 32));
@@ -73,7 +73,7 @@ public class Md5FunctionBuilderTest {
         for (int i = 1; i < 512; i++) {
             message.add(inputVector.getAt(i), LiteralExpression.FALSE);
         }
-        VectorialFunction vf = md5.extendWih(message);
+        VectorialFunction vf = md5.extendWith(message);
         Word outputVector = builder.getOutputVector();
 
         VectorialFunction resultA = vf.simplify(outputVector.getSlice(0, 32));
@@ -117,7 +117,7 @@ public class Md5FunctionBuilderTest {
         for (int i = 1; i < 512; i++) {
             message.add(inputVector.getAt(i), LiteralExpression.FALSE);
         }
-        VectorialFunction vf = md5.extendWih(message);
+        VectorialFunction vf = md5.extendWith(message);
         Word outputVector = builder.getOutputVector();
 
         VectorialFunction resultA = vf.simplify(outputVector.getSlice(0, 32));

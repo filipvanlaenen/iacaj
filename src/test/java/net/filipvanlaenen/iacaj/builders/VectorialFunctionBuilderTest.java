@@ -46,7 +46,7 @@ public class VectorialFunctionBuilderTest {
         ModifiableMap<Variable, Expression> inputVectorMap = ModifiableMap.empty();
         inputVectorMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector, inputValue));
         Word outputVector = builder.getOutputVector();
-        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(inputVectorMap);
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWith(inputVectorMap);
         VectorialFunction actual = addFunctionWithInputVector.simplify(outputVector);
         ModifiableMap<Variable, Expression> expectedMap = ModifiableMap.empty();
         expectedMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, outputValue));

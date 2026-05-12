@@ -25,7 +25,7 @@ public final class VectorialFunction {
         this.variableToExpressionMap = Map.of(variableToExpressionMap);
     }
 
-    public VectorialFunction extendWih(ModifiableMap<Variable, Expression> message) {
+    public VectorialFunction extendWith(ModifiableMap<Variable, Expression> message) {
         // TODO: Simplify when https://github.com/filipvanlaenen/kolektoj/issues/100 has been implemented
         ModifiableMap<Variable, Expression> newMap = ModifiableMap.empty();
         newMap.addAll(variableToExpressionMap);

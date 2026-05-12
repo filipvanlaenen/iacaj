@@ -69,7 +69,7 @@ public class AddFunctionBuilderTest {
         ModifiableMap<Variable, Expression> inputVectorMap = ModifiableMap.empty();
         inputVectorMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector, 0x0102L));
         Word outputVector = builder.getOutputVector();
-        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(inputVectorMap);
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWith(inputVectorMap);
         VectorialFunction actual = addFunctionWithInputVector.simplify(outputVector);
         ModifiableMap<Variable, Expression> expectedMap = ModifiableMap.empty();
         expectedMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, 0x03L));
@@ -92,7 +92,7 @@ public class AddFunctionBuilderTest {
         ModifiableMap<Variable, Expression> inputVectorMap = ModifiableMap.empty();
         inputVectorMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(inputVector, 0x0405L));
         Word outputVector = builder.getOutputVector();
-        VectorialFunction addFunctionWithInputVector = addFunction.extendWih(inputVectorMap);
+        VectorialFunction addFunctionWithInputVector = addFunction.extendWith(inputVectorMap);
         VectorialFunction actual = addFunctionWithInputVector.simplify(outputVector);
         ModifiableMap<Variable, Expression> expectedMap = ModifiableMap.empty();
         expectedMap.addAll(VectorialFunctionBuilder.buildAssignmentFunctions(outputVector, 0x09L));
