@@ -496,8 +496,6 @@ a = true
 b = true
 c = ¬a ∨ b       ⇒ c = true
 
-
-
 a = false
 c = a ∨ b        ⇒ c = b
 
@@ -521,6 +519,8 @@ c = ¬a ∨ ¬b      ⇒ c = true
 
 a = true
 c = ¬a ∨ ¬b      ⇒ c = ¬b
+
+
 
 b = a
 d = b ∨ c        ⇒ d = a ∨ c
