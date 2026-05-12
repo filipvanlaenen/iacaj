@@ -1,10 +1,11 @@
 package net.filipvanlaenen.iacaj.expressions;
 
+import static net.filipvanlaenen.kolektoj.Collection.ElementCardinality.DISTINCT_ELEMENTS;
+
 import net.filipvanlaenen.kolektoj.Collection;
 import net.filipvanlaenen.kolektoj.Map;
 import net.filipvanlaenen.kolektoj.ModifiableCollection;
 import net.filipvanlaenen.kolektoj.ValueCollection;
-import net.filipvanlaenen.kolektoj.Collection.ElementCardinality;
 import net.filipvanlaenen.kolektoj.collectors.Collectors;
 
 /**
@@ -15,38 +16,25 @@ import net.filipvanlaenen.kolektoj.collectors.Collectors;
  */
 public record OrFunction(ValueCollection<Variable> directVariables, ValueCollection<Variable> negatedVariables)
         implements Function {
+    /**
+     * The or operator with spaces.
+     */
     private static final String OR_WITH_SPACES = " " + Operator.OR + " ";
+    /**
+     * The negated or operator with spaces.
+     */
     private static final String OR_NOT_WITH_SPACES = OR_WITH_SPACES + Operator.NOT;
 
-    @Override
-    public Collection<Variable> getVariables() {
-        // TODO
-        ModifiableCollection<Variable> variables = ModifiableCollection.of(directVariables);
-        variables.addAll(negatedVariables);
-        return Collection.of(variables);
-    }
-
-    @Override
-    public Expression simplify() {
-        // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/109
-        ModifiableCollection<Variable> newDirectVariables =
-                ModifiableCollection.of(ElementCardinality.DISTINCT_ELEMENTS);
-        newDirectVariables.addAll(directVariables);
-        ModifiableCollection<Variable> newNegatedVariables =
-                ModifiableCollection.of(ElementCardinality.DISTINCT_ELEMENTS);
-        newNegatedVariables.addAll(negatedVariables);
-        // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/110
-        ModifiableCollection<Variable> commonVariables = ModifiableCollection.of(newDirectVariables);
-        commonVariables.retainAll(newNegatedVariables);
-        if (commonVariables.isEmpty()) {
-            return createExpression(newDirectVariables, newNegatedVariables);
-        } else {
-            return LiteralExpression.TRUE;
-        }
-    }
-
-    private Expression createExpression(ModifiableCollection<Variable> newDirectVariables,
-            ModifiableCollection<Variable> newNegatedVariables) {
+    /**
+     * Creates a new expression based on the provided new direct and negated variables. If only one variable is left, an
+     * identity or negation expression is created instead of a new or expression.
+     *
+     * @param newDirectVariables  The new direct variables.
+     * @param newNegatedVariables The new negated variables.
+     * @return A new expression based on the provided new direct and negated variables.
+     */
+    private Expression createExpression(final Collection<Variable> newDirectVariables,
+            final Collection<Variable> newNegatedVariables) {
         if (newDirectVariables.size() + newNegatedVariables.size() == 1) {
             if (newDirectVariables.isEmpty()) {
                 return new NegationExpression(newNegatedVariables.get());
@@ -54,21 +42,41 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                 return new IdentityExpression(newDirectVariables.get());
             }
         } else {
-            // TODO: Refactor after the implementation of https://github.com/filipvanlaenen/kolektoj/issues/108
-            Variable[] direct = newDirectVariables.toArray(new Variable[0]);
-            Variable[] negated = newNegatedVariables.toArray(new Variable[0]);
-            return new OrFunction(ValueCollection.of(direct), ValueCollection.of(negated));
+            return new OrFunction(ValueCollection.of(newDirectVariables), ValueCollection.of(newNegatedVariables));
+        }
+    }
+
+    @Override
+    public Collection<Variable> getVariables() {
+        return Collection.unionOf(directVariables, negatedVariables);
+    }
+
+    @Override
+    public Expression simplify() {
+        Collection<Variable> distinctDirectVariables = Collection.of(DISTINCT_ELEMENTS, directVariables);
+        Collection<Variable> distinctNegatedVariables = Collection.of(DISTINCT_ELEMENTS, negatedVariables);
+        Collection<Variable> commonVariables =
+                Collection.intersectionOf(distinctDirectVariables, distinctNegatedVariables);
+        if (commonVariables.isEmpty()) {
+            return createExpression(distinctDirectVariables, distinctNegatedVariables);
+        } else {
+            return LiteralExpression.TRUE;
         }
     }
 
     @Override
     public Expression simplify(final Map<Variable, Expression> variableToExpressionMap) {
         ModifiableCollection<Variable> newDirectVariables = ModifiableCollection.empty();
+        ModifiableCollection<Variable> newNegatedVariables = ModifiableCollection.empty();
         for (Variable directVariable : directVariables) {
             if (variableToExpressionMap.containsKey(directVariable)) {
                 Expression expression = variableToExpressionMap.get(directVariable);
                 if (LiteralExpression.TRUE == expression) {
                     return LiteralExpression.TRUE;
+                } else if (expression instanceof IdentityExpression identityExpression) {
+                    newDirectVariables.add(identityExpression.variable());
+                } else if (expression instanceof NegationExpression negationExpression) {
+                    newNegatedVariables.add(negationExpression.variable());
                 } else if (LiteralExpression.FALSE != expression) {
                     newDirectVariables.add(directVariable);
                 }
@@ -76,12 +84,15 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                 newDirectVariables.add(directVariable);
             }
         }
-        ModifiableCollection<Variable> newNegatedVariables = ModifiableCollection.empty();
         for (Variable negatedVariable : negatedVariables) {
             if (variableToExpressionMap.containsKey(negatedVariable)) {
                 Expression expression = variableToExpressionMap.get(negatedVariable);
                 if (LiteralExpression.FALSE == expression) {
                     return LiteralExpression.TRUE;
+                } else if (expression instanceof IdentityExpression identityExpression) {
+                    newNegatedVariables.add(identityExpression.variable());
+                } else if (expression instanceof NegationExpression negationExpression) {
+                    newDirectVariables.add(negationExpression.variable());
                 } else if (LiteralExpression.TRUE != expression) {
                     newNegatedVariables.add(negatedVariable);
                 }
