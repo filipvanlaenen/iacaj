@@ -520,8 +520,6 @@ c = ¬a ∨ ¬b      ⇒ c = true
 a = true
 c = ¬a ∨ ¬b      ⇒ c = ¬b
 
-
-
 b = a
 d = b ∨ c        ⇒ d = a ∨ c
 
