@@ -77,6 +77,9 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                     newDirectVariables.add(identityExpression.variable());
                 } else if (expression instanceof NegationExpression negationExpression) {
                     newNegatedVariables.add(negationExpression.variable());
+                } else if (expression instanceof OrFunction orFunction) {
+                    newDirectVariables.addAll(orFunction.directVariables());
+                    newNegatedVariables.addAll(orFunction.negatedVariables());
                 } else if (LiteralExpression.FALSE != expression) {
                     newDirectVariables.add(directVariable);
                 }
