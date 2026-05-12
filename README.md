@@ -549,6 +549,8 @@ d = c ∨ b        ⇒ d = true
 c = a ∨ b
 d = c ∨ ¬b       ⇒ d = true
 
+
+
 c = a ∧ b
 e = ¬c ∨ d       ⇒ e = ¬a ∨ ¬b ∨ d
 

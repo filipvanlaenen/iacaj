@@ -65,6 +65,9 @@ public record XorFunction(ValueCollection<Variable> variables, boolean negated) 
                     newNegated = !newNegated;
                 } else if (expression instanceof IdentityExpression identityExpression) {
                     newVariables.add(identityExpression.variable());
+                } else if (expression instanceof NegationExpression negationExpression) {
+                    newNegated = !newNegated;
+                    newVariables.add(negationExpression.variable());
                 } else if (LiteralExpression.FALSE != expression) {
                     newVariables.add(variable);
                 }
