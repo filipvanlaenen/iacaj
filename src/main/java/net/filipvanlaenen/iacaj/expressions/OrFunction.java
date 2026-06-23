@@ -96,6 +96,9 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                     newNegatedVariables.add(identityExpression.variable());
                 } else if (expression instanceof NegationExpression negationExpression) {
                     newDirectVariables.add(negationExpression.variable());
+                } else if (expression instanceof AndFunction andFunction) {
+                    newDirectVariables.addAll(andFunction.negatedVariables());
+                    newNegatedVariables.addAll(andFunction.directVariables());
                 } else if (LiteralExpression.TRUE != expression) {
                     newNegatedVariables.add(negatedVariable);
                 }

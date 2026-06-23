@@ -538,8 +538,6 @@ e = c ∨ d        ⇒ e = a ∨ b ∨ d
 c = a ∨ ¬b
 e = c ∨ d        ⇒ e = a ∨ ¬b ∨ d
 
-
-
 c = a ∨ b
 d = c ∨ b        ⇒ d = a ∨ b
 
@@ -549,34 +547,106 @@ d = c ∨ b        ⇒ d = true
 c = a ∨ b
 d = c ∨ ¬b       ⇒ d = true
 
-
-
 c = a ∧ b
 e = ¬c ∨ d       ⇒ e = ¬a ∨ ¬b ∨ d
 
-c = a ∧ b
-d = a ∨ c        ⇒ d = a
 
-c = ¬a ∧ b
-d = a ∨ c        ⇒ d = a ∨ b
 
-c = a ∧ b
-d = ¬a ∨ c       ⇒ d = ¬a ∨ b
+d = a ∧ b ∧ c
+e = a ∨ d        ⇒ e = a
 
-c = ¬a ∧ b
-d = ¬a ∨ c       ⇒ d = ¬a
+d = a ∧ ¬b ∧ ¬c
+e = a ∨ d        ⇒ e = a
 
-c = a ∧ b
-e = a ∨ c ∨ d    ⇒ d = a ∨ d
+d = a ∧ b ∧ ¬c
+e = a ∨ d        ⇒ e = a
 
-c = ¬a ∧ b
-e = a ∨ c ∨ d    ⇒ d = a ∨ b ∨ d
+d = ¬a ∧ b ∧ c
+e = ¬a ∨ d       ⇒ e = ¬a
 
-c = a ∧ b
-e = ¬a ∨ c ∨ d   ⇒ d = ¬a ∨ b ∨ d
+d = ¬a ∧ ¬b ∧ ¬c
+e = ¬a ∨ d       ⇒ e = ¬a
 
-c = ¬a ∧ b
-e = ¬a ∨ c ∨ d   ⇒ d = ¬a ∨ d
+d = ¬a ∧ b ∧ ¬c
+e = ¬a ∨ d       ⇒ e = ¬a
+
+‡ c = ¬a ∧ b
+‡ d = a ∨ c        ⇒ d = a ∨ b
+
+‡ c = ¬a ∧ ¬b
+‡ d = a ∨ c        ⇒ d = a ∨ ¬b
+
+‡ d = ¬a ∧ b ∧ c   ⇒ °f = b ∧ c
+‡ e = a ∨ d        ⇒ e = a ∨ f
+
+‡ d = ¬a ∧ ¬b ∧ ¬c ⇒ °f = ¬b ∧ ¬c
+‡ e = a ∨ d        ⇒ e = a ∨ f
+
+‡ d = ¬a ∧ b ∧ ¬c  ⇒ °f = b ∧ ¬c
+‡ e = a ∨ d        ⇒ e = a ∨ f
+
+‡ c = a ∧ b
+‡ d = ¬a ∨ c       ⇒ d = ¬a ∨ b
+
+‡ c = a ∧ ¬b
+‡ d = ¬a ∨ c       ⇒ d = ¬a ∨ ¬b
+
+‡ d = a ∧ b ∧ c    ⇒ °f = b ∧ c
+‡ e = ¬a ∨ d       ⇒ e  = ¬a ∨ f
+
+‡ d = a ∧ ¬b ∧ ¬c  ⇒ °f = ¬b ∧ ¬c
+‡ e = ¬a ∨ d       ⇒ e  = ¬a ∨ f
+
+‡ d = a ∧ b ∧ ¬c   ⇒ °f = b ∧ ¬c
+‡ e = ¬a ∨ d       ⇒ e  = ¬a ∨ f
+
+d = ¬a ∨ b ∨ c
+e = a ∨ ¬d       ⇒ e = a
+
+d = ¬a ∨ ¬b ∨ ¬c
+e = a ∨ ¬d       ⇒ e = a
+
+d = ¬a ∨ b ∨ ¬c
+e = a ∨ ¬d       ⇒ e = a
+
+d = a ∨ b ∨ c
+e = ¬a ∨ ¬d      ⇒ e = ¬a
+
+d = a ∨ ¬b ∨ ¬c
+e = ¬a ∨ ¬d      ⇒ e = ¬a
+
+d = a ∨ b ∨ ¬c
+e = ¬a ∨ ¬d      ⇒ e = ¬a
+
+‡ c = a ∨ b
+‡ d = a ∨ ¬c       ⇒ d = a ∨ ¬b
+
+‡ c = a ∨ ¬b
+‡ d = a ∨ ¬c       ⇒ d = a ∨ b
+
+‡ d = a ∨ b ∨ c    ⇒ °f = b ∨ c
+‡ e = a ∨ ¬d       ⇒ e = a ∨ ¬f
+
+‡ d = a ∨ ¬b ∨ ¬c  ⇒ °f = ¬b ∨ ¬c
+‡ e = a ∨ ¬d       ⇒ e = a ∨ ¬f
+
+‡ d = a ∨ b ∨ ¬c   ⇒ °f = b ∨ ¬c
+‡ e = a ∨ ¬d       ⇒ e = a ∨ ¬f
+
+‡ c = ¬a ∨ b
+‡ d = ¬a ∨ ¬c      ⇒ d = ¬a ∨ ¬b
+
+‡ c = ¬a ∨ ¬b
+‡ d = ¬a ∨ ¬c      ⇒ d = ¬a ∨ b
+
+‡ d = ¬a ∨ b ∨ c   ⇒ °f = b ∨ c
+‡ e = ¬a ∨ ¬d      ⇒ e  = ¬a ∨ ¬f
+
+‡ d = ¬a ∨ ¬b ∨ ¬c ⇒ °f = ¬b ∨ ¬c
+‡ e = ¬a ∨ ¬d      ⇒ e  = ¬a ∨ ¬f
+
+‡ d = ¬a ∨ b ∨ ¬c  ⇒ °f = b ∨ ¬c
+‡ e = ¬a ∨ ¬d      ⇒ e  = ¬a ∨ ¬f
 ```
 
 ### Resolve Xor
