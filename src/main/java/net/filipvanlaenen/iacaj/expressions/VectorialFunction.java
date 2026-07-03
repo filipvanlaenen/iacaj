@@ -25,12 +25,12 @@ public final class VectorialFunction {
         this.variableToExpressionMap = Map.of(variableToExpressionMap);
     }
 
+    public boolean containsSame(VectorialFunction result) {
+        return variableToExpressionMap.containsSame(result.variableToExpressionMap);
+    }
+
     public VectorialFunction extendWith(ModifiableMap<Variable, Expression> message) {
-        // TODO: Simplify when https://github.com/filipvanlaenen/kolektoj/issues/100 has been implemented
-        ModifiableMap<Variable, Expression> newMap = ModifiableMap.empty();
-        newMap.addAll(variableToExpressionMap);
-        newMap.addAll(message);
-        return new VectorialFunction(newMap);
+        return new VectorialFunction(Map.unionOf(variableToExpressionMap, message));
     }
 
     private void recursivelyAdd(ModifiableMap<Variable, Expression> map, Variable variable,
@@ -64,9 +64,5 @@ public final class VectorialFunction {
     public String toString() {
         return variableToExpressionMap.stream().map(entry -> entry.key() + " = " + entry.value())
                 .collect(Collectors.joining(System.lineSeparator()));
-    }
-
-    public boolean containsSame(VectorialFunction result) {
-        return variableToExpressionMap.containsSame(result.variableToExpressionMap);
     }
 }
