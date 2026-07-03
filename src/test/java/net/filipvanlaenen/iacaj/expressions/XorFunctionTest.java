@@ -30,6 +30,10 @@ public class XorFunctionTest {
      * The variable d.
      */
     private static final Variable VARIABLE_D = new Variable("d");
+    /**
+     * The variable e.
+     */
+    private static final Variable VARIABLE_E = new Variable("e");
 
     /**
      * Verifies a functional test on the simplify method as described below.
@@ -117,6 +121,25 @@ public class XorFunctionTest {
         VectorialFunction actual = original.simplify(new Word(VARIABLE_D));
         VectorialFunction expected = new VectorialFunction(
                 Map.of(VARIABLE_D, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_C), true)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * c = ¬a ⊻ b
+     * e = ¬c ⊻ d      ⇒ e = a ⊻ b ⊻ d
+     * </pre>
+     */
+    @Test
+    public void simplificationOfXorNegatedWithNegatedXor() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), true), VARIABLE_E,
+                        new XorFunction(ValueCollection.of(VARIABLE_C, VARIABLE_D), true)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_E));
+        VectorialFunction expected = new VectorialFunction(
+                Map.of(VARIABLE_E, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B, VARIABLE_D), false)));
         assertTrue(actual.containsSame(expected));
     }
 
@@ -247,6 +270,25 @@ public class XorFunctionTest {
      * Verifies a functional test on the simplify method as described below.
      *
      * <pre>
+     * c = a ⊻ b
+     * e = ¬c ⊻ d      ⇒ e = ¬a ⊻ b ⊻ d
+     * </pre>
+     */
+    @Test
+    public void simplificationOfXorNegatedWithXor() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), false), VARIABLE_E,
+                        new XorFunction(ValueCollection.of(VARIABLE_C, VARIABLE_D), true)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_E));
+        VectorialFunction expected = new VectorialFunction(
+                Map.of(VARIABLE_E, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B, VARIABLE_D), true)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
      * a = true
      * b = true
      * c = a ⊻ b      ⇒ c = false
@@ -301,6 +343,25 @@ public class XorFunctionTest {
      * Verifies a functional test on the simplify method as described below.
      *
      * <pre>
+     * c = ¬a ⊻ b
+     * e = c ⊻ d      ⇒ e = ¬a ⊻ b ⊻ d
+     * </pre>
+     */
+    @Test
+    public void simplificationOfXorWithNegatedXor() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), true), VARIABLE_E,
+                        new XorFunction(ValueCollection.of(VARIABLE_C, VARIABLE_D), false)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_E));
+        VectorialFunction expected = new VectorialFunction(
+                Map.of(VARIABLE_E, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B, VARIABLE_D), true)));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
      * b = ¬a
      * d = b ⊻ c      ⇒ d = ¬a ⊻ c
      * </pre>
@@ -344,6 +405,25 @@ public class XorFunctionTest {
                 Map.of(VARIABLE_B, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_A), false)));
         VectorialFunction actual = original.simplify(new Word(VARIABLE_B));
         VectorialFunction expected = new VectorialFunction(Map.of(VARIABLE_B, LiteralExpression.FALSE));
+        assertTrue(actual.containsSame(expected));
+    }
+
+    /**
+     * Verifies a functional test on the simplify method as described below.
+     *
+     * <pre>
+     * c = a ⊻ b
+     * e = c ⊻ d      ⇒ e = a ⊻ b ⊻ d
+     * </pre>
+     */
+    @Test
+    public void simplificationOfXorWithXor() {
+        VectorialFunction original = new VectorialFunction(
+                Map.of(VARIABLE_C, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B), false), VARIABLE_E,
+                        new XorFunction(ValueCollection.of(VARIABLE_C, VARIABLE_D), false)));
+        VectorialFunction actual = original.simplify(new Word(VARIABLE_E));
+        VectorialFunction expected = new VectorialFunction(
+                Map.of(VARIABLE_E, new XorFunction(ValueCollection.of(VARIABLE_A, VARIABLE_B, VARIABLE_D), false)));
         assertTrue(actual.containsSame(expected));
     }
 

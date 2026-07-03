@@ -706,8 +706,6 @@ d = ¬b ⊻ c     ⇒ d = ¬a ⊻ c
 b = ¬a
 d = ¬b ⊻ c     ⇒ d = a ⊻ c
 
-
-
 c = a ⊻ b
 e = c ⊻ d      ⇒ e = a ⊻ b ⊻ d
 
