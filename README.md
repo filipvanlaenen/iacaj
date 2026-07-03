@@ -654,13 +654,13 @@ b = a ⊻ a      ⇒ b = false
 
 b = ¬a ⊻ a     ⇒ b = true
 
-c = a ⊻ a ⊻ b  ⇒ c = ¬b
+c = a ⊻ a ⊻ b  ⇒ c = b
 
-c = ¬a ⊻ a ⊻ b ⇒ c = b
+c = ¬a ⊻ a ⊻ b ⇒ c = ¬b
 
 a = false
 b = false
-c = a ⊻ b      ⇒ c = true
+c = a ⊻ b      ⇒ c = false
 
 a = false
 b = true
@@ -705,6 +705,8 @@ d = ¬b ⊻ c     ⇒ d = ¬a ⊻ c
 
 b = ¬a
 d = ¬b ⊻ c     ⇒ d = a ⊻ c
+
+
 
 c = a ⊻ b
 e = c ⊻ d      ⇒ e = a ⊻ b ⊻ d
