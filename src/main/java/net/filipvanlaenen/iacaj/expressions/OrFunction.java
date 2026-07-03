@@ -80,6 +80,18 @@ public record OrFunction(ValueCollection<Variable> directVariables, ValueCollect
                 } else if (expression instanceof OrFunction orFunction) {
                     newDirectVariables.addAll(orFunction.directVariables());
                     newNegatedVariables.addAll(orFunction.negatedVariables());
+                } else if (expression instanceof AndFunction andFunction) {
+                    // TODO: Refactor when https://github.com/filipvanlaenen/kolektoj/issues/113 is implemented
+                    ModifiableCollection<Variable> intersectionOfDirectVariables =
+                            ModifiableCollection.of(directVariables);
+                    intersectionOfDirectVariables.retainAll(andFunction.directVariables());
+                    // TODO: Refactor when https://github.com/filipvanlaenen/kolektoj/issues/113 is implemented
+                    ModifiableCollection<Variable> intersectionOfNegatedVariables =
+                            ModifiableCollection.of(negatedVariables);
+                    intersectionOfNegatedVariables.retainAll(andFunction.negatedVariables());
+                    if (intersectionOfDirectVariables.isEmpty() && intersectionOfNegatedVariables.isEmpty()) {
+                        newDirectVariables.add(directVariable);
+                    }
                 } else if (LiteralExpression.FALSE != expression) {
                     newDirectVariables.add(directVariable);
                 }

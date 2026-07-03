@@ -550,8 +550,6 @@ d = c ∨ ¬b       ⇒ d = true
 c = a ∧ b
 e = ¬c ∨ d       ⇒ e = ¬a ∨ ¬b ∨ d
 
-
-
 d = a ∧ b ∧ c
 e = a ∨ d        ⇒ e = a
 
@@ -599,6 +597,8 @@ e = ¬a ∨ d       ⇒ e = ¬a
 
 ‡ d = a ∧ b ∧ ¬c   ⇒ °f = b ∧ ¬c
 ‡ e = ¬a ∨ d       ⇒ e  = ¬a ∨ f
+
+
 
 d = ¬a ∨ b ∨ c
 e = a ∨ ¬d       ⇒ e = a
