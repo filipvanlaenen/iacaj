@@ -598,8 +598,6 @@ e = ¬a ∨ d       ⇒ e = ¬a
 ‡ d = a ∧ b ∧ ¬c   ⇒ °f = b ∧ ¬c
 ‡ e = ¬a ∨ d       ⇒ e  = ¬a ∨ f
 
-
-
 d = ¬a ∨ b ∨ c
 e = a ∨ ¬d       ⇒ e = a
 
